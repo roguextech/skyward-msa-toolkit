@@ -10,7 +10,7 @@ run config.m
 
 % data of the analyis 
 
-ms=4.3:0.1:7;
+ms=3.5:0.1:6;
 m0=ms+settings.mp;
 n=length(ms);
 
