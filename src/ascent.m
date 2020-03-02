@@ -383,6 +383,8 @@ parout.interp.alt = -z;
 parout.wind.NED_wind = [uw, vw, ww];
 parout.wind.body_wind = wind;
 
+parout.velocities=Vels;
+
 parout.forces.AeroDyn_Forces = [X, Y, Z];
 parout.forces.T = T;
 

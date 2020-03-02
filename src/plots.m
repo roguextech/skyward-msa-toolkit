@@ -262,6 +262,7 @@ else   %%%% STOCHASTIC PLOTS (only if N>1)
     end
     axis on; hold on
     plot(LP(:, 2), LP(:, 1), '.r','MarkerSize', 11);
+    plot(0,0,'*b','MarkerSize', 10);
     title('Atterraggio con secondo drogue');
     xlabel('m')
     ylabel('m')
