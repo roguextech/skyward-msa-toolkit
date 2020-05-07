@@ -2,12 +2,6 @@ close all,
 clear all,
 clc
 
-% load('V1_sim.mat');
-% t = time;
-% N = length(t);
-% axN = ax_b; % Add static acceleration (in BODY frame)
-% [~, ~, Press,~]= atmosisa([data_ascent.interp.alt']);
-
 %% READ HERMES V1 TELEMETRY
 telemetryFileName = 'hr_tm_v1.csv';
 rocketName = 'Hermes V1';
@@ -65,12 +59,6 @@ mass = m0 - mfr*time; % Vettore massa
 mass(ind_tburn+1:end) = m0 - mprop; % Massa a vuoto
 exp_thrust = mass(1:ind_tburn).*accT; % Vettore spinta
 Itot = trapz(time(1:ind_tburn),exp_thrust); % Impulso totale
-
-% Calcola forze
-% XForce = mass.*acc_x; %In generale
-% YForce = mass.*acc_y; %In generale
-% ZForce = mass.*acc_z; %In generale
-% XAeroForce = XForce-
 
 % Plot acceleration
 figure, hold on, grid on
