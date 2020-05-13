@@ -6,7 +6,8 @@ clc
 telemetryFileName = 'hr_tm_v1.csv';
 rocketName = 'Hermes V1';
 T1 = readtable(telemetryFileName);
-startInd = 42288; % Definisci il campione a cui partono le misurazioni
+Lpad_pin = table2array(T1(:,'pin_launch')); % 0 entry = pin detach from launchpad 
+startInd =find(Lpad_pin,1,'last'); % find the last non 0 element that is the liftoff time from launchpad  '42287'
 endInd = size(T1,1);
 % Estrai dati
 time = T1.timestamp(startInd:end)./1000;
@@ -130,7 +131,8 @@ legend('Digital','Analog');
 telemetryFileName = 'hr_tm_v0.csv';
 rocketName = 'Hermes V0';
 T0 = readtable(telemetryFileName);
-startInd = 25534;
+Lpad_pin = table2array(T0(:,'launch_pin')); % 0 entry = pin detach from launchpad 
+startInd =find(Lpad_pin,1,'last'); % find the last non 0 element that is the liftoff time from launchpad  '25534'
 endInd = size(T0,1);
 time2 = T0.timestamp(startInd:endInd)./1000;
 acc_x_v0 = T0.z_acc(startInd:endInd);
