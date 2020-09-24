@@ -12,7 +12,7 @@ Release date: 16/04/2016
 
 %% LAUNCH SETUP
 % launchpad
-settings.z0 = 7;                                                                 %[m] Launchpad Altitude
+settings.z0 = 7;                                                                    %[m] Launchpad Altitude
 settings.lrampa = 4.9;                                                              %[m] LaunchPad route (distance from ground of the first hook)
 settings.lat0 = 44.519272;                                                          % Launchpad latitude
 settings.lon0 = 11.642333;                                                          % Launchpad longitude
@@ -24,54 +24,96 @@ end
 % launchpad directions
 % for a single run the maximum and the minimum value of the following
 % angles must be the same.
-settings.OMEGAmin = 70*pi/180;        %[rad] Minimum Elevation Angle, user input in degrees (ex. 80)
-settings.OMEGAmax = 70*pi/180;        %[rad] Maximum Elevation Angle, user input in degrees (ex. 80)
-settings.PHImin = 200*pi/180;           %[rad] Minimum Azimuth Angle from North Direction, user input in degrees (ex. 90)
+settings.OMEGAmin = 90*pi/180;        %[rad] Minimum Elevation Angle, user input in degrees (ex. 80)
+settings.OMEGAmax = 90*pi/180;        %[rad] Maximum Elevation Angle, user input in degrees (ex. 80)
+settings.PHImin = 200*pi/180;         %[rad] Minimum Azimuth Angle from North Direction, user input in degrees (ex. 90)
 settings.PHImax = 200*pi/180;         %[rad] Maximum Azimuth Angle from North Direction, user input in degrees (ex. 90)
 settings.upwind = false;              % If true, phi is selected according to wind direction (constant wind model only)
 settings.PHIsigma = 0*pi/180;         % Stocasthic simulation only
 
 %% ENGINE DETAILS
-% % Aerotech K550W-L
-% settings.motor.exp_time = [0 0.13 0.38 0.63 0.88 1.14 1.39...
-%     1.64 1.9 2.15 2.40 2.66 2.91 3.16 3.5];                         %[s]
+%%%%%% Cesaroni 5342M1560-P
+% settings.motor.exp_time =   [0 0.1  1.4  2    3.25 3.5]; 
+% settings.motor.exp_thrust = [0 1450 1800 1800 1300 0];
 % 
-% settings.motor.exp_thrust = [ 0 139.8 158.07 171.978 178.769 ...
-%     178.247 158.859 132.922 111.005 92.082 74.075 44.837 16.156...
-%     4.589 0.000  ] * 9.81/2.2;                                      % [N]
-% 
-% settings.mp = 0.889;
+% settings.mp = 2.452;                                                % [kg]   Propellant Mass                                                
+% settings.mnc = 0.500;                                               % [kg]   Nosecone Mass
+% settings.tb = settings.motor.exp_time(end);                         % [s]    Burning time
+% settings.mfr = settings.mp/settings.tb;                             % [kg/s] Mass Flow Rate
+% settings.m0 = 15;                                                   % [kg]   Total Mass 
+% settings.ms = settings.m0 - settings.mp;                            % [kg]   Structural Mass
 
-% % Aerotech K695R-L
-% settings.motor.exp_time = [0, 0.02:0.05:0.82, 0.88:0.05:2.23];
-% 
-% settings.motor.exp_thrust = [ 0 540.57 716.61 724.39 740.18 751.53 762.31 821.36 908.55 894.53 885.86 881.97 875.41 869.85 863.18 857.51 847.39,...
-%   844.38 834.96 825.7 817.69 810.69 793.9 781.77 766.09 750.53 739.41 721.05 703.71 689.03 674.91 662.67 646.1,...
-%   633.76 616.52 603.96 590.2 574.71 567.59 569.37 463.39 268.23 121.55 40.92 7.23 3.91];
-% 
-% settings.mp = 0.918;
+%%%%%% Cesaroni 5506M1230-P
+% settings.motor.exp_time = [0 0.1 1.8 3.6 4.7]; 
+% settings.motor.exp_thrust = [0 1340 1450 1120 100];
 
-% Aerotech J420R-14A
-settings.motor.exp_time = [0 0.06 0.18 0.31 0.43 0.55 0.68 0.80 0.93 1.05 1.17 1.30 1.42 1.54 1.61]; 
+% settings.mp = 2.9;                                                % [kg]   Propellant Mass                                                
+% settings.mnc = 0.500;                                               % [kg]   Nosecone Mass
+% settings.tb = settings.motor.exp_time(end);                         % [s]    Burning time
+% settings.mfr = settings.mp/settings.tb;                             % [kg/s] Mass Flow Rate
+% settings.ms = 12.1;                                                  % [kg]   Total Mass
+% settings.m0 = settings.ms + settings.mp;                            % [kg]   Structural Mass
 
-settings.motor.exp_thrust = [0 69.185 117.908 119.348 120.357 119.131 116.273 ... 
-    112.264 103.618 93.241 82.300 73.141 52.646 7.103 0.000] *9.81/2.2;
+%%%%%% Cesaroni 6251M1400-P
+% settings.motor.exp_time =   [0 0.1    0.5    1.1  1.5  2    2.3    2.5  3    3.5    3.7  3.9   4   4.4    4.47];
+% settings.motor.exp_thrust = [0 1993.6 1891.3 1780 1691 1602 1557.5 1513 1335 1223.7 1112 667.5 534 222.5  0   ];
+% settings.mp = 2.992;                                                % [kg]   Propellant Mass                                                
+% settings.mnc = 0.500;                                               % [kg]   Nosecone Mass
+% settings.tb = settings.motor.exp_time(end);                         % [s]    Burning time
+% settings.mfr = settings.mp/settings.tb;                             % [kg/s] Mass Flow Rate
+% settings.m0 = 20;                                                   % [kg]   Total Mass 
+% settings.ms = settings.m0 - settings.mp;                            % [kg]   Structural Mass
 
-settings.mp = 0.345;                                                % [kg]   Propellant Mass
-                                                                 
-settings.mnc = 0.300;                                               % [kg]   Nosecone Mass
+%%%%%% Cesaroni 6819M1540-P
+% settings.motor.exp_time =   [0 0.02 0.04 0.06 0.08 0.15 0.2  0.35 0.55 0.7  1.7  2.5  3.38 3.83 4   4.5];
+% settings.motor.exp_thrust = [0 800  1250 1800 2400 2060 2000 2100 1940 1900 1830 1720 1550 680  530 0];
+% settings.mp = 3.624;                                                % [kg]   Propellant Mass                                                
+% settings.mnc = 0.500;                                               % [kg]   Nosecone Mass
+% settings.tb = settings.motor.exp_time(end);                         % [s]    Burning time
+% settings.mfr = settings.mp/settings.tb;                             % [kg/s] Mass Flow Rate
+% settings.m0 = 20;                                                   % [kg]   Total Mass 
+% settings.ms = settings.m0 - settings.mp;                            % [kg]   Structural Mass
+
+%%%%%% Cesaroni 7545M1590-P
+settings.motor.exp_time =   [0 0.004  0.019  0.063  0.153  0.182  0.247  0.616  1.028 2.111  2.551  2.635  2.796  3      3.349 3.541  3.5870];
+settings.motor.exp_thrust = [0 556.85 1690.3 2359.2 2339.4 2570.1 2471.2 2497.6 2547  2316.4 2273.5 2253.8 1696.9 1472.9 247.1 108.73 0];
+
+settings.mp = 3.457;                                                 % [kg]   Propellant Mass                                                
+settings.mnc = 0.500;                                               % [kg]   Nosecone Mass
 settings.tb = settings.motor.exp_time(end);                         % [s]    Burning time
 settings.mfr = settings.mp/settings.tb;                             % [kg/s] Mass Flow Rate
-settings.ms = 5;                                                    % [kg]   Total Mass
-settings.m0 = settings.ms + settings.mp;                            % [kg]   Structural Mass
+settings.m0 = 20;                                                   % [kg]   Total Mass 
+settings.ms = settings.m0 - settings.mp;                            % [kg]   Structural Mass
+
+
+%%%%%% Cesaroni 7545M1590-P
+% settings.motor.exp_time = [0 0.2 3.5 3.6 4.8]; 
+% settings.motor.exp_thrust = [0 2000 2300 1550 100];
+% 
+% settings.mp = 3.59;                                                % [kg]   Propellant Mass                                                
+% settings.mnc = 0.500;                                               % [kg]   Nosecone Mass
+% settings.tb = settings.motor.exp_time(end);                         % [s]    Burning time
+% settings.mfr = settings.mp/settings.tb;                             % [kg/s] Mass Flow Rate
+% settings.m0 = 20;                                                   % [kg]   Total Mass 
+% settings.ms = settings.m0 - settings.mp;                            % [kg]   Structural Mass
+
+%%%%%% HRE
+% settings.motor.exp_time = [0, 8.1];
+% settings.motor.exp_thrust = [400, 400];
+% settings.mp = 0.183*8.1;                                            % [kg]   Propellant Mass                                                
+% settings.mnc = 0.300;                                               % [kg]   Nosecone Mass
+% settings.tb = 8.1;                                                  % [s]    Burning time
+% settings.mfr = 0.183;                                               % [kg/s] Mass Flow Rate
+% settings.ms = 10;                                                   % [kg]   Total Mass
+% settings.m0 = settings.ms + settings.mp;                            % [kg]   Structural Mass
 
 %% GEOMETRY DETAILS
 % This parameters should be the same parameters set up in MISSILE DATCOM
 % simulation.
 
-settings.C = 0.09;                                                  % [m]      Caliber (Fuselage Diameter)
-settings.S = 0.0064;                                                % [m^2]    Cross-sectional Surface
-L = 1.516;                                                          % [m]      Rocket length
+settings.C = 0.16;                                                  % [m]      Caliber (Fuselage Diameter)
+settings.S = pi*settings.C^2/4;                                     % [m^2]    Cross-sectional Surface
+L = 2.5;                                                            % [m]      Rocket length
 
 %% MASS GEOMERTY DETAILS
 % x-axis: along the fuselage
@@ -205,8 +247,8 @@ settings.wind.input_uncertainty = [30, 20];
 
 % Wind is generated randomly from the minimum to the maximum parameters which defines the wind.
 % Setting the same values for min and max will fix the parameters of the wind.
-settings.wind.MagMin = 8;                           % [m/s] Minimum Magnitude
-settings.wind.MagMax = 8;                          % [m/s] Maximum Magnitude
+settings.wind.MagMin = 1;                           % [m/s] Minimum Magnitude
+settings.wind.MagMax = 1;                          % [m/s] Maximum Magnitude
 settings.wind.ElMin = 0*pi/180;                     % [rad] Minimum Elevation, user input in degrees (ex. 0)
 settings.wind.ElMax = 0*pi/180;                     % [rad] Maximum Elevation, user input in degrees (ex. 0) (Max == 90 Deg)
 settings.wind.AzMin = (20)*pi/180;                   % [rad] Minimum Azimuth, user input in degrees (ex. 90)

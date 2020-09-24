@@ -22,10 +22,10 @@ clear; close all; clc
 
 %% States
 % State values in which the aerodynamic coefficients will be computed
-Mach = 0.05:0.05:0.65;
-Alpha = [-20 -15 -10 -7.5 -5 -2.5 -1.5 -1 -0.5 -0.1 0.1 0.5 1 1.5 2.5 5 7.5 10 15 20];
+Mach = 0.05:0.05:1;
+Alpha = [-10 -7.5 -5 -2.5 -1.5 -1 -0.5 -0.1 0.1 0.5 1 1.5 2.5 5 7.5 10];
 Beta = [-0.1 0.1];
-Alt = 0:200:2400;
+Alt = 0:200:4000;
 Nm = length(Mach);
 Na = length(Alpha);
 Nb = length(Beta);
@@ -34,17 +34,17 @@ Nalt = length(Alt);
 
 %% Design Parameters
 % looping for various dimension of the fins [m]
-Chord1 = 0.1:0.01:0.12; N1 = length(Chord1);
-Chord2 = 0.05:0.01:0.07; N2 = length(Chord2);
+Chord1 = 0.24; N1 = length(Chord1);
+Chord2 = 0.12; N2 = length(Chord2);
 shape = 'rect';
 
 %% Fixed Parameters
-xcg = [1.251, 1.171];                               % [m] CG position [full, empty]
-D = 0.09;                                           % [m] rocket diameter
+xcg = [1.7, 1.6];                               % [m] CG position [full, empty]
+D = 0.16;                                           % [m] rocket diameter
 r = D/2;                                            % [m] rocket radius
 S = r^2*pi;                                         % [m^2] cross section                         
-Lnose = 0.3;                                        % [m] nose length
-Lcenter = 1.72;                                     % [m] Lcenter : Centerbody length
+Lnose = 0.35;                                        % [m] nose length
+Lcenter = 2.15;                                     % [m] Lcenter : Centerbody length
 Npanel = 4;                                         % [m] number of fins
 Phif = [0 90 180 270];                              % [deg] Angle of each panel
 Ler = 0.003;                                        % [deg] Leading edge radius
@@ -53,6 +53,7 @@ zup_raw = 0.0015;                                   % [m] fin semi-thickness
 Lmaxu_raw = 0.006;                                  % [m] Fraction of chord from leading edge to max thickness
 C1Hratio = 2;                                       % [/] fin chord-heigth ratio
 
+%% datcom
 data = cell(N1, N2);
 mass_condition = {'full', 'empty'};
 for i = 1:N1
@@ -77,7 +78,7 @@ for i = 1:N1
                 Xle2 = Lcenter + Lnose - d - diffC/2;
         end
         
-        % Defining Fin Section
+        %%% Defining Fin Section
         Zup = [zup_raw/C1, zup_raw/C2];
         Lmaxu = [Lmaxu_raw/C1, Lmaxu_raw/C2];
         Lflatu = [(C1 - 2*Lmaxu_raw)/C1, (C2 - 2*Lmaxu_raw)/C2];
@@ -85,7 +86,7 @@ for i = 1:N1
         for k = 1:2
             XCG = xcg(k);
             
-            %% Creating for005.dat file from previous data
+            %%% Creating for005.dat file from previous data
             if ismac   % mac procedure
                 fid  =  fopen(strcat(pwd, '/for005.dat'),'w+');
             else
@@ -238,7 +239,7 @@ for i = 1:N1
             end
             fclose(fid);
             
-            %% Datcom and parsing
+            %%% Datcom and parsing
             if ismac
                 system('./datcom for005.dat' );
             else
@@ -248,7 +249,7 @@ for i = 1:N1
             value = 0;
             while value == 0
                 value = exist('for006.dat','file');
-                pause(0.1);
+                pause(0.01);
             end
             clc
             if k == 1 
@@ -276,7 +277,7 @@ end
 data = reshape(data, [N1*N2, 1]);
 data = data(~cellfun('isempty', data));
 delete('for003.dat', 'for004.dat', 'for005.dat', 'for006.dat', 'for009.dat',...
-    'for010.dat', 'for011.dat', 'for012.dat', 'empty.mat', 'full.mat')
+    'for010.dat', 'for011.dat', 'for012.dat')
 
 clearvars -except data
 AMtime = toc;

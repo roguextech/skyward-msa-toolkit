@@ -325,7 +325,7 @@ else
     qdyn = 0.5*rho*V_norm^2;        %[Pa] dynamics pressure
     qdynL_V = 0.5*rho*V_norm*S*C;   
     
-    X = qdyn*S*CA;                  %[N] x-body component of the aerodynamics force
+    X = 1.4*qdyn*S*CA;              %[N] x-body component of the aerodynamics force
     Y = qdyn*S*CYB*beta;            %[N] y-body component of the aerodynamics force
     Z = qdyn*S*CNA*alpha;           %[N] z-body component of the aerodynamics force
     Fg = quatrotate(Q,[0 0 m*g])';  %[N] force due to the gravity in body frame
