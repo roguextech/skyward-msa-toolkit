@@ -1,4 +1,4 @@
-function [dY, XCP_value] = ascent(t,Y,settings,uw,vw,ww)
+function dY = ascent(t,Y,settings,uw,vw,ww)
 % ODE-Function of the 6DOF Rigid Rocket Model
 % State = ( x y z | u v w | p q r | q0 q1 q2 q3 | m | Ixx Iyy Izz )
 %
@@ -197,7 +197,7 @@ Cmqf = interp4_easy(A_datcom,M_datcom,B_datcom,H_datcom,CoeffsF.CMQ,alpha,M,beta
 Cnbf = interp4_easy(A_datcom,M_datcom,B_datcom,H_datcom,CoeffsF.CLNB,alpha,M,beta,-z);
 Cnrf = interp4_easy(A_datcom,M_datcom,B_datcom,H_datcom,CoeffsF.CLNR,alpha,M,beta,-z);
 Cnpf = interp4_easy(A_datcom,M_datcom,B_datcom,H_datcom,CoeffsF.CLNP,alpha,M,beta,-z);
-XCPf = - interp4_easy(A_datcom,M_datcom,B_datcom,H_datcom,CoeffsF.X_C_P,alpha,M,beta,-z);
+% XCPf = - interp4_easy(A_datcom,M_datcom,B_datcom,H_datcom,CoeffsF.X_C_P,alpha,M,beta,-z);
 
 %% CHOSING THE EMPTY CONDITION VALUE
 % interpolation of the coefficients with the value in the nearest condition of the Coeffs matrix
@@ -213,7 +213,7 @@ Cmqe = interp4_easy(A_datcom,M_datcom,B_datcom,H_datcom,CoeffsE.CMQ,alpha,M,beta
 Cnbe = interp4_easy(A_datcom,M_datcom,B_datcom,H_datcom,CoeffsE.CLNB,alpha,M,beta,-z);
 Cnre = interp4_easy(A_datcom,M_datcom,B_datcom,H_datcom,CoeffsE.CLNR,alpha,M,beta,-z);
 Cnpe = interp4_easy(A_datcom,M_datcom,B_datcom,H_datcom,CoeffsE.CLNP,alpha,M,beta,-z);
-XCPe = - interp4_easy(A_datcom,M_datcom,B_datcom,H_datcom,CoeffsE.X_C_P,alpha,M,beta,-z);
+% XCPe = - interp4_easy(A_datcom,M_datcom,B_datcom,H_datcom,CoeffsE.X_C_P,alpha,M,beta,-z);
 
 %% LINEAR INTERPOLATION BETWEEN THE TWO CONDITIONS
 % Computing the value of the aerodynamics coefficients at a certain time
@@ -231,7 +231,7 @@ if t < tb
     Cnb = t/tb*(Cnbe-Cnbf)+Cnbf;
     Cnr = t/tb*(Cnre-Cnrf)+Cnrf;
     Cnp = t/tb*(Cnpe-Cnpf)+Cnpf;
-    XCP_value = t/tb*(XCPe-XCPf)+XCPf;
+%     XCP_value = t/tb*(XCPe-XCPf)+XCPf;
 else
     CA = CAe;
     CYB = CYBe;
@@ -244,7 +244,7 @@ else
     Cnb = Cnbe;
     Cnr = Cnre;
     Cnp = Cnpe;
-    XCP_value = XCPe;
+%     XCP_value = XCPe;
 end
 
 if -z < settings.lrampa*sin(OMEGA)      % No torque on the Launch
@@ -260,7 +260,7 @@ if -z < settings.lrampa*sin(OMEGA)      % No torque on the Launch
     dq = 0;
     dr = 0;
     
-    XCP_value = NaN;
+%     XCP_value = NaN;
     
     
     if T < Fg                           % No velocity untill T = Fg
@@ -275,7 +275,7 @@ else
     qdyn = 0.5*rho*V_norm^2;        %[Pa] dynamics pressure
     qdynL_V = 0.5*rho*V_norm*S*C;   
     
-    X = qdyn*S*CA;                  %[N] x-body component of the aerodynamics force
+    X = 1.4*qdyn*S*CA;                  %[N] x-body component of the aerodynamics force
     Y = qdyn*S*CYB*beta;            %[N] y-body component of the aerodynamics force
     Z = qdyn*S*CNA*alpha;           %[N] z-body component of the aerodynamics force
     Fg = quatrotate(Q,[0 0 m*g])';  %[N] force due to the gravity in body frame

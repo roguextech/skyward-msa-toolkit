@@ -17,41 +17,40 @@ Skyward Experimental Rocketry | CRD Dept | crd@skywarder.eu
 email: mauro.defrancesco@skywarder.eu
 
 %}
-tic
-clear; close all; clc
+function [data, AMtime] = Auto_Matrices(datcom)
 
-%% States
-% State values in which the aerodynamic coefficients will be computed
-Mach = 0.05:0.05:1;
-Alpha = [-10 -7.5 -5 -2.5 -1.5 -1 -0.5 -0.1 0.1 0.5 1 1.5 2.5 5 7.5 10];
-Beta = [-0.1 0.1];
-Alt = 0:200:4000;
+tic
+
+%% recalling the variables
+Mach = datcom.s.Mach; 
+Alpha = datcom.s.Alpha;
+Beta = datcom.s.Beta;
+Alt = datcom.s.Alt;
+
+Chord1 = datcom.design.Chord1; 
+Chord2 = datcom.design.Chord2; 
+shape = datcom.design.shape;
+
+xcg = datcom.para.xcg;                  
+D = datcom.para.D;
+r = D/2;
+S = datcom.para.S;                      
+Lnose = datcom.para.Lnose;              
+Lcenter = datcom.para.Lcenter;          
+Npanel = datcom.para.Npanel;            
+Phif = datcom.para.Phif;                
+Ler = datcom.para.Ler;                            
+d = datcom.para.d;                                 
+zup_raw = datcom.para.zup_raw;                     
+Lmaxu_raw = datcom.para.Lmaxu_raw;                 
+C1Hratio = datcom.para.C1Hratio;  
+
 Nm = length(Mach);
 Na = length(Alpha);
 Nb = length(Beta);
 Nalt = length(Alt);
-
-
-%% Design Parameters
-% looping for various dimension of the fins [m]
-Chord1 = 0.24; N1 = length(Chord1);
-Chord2 = 0.12; N2 = length(Chord2);
-shape = 'rect';
-
-%% Fixed Parameters
-xcg = [1.7, 1.6];                               % [m] CG position [full, empty]
-D = 0.16;                                           % [m] rocket diameter
-r = D/2;                                            % [m] rocket radius
-S = r^2*pi;                                         % [m^2] cross section                         
-Lnose = 0.35;                                        % [m] nose length
-Lcenter = 2.15;                                     % [m] Lcenter : Centerbody length
-Npanel = 4;                                         % [m] number of fins
-Phif = [0 90 180 270];                              % [deg] Angle of each panel
-Ler = 0.003;                                        % [deg] Leading edge radius
-d = 0;                                              % [m] rocket tip-fin distance
-zup_raw = 0.0015;                                   % [m] fin semi-thickness 
-Lmaxu_raw = 0.006;                                  % [m] Fraction of chord from leading edge to max thickness
-C1Hratio = 2;                                       % [/] fin chord-heigth ratio
+N1 = length(Chord1);
+N2 = length(Chord2);
 
 %% datcom
 data = cell(N1, N2);
@@ -108,27 +107,41 @@ for i = 1:N1
             fprintf(fid, '%d., \r\n', Nm);
             %%%% Mach
             fprintf(fid, '  MACH = ');
-            for M = 1:11
-                fprintf(fid, '%.2f,',Mach(M));
+            if Nm > 11
+                for M = 1:11
+                    fprintf(fid, '%.2f,',Mach(M));
+                end
+                fprintf(fid,  ' \r\n MACH(12) = ');
+                for M = 12:Nm
+                    fprintf(fid, '%.2f',Mach(M));
+                    fprintf(fid, ',');
+                end
+            else
+                for M = 1:Nm
+                    fprintf(fid, '%.2f,',Mach(M));
+                end
             end
-            fprintf(fid,  ' \r\n MACH(12) = ');
-            for M = 12:Nm
-                fprintf(fid, '%.2f',Mach(M));
-                fprintf(fid, ',');
-            end
+            
             fprintf(fid, '\r\n');
             %%%% Nalpha
             fprintf(fid, '  NALPHA = ');
             fprintf(fid, '%d., \r\n', Na);
             %%%% Alpha
             fprintf(fid, '  ALPHA = ');
-            for a = 1:9
-                fprintf(fid, '%.1f,', Alpha(a));
+            if Na > 9 
+                for a = 1:9
+                    fprintf(fid, '%.1f,', Alpha(a));
+                end
+                fprintf(fid,  ' \r\n ALPHA(10) = ');
+                for a = 10:Na
+                    fprintf(fid, '%.1f,', Alpha(a));
+                end
+            else
+                for a = 1:Na
+                    fprintf(fid, '%.1f,', Alpha(a));
+                end
             end
-            fprintf(fid,  ' \r\n ALPHA(10) = ');
-            for a = 10:Na
-                fprintf(fid, '%.1f,', Alpha(a));
-            end
+                
             fprintf(fid, '$');
             
             %%%%%%%%%%%% Reference Quantities
@@ -277,7 +290,6 @@ end
 data = reshape(data, [N1*N2, 1]);
 data = data(~cellfun('isempty', data));
 delete('for003.dat', 'for004.dat', 'for005.dat', 'for006.dat', 'for009.dat',...
-    'for010.dat', 'for011.dat', 'for012.dat')
+    'for010.dat', 'for011.dat', 'for012.dat', 'full.mat', 'empty.mat')
 
-clearvars -except data
 AMtime = toc;
