@@ -156,6 +156,8 @@ if settings.plots
     
     parout.accelerations.body_acc = [du, dv, dw];
     
+    parout.velocities = [u, v, w];
+    
     parout.geo_cord.lat = lat;
     parout.geo_cord.lon = lon;
     

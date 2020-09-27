@@ -223,16 +223,20 @@ settings.wind.HourMax = 13;                         % [h] Maximum Hour of the da
 settings.wind.ww = 0;                               % [m/s] Vertical wind speed
 
 %%%%% Input wind
-settings.wind.input = true;
+settings.wind.input = false;
 % Wind is generated for every altitude interpolating with the coefficient defined below
+
+% first row: wind magnitude [m/s]
+% secon row: wind azimut angle (toward wind incoming direction) [deg]
+% third row: altitude
 
 settings.wind.input_ground = 7; %wind magnitude at the ground [m/s]
 settings.wind.input_alt = [0 100 600 750 900 1500 2500]; %altitude vector [m]
 settings.wind.input_mult = [0 0 10 15 20 30 30]; %percentage of increasing magnitude at each altitude
-settings.wind.input_azimut = [30 30 30 30 30 30 30]; %wind azimut angle at each altitude (toward wind incoming direction) [deg]
+settings.wind.input_azimut = [30 30 30 30 30 30 30]; %wind azimut angle (toward wind incoming direction) [deg]
 
 
-settings.wind.input_uncertainty = [1, 1];
+settings.wind.input_uncertainty = [30, 20];
 % settings.wind.input_uncertainty = [a,b];      wind uncertanties:
 % - a, wind magnitude percentage uncertanty: magn = magn *(1 +- a)
 % - b, wind direction band uncertanty: dir = dir 1 +- b
@@ -258,7 +262,7 @@ settings.wind.AzMax = (360)*pi/180;                   % [rad] Maximum Azimuth, u
 %% BALLISTIC SIMULATION
 % Set to True to run a ballistic (without drogues) simulation
 
-settings.ballistic = false;
+settings.ballistic = true;
 
 %% STOCHASTIC DETAILS
 % If N > 1 the stochastic routine is started

@@ -264,10 +264,9 @@ else   %%%% STOCHASTIC PLOTS (only if N>1)
     plot(LP(:, 2), LP(:, 1), '.r','MarkerSize', 11);
     plot(0,0,'*b','MarkerSize', 10);
     if settings.ballistic 
-        title('Landing Points in ballistic');
-    else   
-        title('Landing Points with 2nd drouge');
-    end
+        title('Atterraggio con secondo drogue');
+        
+        title('Landing P');
     xlabel('m')
     ylabel('m')
     axis image

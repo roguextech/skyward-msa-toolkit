@@ -20,7 +20,10 @@ email: adriano.filippo.inno@skywarder.eu
 Release date: 13/03/2018
 
 %}
-
+settings.wind.input_matr = [ (settings.wind.input_ground * (1 + settings.wind.input_mult/100))
+                             settings.wind.input_azimut
+                             settings.wind.input_alt ];
+                         
 magn = (1 + uncert(1)/100).*settings.wind.input_matr(1, :);
 dir = mod(180 + settings.wind.input_matr(2, :), 360);
 dir = dir + uncert(2);
