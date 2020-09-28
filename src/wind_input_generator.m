@@ -38,6 +38,10 @@ if h < 0
     h = 0;
 end
 
+if h > h_vect(end)
+    error('The current altitude of the missile is out of range of the settings.wind.input_alt variable, fix it in config.m ')
+end
+
 uw = interp1(h_vect, uw_vect, h);
 vw = interp1(h_vect, vw_vect, h);
 ww = 0; 
