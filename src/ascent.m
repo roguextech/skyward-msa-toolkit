@@ -296,7 +296,7 @@ end
 if -z < settings.lrampa*sin(OMEGA)      % No torque on the Launch
     
     Fg = m*g*sin(OMEGA);                % [N] force due to the gravity
-    X = 0.5*rho*V_norm^2*S*CA;
+    X = 1.4*0.5*rho*V_norm^2*S*CA;
     F = -Fg +T -X;
     du = F/m;
     

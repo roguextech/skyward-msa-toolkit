@@ -114,7 +114,8 @@ if t<tb
     Ixxdot = -dI(1);
     Iyydot = -dI(2);
     Izzdot = -dI(3);
-    T = interp1(settings.motor.exp_time, settings.motor.exp_thrust, t);
+    [~, ind] = unique(settings.motor.exp_time);
+    T = interp1(settings.motor.exp_time(ind), settings.motor.exp_thrust(ind), t);
     
 else             % for t >= tb the fligth condition is the empty one(no interpolation needed)
     mdot = 0;
@@ -256,7 +257,7 @@ end
 if -z < settings.lrampa*sin(OMEGA)      % No torque on the Launch
     
     Fg = m*g*sin(OMEGA);                % [N] force due to the gravity
-    X = 0.5*rho*V_norm^2*S*CA;
+    X = 1.4*0.5*rho*V_norm^2*S*CA;
     F = -Fg +T -X;
     du = F/m;
     
@@ -285,7 +286,7 @@ else
     qdyn = 0.5*rho*V_norm^2;        %[Pa] dynamics pressure
     qdynL_V = 0.5*rho*V_norm*S*C;   
     
-    X = qdyn*S*CA;                  %[N] x-body component of the aerodynamics force
+    X = 1.4*qdyn*S*CA;              %[N] x-body component of the aerodynamics force + penalty on drag force 
     Y = qdyn*S*CYB*beta;            %[N] y-body component of the aerodynamics force
     Z = qdyn*S*CNA*alpha;           %[N] z-body component of the aerodynamics force
     Fg = quatrotate(Q,[0 0 m*g])';  %[N] force due to the gravity in body frame
