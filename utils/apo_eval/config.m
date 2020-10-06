@@ -8,7 +8,7 @@ settings.lrampa = 4.9;                %[m] LaunchPad route (launchpad length-dis
 % launchpad directions
 % for a single run the maximum and the minimum value of the following
 % angles must be the same.
-settings.OMEGA = 85*pi/180;        %[rad] Minimum Elevation Angle, user input in degrees (ex. 80)
+settings.OMEGA = 84*pi/180;        %[rad] Minimum Elevation Angle, user input in degrees (ex. 80)
 settings.PHI = 0*pi/180;       %[rad] Maximum Azimuth Angle from North Direction, user input in degrees (ex. 90)
 
 %% ENGINE DETAILS
@@ -20,7 +20,7 @@ motors = load(filename_full,'MotorsByItot');
 motors = motors.MotorsByItot;
 
 % save in settings the acceptable motors 
-settings.Itot_range = [7400 7900];
+settings.Itot_range = [7900 9000];
 j=1;
 for i=1:size(motors,2)
     

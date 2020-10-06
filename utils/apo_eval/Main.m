@@ -9,7 +9,7 @@ clc
 run config.m
 
 % data of the analyis 
-m0 = 20:1:25;
+m0 = 23:1:27;
 n_mass = length(m0);
 n_motors = size(settings.motors,2);
 
