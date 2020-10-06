@@ -1,4 +1,4 @@
-function data = RocketGeometryGUI
+% function data = RocketGeometryGUI
 % Rocket and Fins geometry GUI to develop DATCOM file
 %
 % How to use: 

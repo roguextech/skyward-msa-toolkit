@@ -33,7 +33,7 @@ settings.PHIsigma = 0*pi/180;         % Stocasthic simulation only
 
 %% ENGINE DETAILS
 % load motors data 
-DATA_PATH = '/Users/teo/Desktop/skyward/skyward-matlab-rocket-simulator/data/';
+DATA_PATH = '../data/';
 filename_full = strcat(DATA_PATH,'MotorsList.mat');
 motors = load(filename_full,'MotorsByName');
 motors = motors.MotorsByName;
@@ -97,7 +97,7 @@ settings.Izze = 1.712304085;                    % [kg*m^2] Inertia to z-axis
 % Note: All the parameters (AoA,Betas,Altitudes,Machs) must be the same for
 % empty and full configuration
 
-DATA_PATH = '../data/';
+% DATA_PATH = '../data/';
 
 % Coefficients in full configuration
 filename_full = strcat(DATA_PATH,'full.mat');
@@ -118,6 +118,7 @@ settings.Altitudes = s.State.Altitudes';
 settings.Machs = s.State.Machs';
 clear('s');
 
+settings.control = '0%';                                               % aerobrakes 0% 50% or 100% opened
 
 %% PARACHUTES DETAILS
 % parachute 1
