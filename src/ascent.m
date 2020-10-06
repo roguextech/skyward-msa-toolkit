@@ -339,9 +339,14 @@ else
     % first computed in the body-frame reference system
     
     qdyn = 0.5*rho*V_norm^2;        %[Pa] dynamics pressure
-    qdynL_V = 0.5*rho*V_norm*S*C;   
+    qdynL_V = 0.5*rho*V_norm*S*C; 
     
-    X = 1.4*qdyn*S*CA;              %[N] x-body component of the aerodynamics force
+    if c == 1
+        X = 1.4*qdyn*S*CA;              %[N] x-body component of the aerodynamics force
+    else
+        X = 1.2*qdyn*S*CA;              %[N] x-body component of the aerodynamics force
+    end
+        
     Y = qdyn*S*CYB*beta;            %[N] y-body component of the aerodynamics force
     Z = qdyn*S*CNA*alpha;           %[N] z-body component of the aerodynamics force
     Fg = quatrotate(Q,[0 0 m*g])';  %[N] force due to the gravity in body frame

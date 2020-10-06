@@ -38,7 +38,7 @@ filename_full = strcat(DATA_PATH,'MotorsList.mat');
 motors = load(filename_full,'MotorsByName');
 motors = motors.MotorsByName;
 
-name = 'M2020';
+name = 'M2245';
 settings.motor.exp_time = motors.(name).t;
 settings.motor.exp_thrust = motors.(name).T;
 settings.mp = motors.(name).mp;                                            % [kg]   Propellant Mass                                                
@@ -118,7 +118,7 @@ settings.Altitudes = s.State.Altitudes';
 settings.Machs = s.State.Machs';
 clear('s');
 
-settings.control = '0%';                                               % aerobrakes 0% 50% or 100% opened
+settings.control = '50%';                                          % aerobrakes 0% 50% or 100% opened
 
 %% PARACHUTES DETAILS
 % parachute 1
