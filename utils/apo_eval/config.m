@@ -20,7 +20,7 @@ motors = load(filename_full,'MotorsByItot');
 motors = motors.MotorsByItot;
 
 % save in settings the acceptable motors 
-settings.Itot_range = [7900 9000];
+settings.Itot_range = [8300 10000];
 j=1;
 for i=1:size(motors,2)
     
@@ -37,9 +37,9 @@ clear('motors' , 'i' , 'j')
 % This parameters should be the same parameters set up in MISSILE DATCOM
 % simulation.
 
-settings.C = 0.160;                          % [m]      Caliber (Fuselage Diameter)
+settings.C = 0.150;                          % [m]      Caliber (Fuselage Diameter)
 settings.S = pi*(settings.C/2)^2;            % [m^2]    Cross-sectional Surface
-settings.L = 2.50;                           % [m]      Rocket length
+settings.L = 3;                           % [m]      Rocket length
 
 %% MASS GEOMERTY DETAILS
 % x-axis: along the fuselage
