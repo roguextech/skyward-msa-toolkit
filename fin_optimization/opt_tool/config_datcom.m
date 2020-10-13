@@ -28,16 +28,16 @@ datcom.s.Alt = 0:200:4000;
 
 %% Design Parameters
 % looping for various dimension of the fins [m]
-datcom.design.Chord1 = 0.17:0.01:0.2; 
-datcom.design.Chord2 = 0.08:0.01:0.1; 
+datcom.design.Chord1 = 0.3; 
+datcom.design.Chord2 = 0.15; 
 datcom.design.shape = 'rect';
 
 %% Fixed Parameters
-datcom.para.xcg = [1.7, 1.6];                       % [m] CG position [full, empty]
+datcom.para.xcg = [2.2, 2.1];                       % [m] CG position [full, empty]
 datcom.para.D = settings.C;                         % [m] rocket diameter
 datcom.para.S = settings.S;                         % [m^2] rocket cross section
 datcom.para.Lnose = 0.5;                            % [m] nose length
-datcom.para.Lcenter = 2.15;                         % [m] Lcenter : Centerbody length
+datcom.para.Lcenter = 2.5;                          % [m] Lcenter : Centerbody length
 datcom.para.Npanel = 4;                             % [m] number of fins
 datcom.para.Phif = [0 90 180 270];                  % [deg] Angle of each panel
 datcom.para.Ler = 0.003;                            % [deg] Leading edge radius

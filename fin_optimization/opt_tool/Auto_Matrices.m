@@ -289,7 +289,7 @@ end
 
 data = reshape(data, [N1*N2, 1]);
 data = data(~cellfun('isempty', data));
-delete('for003.dat', 'for004.dat', 'for005.dat', 'for006.dat', 'for009.dat',...
-    'for010.dat', 'for011.dat', 'for012.dat', 'full.mat', 'empty.mat')
+% delete('for003.dat', 'for004.dat', 'for005.dat', 'for006.dat', 'for009.dat',...
+%     'for010.dat', 'for011.dat', 'for012.dat', 'full.mat', 'empty.mat')
 
 AMtime = toc;
