@@ -168,9 +168,9 @@ end
 
 %% AERODYNAMICS ANGLES
 
-if not(ur < 1e-1 || V_norm < 1e-3)
+if not(ur < 1e-9 || V_norm < 1e-9)
     alpha = atan(wr/ur);
-    beta = asin(vr/V_norm);
+    beta = atan(vr/ur);             % beta = asin(vr/V_norm); is the classical notation, Datcom uses this one though. 
 else
     alpha = 0;
     beta = 0;
@@ -178,8 +178,6 @@ end
 
 alpha_value = alpha;
 beta_value = beta;
-
-
 
 %% DATCOM COEFFICIENTS
 
