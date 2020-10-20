@@ -21,11 +21,12 @@ if settings.stoch.N == 1
     end
     
     %% ASCENT PLOTS
-    
+    %%% Stability Margin
     figure('Name','Stability Margin - ascent Phase','NumberTitle','off');
     plot(data_ascent.integration.t, -data_ascent.coeff.XCP,'.'), title('Stability margin vs time'), grid on;
     xlabel('Time [s]'); ylabel('S.M.[/]')
     
+    %%% Aero Forces
     figure('Name','Forces - ascent Phase','NumberTitle','off');
     subplot(2,2,1)
     plot(data_ascent.integration.t, data_ascent.forces.T, '.'), grid on;
@@ -43,6 +44,7 @@ if settings.stoch.N == 1
     plot(data_ascent.integration.t, data_ascent.forces.AeroDyn_Forces(:,3)), grid on;
     xlabel('Time [s]'); ylabel('Z-body force [N]')
     
+    %%% Aerodynamics Angles
     figure('Name','Aerodynamics Angles - ascent Ahase','NumberTitle','off');
     subplot(2,1,1)
     plot(data_ascent.integration.t, data_ascent.interp.alpha*180/pi), grid on;
@@ -52,10 +54,24 @@ if settings.stoch.N == 1
     plot(data_ascent.integration.t, data_ascent.interp.beta*180/pi), grid on;
     xlabel('Time [s]'); ylabel('beta [deg]')
     
+    %%% Cd
     figure('Name','Drag Coefficient - ascent Phase','NumberTitle','off');
     plot(data_ascent.integration.t, data_ascent.coeff.CA), title('Drag Coefficient vs time'), grid on;
     xlabel('Time [s]'); ylabel('Drag Coeff CD [/]')
     
+    %%% Angles(body)
+    figure('Name', 'Eulerian Angles - ascent Phase', 'NumberTitle', 'off');
+    subplot(3,1,1)
+    plot(data_ascent.integration.t, data_ascent.state.Y(:, 19)*180/pi)
+    grid on, xlabel('time [s]'), ylabel('pitch angle [deg]');
+    
+    subplot(3,1,2)
+    plot(data_ascent.integration.t, data_ascent.state.Y(:, 20)*180/pi)
+    grid on, xlabel('time [s]'), ylabel('yaw angle [deg]');
+    
+    subplot(3,1,3)
+    plot(data_ascent.integration.t, data_ascent.state.Y(:, 18)*180/pi)
+    grid on, xlabel('time [s]'), ylabel('roll angle [deg]')
     
     %% 3D TRAJECTORY
     figure('Name','3D Trajectory - All Flight','NumberTitle','off');
@@ -223,33 +239,7 @@ if settings.stoch.N == 1
     end
     
     plot(0, 0, 'r.','markersize',14);
-    plot(Yf(end, 2), -Yf(end, 3), 'rx','markersize',7);
-    
-    %% EULERIAN ANGLES (subplotted)
-    % pre-allocation
-    pitch_angle = zeros(Na, 1); yaw_angle = zeros(Na, 1); roll_angle = zeros(Na, 1);
-    
-    % retriving the angle from the state
-    for k = 2:Na
-        pitch_angle(k) = pitch_angle(k-1) + (Ya(k, 8) + Ya(k-1, 8))/2*180/pi*(Ta(k) - Ta(k-1));
-        yaw_angle(k) = yaw_angle(k-1) + (Ya(k, 9) + Ya(k-1, 9))/2*180/pi*(Ta(k) - Ta(k-1));
-        roll_angle(k) = roll_angle(k-1) + (Ya(k, 7) + Ya(k-1, 7))/2*180/pi*(Ta(k) - Ta(k-1));
-    end
-    
-    figure('Name', 'Eulerian Angles - ascent Phase', 'NumberTitle', 'off');
-    subplot(3,1,1)
-    plot(Ta, pitch_angle + settings.OMEGAmin*180/pi)
-    grid on, xlabel('time [s]'), ylabel('pitch angle [deg]');
-    
-    subplot(3,1,2)
-    plot(Ta, yaw_angle)
-    grid on, xlabel('time [s]'), ylabel('yaw angle [deg]');
-    
-    subplot(3,1,3)
-    plot(Ta, roll_angle)
-    grid on, xlabel('time [s]'), ylabel('roll angle [deg]')
-    
-    
+    plot(Yf(end, 2), -Yf(end, 3), 'rx','markersize',7);  
     
 else   %%%% STOCHASTIC PLOTS (only if N>1)
     

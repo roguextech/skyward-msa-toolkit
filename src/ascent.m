@@ -5,14 +5,16 @@ ASCENT - ode function of the 6DOF Rigid Rocket Model
 
 INPUTS:      
             - t, integration time;
-            - Y, state vector, [ x y z | u v w | p q r | q0 q1 q2 q3 | m | Ixx Iyy Izz ]:
+            - Y, state vector, [ x y z | u v w | p q r | q0 q1 q2 q3 | m | Ixx Iyy Izz | thetax thetay thetaz]:
 
                                 * (x y z), NED{north, east, down} horizontal frame; 
                                 * (u v w), body frame velocities;
                                 * (p q r), body frame angular rates;
+                                * (thetax thetay thetaz), body angles;
                                 * m , total mass;
                                 * (Ixx Iyy Izz), Inertias;
                                 * (q0 q1 q2 q3), attitude unit quaternion.
+ 
 
             - settings, rocket data structure;
             - uw, wind component along x;
@@ -390,6 +392,7 @@ dY(14) = mdot;
 dY(15) = Ixxdot;
 dY(16) = Iyydot;
 dY(17) = Izzdot;
+dY(18:20) = [p q r];
 dY = dY';
 
 %% SAVING THE QUANTITIES FOR THE PLOTS
