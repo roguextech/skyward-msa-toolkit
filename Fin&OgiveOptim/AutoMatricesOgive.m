@@ -40,8 +40,9 @@ C1 = datcom.design.Chord1;
 C2 = datcom.design.Chord2;
 Lnose = datcom.design.Lnose;
 Pow = datcom.design.NosePower;
+OgType = datcom.design.OgType;
 H = C1/C1Hratio;
-OgType = [repmat("POWER", [1, length(Pow)]), 'KARMAN', 'HAACK', 'OGIVE'];
+
 
 Nm = length(Mach);
 Na = length(Alpha);
@@ -54,22 +55,23 @@ Nt = length(OgType);
 data = cell(No, Nt);
 mass_condition = {'full', 'empty'};
 
-Xle1 = Lcenter + Lnose - d - C1;
 diffC = C1-C2;
 
-switch shape
-    case 'rect'
-        Xle2 = Lcenter + Lnose - d - C2;
-        
-    case 'iso'
-        Xle2 = Lcenter + Lnose - d - diffC/2;
-end
+
 
 %%% Defining Fin Section
 Zup = [zup_raw/C1, zup_raw/C2];
 Lmaxu = [Lmaxu_raw/C1, Lmaxu_raw/C2];
 Lflatu = [(C1 - 2*Lmaxu_raw)/C1, (C2 - 2*Lmaxu_raw)/C2];
 for i = 1:No
+    Xle1 = Lcenter + Lnose(i) - d - C1;
+    switch shape
+        case 'rect'
+            Xle2 = Lcenter + Lnose(i) - d - C2;
+            
+        case 'iso'
+            Xle2 = Lcenter + Lnose(i) - d - diffC/2;
+    end
     for j = 1:Nt
         for k = 1:2
             
@@ -280,7 +282,7 @@ for i = 1:No
             if k == 1
                 data{i, j}.Lnose = Lnose(i);
                 data{i, j}.Type = OgType(j);
-                if j <= 3
+                if j <= length(Pow)
                     data{i, j}.Power = Pow(j);
                 end
             end

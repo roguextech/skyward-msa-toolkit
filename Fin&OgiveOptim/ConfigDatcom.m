@@ -27,15 +27,21 @@ datcom.s.Beta = [-0.1 0.1];
 datcom.s.Alt = 0:200:4000;
 
 %% Design Parameters
-% looping for various dimension of the fins [m]
-datcom.design.Chord1 = 0.3:0.01:0.31;               % [m] chord fixed length
-datcom.design.Chord2 = 0.15:0.01:0.16;              % [m] chord free length 
+% fins
+datcom.design.Chord1 = 0.30:0.01:0.31;                         % [m] chord fixed length
+datcom.design.Chord2 = 0.15:0.01:0.16;                         % [m] chord free length 
 datcom.design.shape = 'rect';
-datcom.design.Lnose = 0.3:0.05:0.5;                  % [m] nose length
-datcom.design.NosePower = [1/3, 1/2, 3/4]; 
+% ogive
+datcom.design.Lnose = 0.25:0.01:0.35;                % [m] nose length
+datcom.design.NosePower = [];                        % [/] Power coefficient of the NoseCone, put a empty vector to avoid power ogive.
+Karman = true; 
+Haack = false; 
+Ogive = false; 
+OtherTypes = ["KARMAN", 'HAACK', 'OGIVE']; OtherTypes = OtherTypes([Karman, Haack, Ogive]);
+datcom.design.OgType = [repmat("POWER", [1, length(datcom.design.NosePower)]), OtherTypes];
 
 %% Fixed Parameters
-datcom.para.xcg = [2, 1.9];                       % [m] CG position [full, empty]
+datcom.para.xcg = [2, 1.9];                         % [m] CG position [full, empty]
 datcom.para.D = settings.C;                         % [m] rocket diameter
 datcom.para.S = settings.S;                         % [m^2] rocket cross section
 datcom.para.Lcenter = 2.5;                          % [m] Lcenter : Centerbody length
