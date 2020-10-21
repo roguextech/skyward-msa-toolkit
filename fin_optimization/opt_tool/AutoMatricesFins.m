@@ -17,7 +17,7 @@ Skyward Experimental Rocketry | CRD Dept | crd@skywarder.eu
 email: mauro.defrancesco@skywarder.eu
 
 %}
-function [data, AMtime] = Auto_Matrices(datcom)
+function [data, AMtime] = AutoMatricesFins(datcom, print)
 
 tic
 
@@ -27,6 +27,13 @@ Alpha = datcom.s.Alpha;
 Beta = datcom.s.Beta;
 Alt = datcom.s.Alt;
 
+Nn = numel(datcom.design.Lnose);
+if Nn ~= 1
+    Lnose = datcom.design.Lnose(ceil(Nn/2));
+else
+    Lnose = datcom.design.Lnose;
+end
+
 Chord1 = datcom.design.Chord1; 
 Chord2 = datcom.design.Chord2; 
 shape = datcom.design.shape;
@@ -34,8 +41,8 @@ shape = datcom.design.shape;
 xcg = datcom.para.xcg;                  
 D = datcom.para.D;
 r = D/2;
-S = datcom.para.S;                      
-Lnose = datcom.para.Lnose;              
+S = datcom.para.S; 
+
 Lcenter = datcom.para.Lcenter;          
 Npanel = datcom.para.Npanel;            
 Phif = datcom.para.Phif;                
@@ -53,8 +60,10 @@ N1 = length(Chord1);
 N2 = length(Chord2);
 
 %% datcom
-data = cell(N1, N2);
+data = cell(N1, N2); 
 mass_condition = {'full', 'empty'};
+
+
 for i = 1:N1
     C1 = Chord1(i);
     H = C1/C1Hratio;
@@ -83,6 +92,13 @@ for i = 1:N1
         Lflatu = [(C1 - 2*Lmaxu_raw)/C1, (C2 - 2*Lmaxu_raw)/C2];
         
         for k = 1:2
+            if print
+                clc
+                perc = round((i-1)/N1*100 + (j-1)/N2*(100/N1) + (k-1)/2*(100/N1/N2));
+                fprintf('----------------- Fins Aerodynamics Prediction ----------------- \n')
+                fprintf(' Progress %d %% \n', perc);
+            end
+            
             XCG = xcg(k);
             
             %%% Creating for005.dat file from previous data
@@ -254,9 +270,9 @@ for i = 1:N1
             
             %%% Datcom and parsing
             if ismac
-                system('./datcom for005.dat' );
+                [~,~] = system('./datcom for005.dat' );
             else
-                system('datcom.exe for005.dat' );
+                [~,~] = system('datcom.exe for005.dat' );
             end
             
             value = 0;
@@ -264,14 +280,14 @@ for i = 1:N1
                 value = exist('for006.dat','file');
                 pause(0.01);
             end
-            clc
+%             clc
             if k == 1 
                 mat_name = 'full';
             else
                 mat_name = 'empty';
             end
             
-            [Coeffs, State] = datcom_parser(mat_name);
+            [Coeffs, State] = DatcomParser(mat_name);
             
             data{i, j}.(mass_condition{k}).Coeffs = Coeffs;
             data{i, j}.(mass_condition{k}).State = State;
@@ -286,10 +302,10 @@ for i = 1:N1
     end
     
 end
-
+clc
 data = reshape(data, [N1*N2, 1]);
 data = data(~cellfun('isempty', data));
-% delete('for003.dat', 'for004.dat', 'for005.dat', 'for006.dat', 'for009.dat',...
-%     'for010.dat', 'for011.dat', 'for012.dat', 'full.mat', 'empty.mat')
+delete('for003.dat', 'for004.dat', 'for005.dat', 'for006.dat', 'for009.dat',...
+    'for010.dat', 'for011.dat', 'for012.dat', 'full.mat', 'empty.mat')
 
 AMtime = toc;

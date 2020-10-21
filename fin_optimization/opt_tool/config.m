@@ -31,23 +31,27 @@ settings.OMEGA = 90*pi/180;         %[rad] Minimum Elevation Angle, user input i
 settings.PHI = 0*pi/180;            %[rad] Maximum Azimuth Angle from North Direction, user input in degrees (ex. 90)
 
 %% ENGINE DETAILS
-%%%%%% Cesaroni 7545M1590-P
-settings.motor.exp_time =   [0 0.004  0.019  0.063  0.153  0.182  0.247  0.616  1.028 2.111  2.551  2.635  2.796  3      3.349 3.541  3.5870];
-settings.motor.exp_thrust = [0 556.85 1690.3 2359.2 2339.4 2570.1 2471.2 2497.6 2547  2316.4 2273.5 2253.8 1696.9 1472.9 247.1 108.73 0];
+load('MotorsList.mat'); motors = MotorsByName;
+name = 'M2020';
+%name = 'M1890';
+% name = 'M1800';
+settings.motor.exp_time = motors.(name).t;
+settings.motor.exp_thrust = motors.(name).T;
+settings.mp = motors.(name).mp;                                            % [kg]   Propellant Mass                                                
+settings.tb = motors.(name).t(end) ;                                                     % [s]    Burning time
+settings.mfr = settings.mp/settings.tb;                                               % [kg/s] Mass Flow Rate
+settings.ms = 21;                                                   % [kg]   Total Mass
+settings.m0 = settings.ms + settings.mp;                            % [kg]   Structural Mass
+settings.mnc = 0.400;                                               % [kg]   Nosecone Mass
 
-settings.mp = 3.457;                                                 % [kg]   Propellant Mass                                                
-settings.mnc = 0.500;                                               % [kg]   Nosecone Mass
-settings.tb = settings.motor.exp_time(end);                         % [s]    Burning time
-settings.mfr = settings.mp/settings.tb;                             % [kg/s] Mass Flow Rate
-settings.m0 = 20;                                                   % [kg]   Total Mass 
-settings.ms = settings.m0 - settings.mp;                            % [kg]   Structural Mass
+clear ('motors','name')
 
 
 %% GEOMETRY DETAILS
 % This parameters should be the same parameters set up in MISSILE DATCOM
 % simulation.
 
-settings.C = 0.16;                          % [m]      Caliber (Fuselage Diameter)
+settings.C = 0.15;                          % [m]      Caliber (Fuselage Diameter)
 settings.S = pi*settings.C^2/4;             % [m^2]    Cross-sectional Surface
 
 %% MASS GEOMERTY DETAILS
@@ -67,8 +71,8 @@ settings.Izze = 1.712304085;                    % [kg*m^2] Inertia to z-axis
 
 %% INTEGRATION OPTIONS
 settings.ode.final_time =  2000;                                                % [s] Final integration time
-settings.ode.optionsasc = odeset('Events', @event_apogee,'InitialStep',1);      %ODE options for ascend
-settings.ode.optionspad = odeset('Events', @event_pad);                         %ODE options for ascend
+settings.ode.optionsasc = odeset('Events', @EventApogee,'InitialStep',1);      %ODE options for ascend
+settings.ode.optionspad = odeset('Events', @EventPad);                         %ODE options for ascend
 
 %% Random wind model
 % Wind is generated randomly from the minimum to the maximum parameters which defines the wind.
@@ -84,6 +88,3 @@ settings.wind.Az = (180)*pi/180;          % [rad] Azimuth, user input in degrees
 
 %% Optimization Choice
 settings.cal_min = 1;                    % minum stability margin required
-
-%% XCP plot
-settings.plot = true;

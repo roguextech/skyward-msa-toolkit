@@ -1,4 +1,4 @@
-function [Coeffs, State] = datcom_parser(mat_name)
+function [Coeffs, State] = DatcomParser(mat_name)
 
 linestring = fileread('for006.dat');
 

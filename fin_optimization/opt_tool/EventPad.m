@@ -1,4 +1,4 @@
-function [value, isterminal, direction] = event_pad(~, Y, settings, varargin)
+function [value, isterminal, direction] = EventPad(~, Y, settings, varargin)
 % Event function to stop simulation at apogee
 
 % Author: Ruben Di Battista

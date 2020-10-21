@@ -1,4 +1,4 @@
-function dY = ascent(t,Y,settings,uw,vw,ww)
+function dY = Ascent(t,Y,settings,uw,vw,ww)
 % ODE-Function of the 6DOF Rigid Rocket Model
 % State = ( x y z | u v w | p q r | q0 q1 q2 q3 | m | Ixx Iyy Izz )
 %
@@ -125,9 +125,9 @@ end
 
 %% AERODYNAMICS ANGLES
 
-if not(ur < 1e-1 || V_norm < 1e-3)
+if not(ur < 1e-9)
     alpha = atan(wr/ur);
-    beta = asin(vr/V_norm);
+    beta = atan(vr/ur);
 else
     alpha = 0;
     beta = 0;

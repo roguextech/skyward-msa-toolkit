@@ -1,4 +1,4 @@
-function apogee = run_sim(settings)
+function apogee = RunSim(settings)
 
 % Author: Ruben Di Battista
 % Skyward Experimental Rocketry | CRD Dept | crd@skywarder.eu
@@ -19,7 +19,7 @@ Q0 = angle2quat(settings.PHI, settings.OMEGA, 0*pi/180,'ZYX')';
 
 %% WIND GENERATION
 
-[uw, vw, ww, ~] = wind_const_generator(settings.wind.Az, settings.wind.Mag);
+[uw, vw, ww, ~] = WindConstGenerator(settings.wind.Az, settings.wind.Mag);
 tf = settings.ode.final_time;
 
 %% ASCENT
@@ -27,7 +27,7 @@ X0 = [0 0 0]';
 V0 = [0 0 0]';
 W0 = [0 0 0]';
 X0a = [X0; V0; W0; Q0; settings.m0; settings.Ixxf; settings.Iyyf; settings.Izzf];
-[~,Ya] = ode113(@ascent, [0, tf], X0a, settings.ode.optionsasc, settings, uw, vw, ww);
+[~,Ya] = ode113(@Ascent, [0, tf], X0a, settings.ode.optionsasc, settings, uw, vw, ww);
 
 %% CALCULATE OUTPUT QUANTITIES
 

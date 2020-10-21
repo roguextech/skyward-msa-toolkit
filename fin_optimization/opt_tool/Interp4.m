@@ -1,4 +1,4 @@
-function [V] = interp4_easy(X1,X2,X3,X4,TABLE,x1,x2,x3,x4)
+function [V] = Interp4(X1,X2,X3,X4,TABLE,x1,x2,x3,x4)
 % interp4_easy:
 % This function interpolate with nearest-neighbor method a R4->R function
 % F(x1...x4), given a [NxMxLxI] Matrix that discretize the function
