@@ -57,8 +57,6 @@ mass_condition = {'full', 'empty'};
 
 diffC = C1-C2;
 
-
-
 %%% Defining Fin Section
 Zup = [zup_raw/C1, zup_raw/C2];
 Lmaxu = [Lmaxu_raw/C1, Lmaxu_raw/C2];
@@ -71,6 +69,9 @@ for i = 1:No
             
         case 'iso'
             Xle2 = Lcenter + Lnose(i) - d - diffC/2;
+            
+        case 'parall'
+            Xle2 = Lcenter + Lnose(i) - d;
     end
     for j = 1:Nt
         for k = 1:2
