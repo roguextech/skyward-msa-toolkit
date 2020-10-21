@@ -280,7 +280,7 @@ for i = 1:N1
                 value = exist('for006.dat','file');
                 pause(0.01);
             end
-%             clc
+
             if k == 1 
                 mat_name = 'full';
             else
@@ -302,7 +302,7 @@ for i = 1:N1
     end
     
 end
-clc
+
 data = reshape(data, [N1*N2, 1]);
 data = data(~cellfun('isempty', data));
 delete('for003.dat', 'for004.dat', 'for005.dat', 'for006.dat', 'for009.dat',...

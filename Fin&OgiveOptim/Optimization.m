@@ -55,16 +55,16 @@ ApogeeFins = zeros(n, 1);
 XCP_pad = zeros(n, 1);
 
 for i = 1:n
-    clc
-    fprintf('----------------- Fins Aerodynamics Prediction ----------------- \n')
-    fprintf(' Progress %d %% \n\n', 100);
-    fprintf('-----------------       Fins Simulation         ----------------- \n')
-    fprintf(' Progress %d %% \n\n', floor(i*100/n));
     data_ith = dataFins{i};
     xcpf = -DataPad{i}.full.Coeffs.X_C_P(2);
     xcpe = -DataPad{i}.empty.Coeffs.X_C_P(2);
     XCP_pad(i) = Tpad(end)/settings.tb*(xcpe - xcpf) + xcpf;
     if XCP_pad(i) > settings.cal_min
+        clc
+        fprintf('----------------- Fins Aerodynamics Prediction ----------------- \n')
+        fprintf(' Progress %d %% \n\n', 100);
+        fprintf('-----------------       Fins Simulation         ----------------- \n')
+        fprintf(' Progress %d %% \n\n', floor(i*100/n));
         [settings] = ManageData(data_ith, settings);
         ApogeeFins(i) = RunSim(settings);
     end
