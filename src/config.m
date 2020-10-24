@@ -46,7 +46,7 @@ settings.motor.exp_thrust = motors.(name).T;
 settings.mp = motors.(name).mp;                                            % [kg]   Propellant Mass                                                
 settings.tb = motors.(name).t(end) ;                                                     % [s]    Burning time
 settings.mfr = settings.mp/settings.tb;                                               % [kg/s] Mass Flow Rate
-settings.ms = 21.05;                                                   % [kg]   Total Mass
+settings.ms = 21;                                                   % [kg]   Total Mass
 settings.m0 = settings.ms + settings.mp;                            % [kg]   Structural Mass
 settings.mnc = 0.400;                                               % [kg]   Nosecone Mass
 
