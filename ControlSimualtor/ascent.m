@@ -132,9 +132,7 @@ g = 9.80655;                 % [N/kg] module of gravitational field at zero
 tb = settings.tb;            % [s]     Burning Time
 mfr = settings.mfr;          % [kg/s]  Mass Flow Rate
 
-if settings.stoch.N == 1
-    OMEGA = settings.OMEGA;      % [rad] Elevation Angle in the launch pad
-end
+OMEGA = settings.OMEGA;      % [rad] Elevation Angle in the launch pad
 
 % inertias for full configuration (with all the propellant embarqued) obtained with CAD's
 Ixxf = settings.Ixxf;        % [kg*m^2] Inertia to x-axis
