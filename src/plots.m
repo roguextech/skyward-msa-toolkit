@@ -134,9 +134,15 @@ if settings.stoch.N == 1
     %% HORIZONTAL-FRAME VELOCITIES(subplotted)
     figure('Name','Horizontal Frame Velocities - All Flight','NumberTitle','off');
     
+    % Rotate velocities 
+    if not(settings.ballistic)
+        Vhframe = [quatrotate(quatconj(Ya(:, 10:13)), Ya(:, 4:6)); Yf(Na + 1:end, 4:6)];
+    else
+        Vhframe = [quatrotate(quatconj(Ya(:, 10:13)), Ya(:, 4:6)); quatrotate(quatconj(Yf(Na + 1:end, 10:13)),Yf(Na + 1:end, 4:6))];
+    end 
+        
     % x axis
     subplot(3,1,1);
-    Vhframe = [quatrotate(quatconj(Ya(:, 10:13)), Ya(:, 4:6)); Yf(Na + 1:end, 4:6)];
     plot(Tf, Vhframe(:, 1)), hold on, grid on, xlabel('Time[s]'), ylabel('Velocity-x [m/s]');
     
     h = zeros(Np, 1);
