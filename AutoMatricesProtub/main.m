@@ -2,16 +2,6 @@
 CONFIG - This script sets up all the parameters for missile Datcom
 All the parameters are stored in the "datcom" structure.
 
-Author: Ruben Di Battista
-Skyward Experimental Rocketry | CRD Dept | crd@skywarder.eu
-email: ruben.dibattista@skywarder.eu
-Website: http://www.skywarder.eu
-License: 2-clause BSD
-
-Author: Francesco Colombi
-Skyward Experimental Rocketry | CRD Dept | crd@skywarder.eu
-email: francesco.colombi@skywarder.eu
-
 Author: Adriano Filippo Inno
 Skyward Experimental Rocketry | CRD Dept | crd@skywarder.eu
 email: adriano.filippo.inno@skywarder.eu
@@ -30,13 +20,13 @@ datcom.s.Alt = 0:500:4000;
 % looping for various dimension of the fins [m]
 datcom.design.Chord1 = 0.3; 
 datcom.design.Chord2 = 0.15; 
-datcom.design.shape = 'rect';
+datcom.design.shape = 'parall';
 
 %% Fixed Parameters
 datcom.para.xcg = [2.2, 2.1];                       % [m] CG position [full, empty]
 datcom.para.D = 0.15;                               % [m] rocket diameter
 datcom.para.S = datcom.para.D^2/4*pi;               % [m^2] rocket cross section
-datcom.para.Lnose = 0.5;                            % [m] nose length
+datcom.para.Lnose = 0.3;                            % [m] nose length
 datcom.para.Lcenter = 2.5;                          % [m] Lcenter : Centerbody length
 datcom.para.Npanel = 3;                             % [m] number of fins
 datcom.para.Phif = [0 120 240];                     % [deg] Angle of each panel
@@ -50,8 +40,8 @@ datcom.para.C1Hratio = 2;                           % [/] fin chord-heigth ratio
 datcom.xprot = 1; % axial position 
 datcom.nloc = 3; % number of brakes
 datcom.lprot = 0.005; % brakes thickness
-datcom.wprot = 0.06; % brakes width
-datcom.hprot = [0, 0.022, 0.045]; % bakes length, first entry must be always 0!
+datcom.wprot = 0.08; % brakes width
+datcom.hprot = 0:0.001:0.04; % bakes length, first entry must be always 0!
 
 %% Run 
 autoMatricesProtub(datcom);
