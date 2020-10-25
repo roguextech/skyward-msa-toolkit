@@ -43,7 +43,7 @@ n_hprot = length(hprot);
 
 %% datcom
 
-% mass_condition = {'full', 'empty'};
+mass_condition = {'full', 'empty'};
 
 H = C1/C1Hratio;
 
@@ -56,9 +56,6 @@ switch shape
         
     case 'iso'
         Xle2 = Lcenter + Lnose - d - diffC/2;
-                    
-    case 'parall'
-        Xle2 = Lcenter + Lnose - d;
 end
 
 %%% Defining Fin Section
