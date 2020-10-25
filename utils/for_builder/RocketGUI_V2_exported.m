@@ -1,20 +1,3 @@
-% function data = RocketGUI_V2
-% Rocket and Fins geometry GUI to develop DATCOM file
-%
-% How to use: 
-% Run the script and simply modify the default values.
-% The plots are updated automatically once the numerical values are changed
-% Press the button to printf the DATCOM geomtry values in console
-%
-% Author: Luca Facchini
-% Skyward Experimental Rocketry | MSA Dept
-% email: luca.facchini@skywarder.eu
-% Website: http://www.skywarder.eu
-% Release date: 11 October 2019 | First Version
-%               25 October 2020 | V2 (app designer)
-% License:  2-clause BSD
-
-
 classdef RocketGUI_V2_exported < matlab.apps.AppBase
 
     % Properties that correspond to app components
@@ -43,9 +26,9 @@ classdef RocketGUI_V2_exported < matlab.apps.AppBase
         FinsPanel                   matlab.ui.container.Panel
         ShapeDropDownLabel          matlab.ui.control.Label
         FinShapeDropDown            matlab.ui.control.DropDown
-        MaxChordEditFieldLabel      matlab.ui.control.Label
+        RootChordEditFieldLabel     matlab.ui.control.Label
         MaxChordEditField           matlab.ui.control.NumericEditField
-        MinChordEditFieldLabel      matlab.ui.control.Label
+        TipChordEditFieldLabel      matlab.ui.control.Label
         MinChordEditField           matlab.ui.control.NumericEditField
         XLE1EditFieldLabel          matlab.ui.control.Label
         XLE1EditField               matlab.ui.control.NumericEditField
@@ -143,11 +126,10 @@ classdef RocketGUI_V2_exported < matlab.apps.AppBase
         plot(app.RocketUIAxes,xf,-yf,'-b');
         h2 = plot(app.RocketUIAxes,app.XCG,app.ZCG,'or');
         plot(app.RocketUIAxes,app.XCG,app.ZCG,'+r');
-        app.RocketUIAxes.YLim = [-app.D*2 app.D*2];
-        app.RocketUIAxes.XLim = [-15 (15+app.RocketLength)];
+%         app.RocketUIAxes.YLim = [-app.D*2-3 app.D*2+3];
+%         app.RocketUIAxes.XLim = [-15 (15+app.RocketLength)];
         xlabel(app.RocketUIAxes, 'X [cm]')
         ylabel(app.RocketUIAxes, 'Z [cm]')
-        axis(app.RocketUIAxes, 'equal')
         legend([h1,h2],'Rocket','CG');
         axis(app.RocketUIAxes,'equal');
         grid(app.RocketUIAxes,'on');
@@ -168,11 +150,10 @@ classdef RocketGUI_V2_exported < matlab.apps.AppBase
         yf = [0 app.FinT/2 app.FinT/2 0];
         h2 = plot(app.FinsUIAxes,xf,yf,'-r');
         plot(app.FinsUIAxes,xf,-yf,'r');
-        app.FinsUIAxes.XLim = [-app.FinMaxChord/2-0.1 app.FinMaxChord/2+0.1];
-        app.FinsUIAxes.YLim = [-app.FinT app.FinT];
+%         app.FinsUIAxes.XLim = [-app.FinMaxChord/2-1 app.FinMaxChord/2+1];
+%         app.FinsUIAxes.YLim = [-app.FinT-0.1 app.FinT+0.1];
         xlabel(app.FinsUIAxes, 'X [cm]')
         ylabel(app.FinsUIAxes, 'Y [cm]')
-        axis(app.FinsUIAxes, 'equal')
         grid(app.FinsUIAxes,'minor');
         axis(app.FinsUIAxes,'equal');
         legend([h1,h2],'Cross section at fin root','Cross section at fin tip');
@@ -194,20 +175,20 @@ classdef RocketGUI_V2_exported < matlab.apps.AppBase
             app.RocketLength = 202;
             app.NoseLength = 30;
             app.BodyLength = app.RocketLength - app.NoseLength;
-            app.FinMaxChord = 17;
+            app.FinMaxChord = 16;
             app.FinMinChord = 8;
-            app.FinHeight = 7.5;
+            app.FinHeight = 7;
             app.BottomDist = 0.0;
             app.XLe = app.RocketLength - app.BottomDist - [app.FinMaxChord ; ...
                 app.FinMaxChord-(app.FinMaxChord-app.FinMinChord)/2];
-            app.XCG = 117.1;
+            app.XCG = 117;
             app.ZCG = 0;
             app.NShape = 'KARMAN';
             app.NPower = 0.5;
             
             % Fin cross section
             app.FinShape = 'TRAPEZOID';
-            app.FinT = 0.55;
+            app.FinT = 0.6;
             app.LDiagSection = 0.3; % Horizontal length of diagonal part of the section
             app.LmaxMaxChord = app.LDiagSection;
             app.LmaxMinChord = app.LDiagSection;
@@ -270,6 +251,7 @@ classdef RocketGUI_V2_exported < matlab.apps.AppBase
                 app.MinChordEditField.Enable = true;
                 app.XLE2EditField.Enable = true;
             end
+            app.FinShape = value;
             updatePlot(app);
         end
 
@@ -299,9 +281,14 @@ classdef RocketGUI_V2_exported < matlab.apps.AppBase
                         msgbox('Invalid value of chord. Cannot be bigger than rocket length','Warning');
                         % Reassign previous value
                         src.Value = app.FinMaxChord;
-                    elseif value < app.FinMinChord
-                        msgbox('Invalid value of chord. Cannot be smaller than the minor chord','Warning');
+                    elseif value < app.FinMinChord & ~strcmp(app.FinShape,'RECTANGULAR')
+                        msgbox('Invalid value of chord. Cannot be smaller than the tip chord','Warning');
                         src.Value = app.FinMaxChord;
+                    elseif value < app.FinMinChord & strcmp(app.FinShape,'RECTANGULAR')
+                        app.FinMaxChord = value;
+                        app.FinMinChord = value;
+                        app.MaxChordEditField.Value = value;
+                        app.MinChordEditField.Value = value;
                     else
                         app.FinMaxChord = value;
                         app.LflatMaxChord = app.FinMaxChord - 2*app.LmaxMaxChord;
@@ -311,10 +298,15 @@ classdef RocketGUI_V2_exported < matlab.apps.AppBase
                         msgbox('Invalid value of chord. Cannot be > than rocket length','Warning');
                         % Reassign previous value
                         src.Value = app.FinMinChord;
-                    elseif value > app.FinMaxChord
-                        msgbox('Invalid value of chord. Cannot be > than the minor chord','Warning');
+                    elseif value > app.FinMaxChord & ~strcmp(app.FinShape,'RECTANGULAR')
+                        msgbox('Invalid value of chord. Cannot be > than the root chord','Warning');
                         % Reassign previous value
                         src.Value = app.FinMinChord;
+                    elseif value > app.FinMaxChord & strcmp(app.FinShape,'RECTANGULAR')
+                        app.FinMaxChord = value;
+                        app.FinMinChord = value;
+                        app.MaxChordEditField.Value = value;
+                        app.MinChordEditField.Value = value;
                     else
                         app.FinMinChord = value;
                         app.LflatMinChord = app.FinMinChord - 2*app.LmaxMinChord;
@@ -323,21 +315,30 @@ classdef RocketGUI_V2_exported < matlab.apps.AppBase
                     if value > app.RocketLength(1)
                         msgbox('Invalid value of XLE(1). Cannot be bigger than rocket length','Warning');
                         src.Value = app.XLe(1);
-                    elseif value > app.XLe(2)
-                        msgbox('Invalid value of XLE. Cannot be bigger than rocket length','Warning');
-                        % Reassign previous value
-                        src.Value = app.XLe(1);
-                    else
-                        app.XLe(1) = value;
-                    end
+                    else 
+                        if strcmp(app.FinShape,'TRAPEZOID')
+                            app.XLe(1) = value;
+                        else % rectangular fins
+                            app.XLe(1) = value;
+                            app.XLe(2) = value; 
+                            app.XLE1EditField.Value = value;
+                            app.XLE2EditField.Value = value;
+                        end
+                     end
                 case 'XLE2'
                     % check if value is ok
-                    if value < app.XLe(1)
-                        msgbox('Invalid value of XLe(2). Cannot be smaller than XLe(1)','Warning');
-                        % Reassign previous value
+                    if value > app.RocketLength(1)
+                        msgbox('Invalid value of XLE(2). Cannot be bigger than rocket length','Warning');
                         src.Value = app.XLe(2);
-                    else
-                        app.XLe(2) = value;
+                    else 
+                        if strcmp(app.FinShape,'TRAPEZOID')
+                            app.XLe(2) = value;
+                        else % rectangular fins
+                            app.XLe(1) = value;
+                            app.XLe(2) = value; 
+                            app.XLE1EditField.Value = value;
+                            app.XLE2EditField.Value = value;
+                        end
                     end
                 case 'FinHeight'
                     app.FinHeight = value;
@@ -348,15 +349,25 @@ classdef RocketGUI_V2_exported < matlab.apps.AppBase
                 case 'NPower'
                     app.NPower = value;
                 case 'FinThickness'
-                    app.FinT = value;
+                    if value > app.D/2
+                        msgbox('Invalid value of fin thickness. Cannot be bigger than rocket radius','Warning');
+                        src.Value = app.FinT;
+                    else
+                        app.FinT = value;
+                    end  
                 case 'LMax'
                     app.LDiagSection  = value;
                     app.LmaxMaxChord = value;
                     app.LmaxMinChord = value;
-                    app.LflatMinChord = app.FinMinChord-2*data.LmaxMinChord;
-                    app.LflatMaxChord = app.FinMaxChord-2*data.LmaxMaxChord;
+                    app.LflatMinChord = app.FinMinChord-2*app.LmaxMinChord;
+                    app.LflatMaxChord = app.FinMaxChord-2*app.LmaxMaxChord;
                 case 'NFins'
-                    app.NFins = value;
+                    if value <= 1
+                        msgbox('Invalid numer of fins. Use at least 2 fins','Warning');
+                        src.Value = app.NFins;
+                    else
+                        app.NFins = value;
+                    end
                 otherwise
             end
             updatePlot(app);
@@ -794,11 +805,11 @@ classdef RocketGUI_V2_exported < matlab.apps.AppBase
             app.FinShapeDropDown.Position = [67 194 125 22];
             app.FinShapeDropDown.Value = 'TRAPEZOID';
 
-            % Create MaxChordEditFieldLabel
-            app.MaxChordEditFieldLabel = uilabel(app.FinsPanel);
-            app.MaxChordEditFieldLabel.HorizontalAlignment = 'right';
-            app.MaxChordEditFieldLabel.Position = [230 194 64 22];
-            app.MaxChordEditFieldLabel.Text = 'Max Chord';
+            % Create RootChordEditFieldLabel
+            app.RootChordEditFieldLabel = uilabel(app.FinsPanel);
+            app.RootChordEditFieldLabel.HorizontalAlignment = 'right';
+            app.RootChordEditFieldLabel.Position = [227 194 67 22];
+            app.RootChordEditFieldLabel.Text = 'Root Chord';
 
             % Create MaxChordEditField
             app.MaxChordEditField = uieditfield(app.FinsPanel, 'numeric');
@@ -808,11 +819,11 @@ classdef RocketGUI_V2_exported < matlab.apps.AppBase
             app.MaxChordEditField.Position = [300 194 100 22];
             app.MaxChordEditField.Value = 17;
 
-            % Create MinChordEditFieldLabel
-            app.MinChordEditFieldLabel = uilabel(app.FinsPanel);
-            app.MinChordEditFieldLabel.HorizontalAlignment = 'right';
-            app.MinChordEditFieldLabel.Position = [231 162 61 22];
-            app.MinChordEditFieldLabel.Text = 'Min Chord';
+            % Create TipChordEditFieldLabel
+            app.TipChordEditFieldLabel = uilabel(app.FinsPanel);
+            app.TipChordEditFieldLabel.HorizontalAlignment = 'right';
+            app.TipChordEditFieldLabel.Position = [234 162 58 22];
+            app.TipChordEditFieldLabel.Text = 'Tip Chord';
 
             % Create MinChordEditField
             app.MinChordEditField = uieditfield(app.FinsPanel, 'numeric');
