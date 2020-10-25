@@ -15,8 +15,8 @@ classdef RocketGUI_V2_exported < matlab.apps.AppBase
         ZCGEditField                matlab.ui.control.NumericEditField
         NoseshapeDropDownLabel      matlab.ui.control.Label
         NoseshapeDropDown           matlab.ui.control.DropDown
-        POWEREditFieldLabel         matlab.ui.control.Label
-        POWEREditField              matlab.ui.control.NumericEditField
+        NosePowerEditFieldLabel     matlab.ui.control.Label
+        PowerEditField              matlab.ui.control.NumericEditField
         DiameterEditFieldLabel      matlab.ui.control.Label
         DiameterEditField           matlab.ui.control.NumericEditField
         RocketLengthEditFieldLabel  matlab.ui.control.Label
@@ -109,57 +109,56 @@ classdef RocketGUI_V2_exported < matlab.apps.AppBase
                     rho = ((app.D/2)^2+(app.NoseLength)^2)/app.D;
                     yn = sqrt(rho^2-(app.NoseLength-xn).^2)+app.D/2-rho;
                 case 'POWER'
-                    yn = app.D/2.*(xn/data.NoseLength).^app.NPower;
+                    yn = app.D/2.*(xn/app.NoseLength).^app.NPower;
             end
         
-        % Body coordinates
-        xb = [xn app.RocketLength app.RocketLength];
-        yb = [yn app.D/2 0];
-        % Fins coordinates
-        xf = [app.XLe(1)  app.XLe(1)+app.FinMaxChord app.XLe(2)+app.FinMinChord ...
-            app.XLe(2) app.XLe(1)];
-        yf = [app.D/2 app.D/2 app.D/2+app.FinHeight app.D/2+app.FinHeight app.D/2];
-        h1 = plot(app.RocketUIAxes,xb,yb,'-b');
-        hold(app.RocketUIAxes,'on');
-        plot(app.RocketUIAxes,xb,-yb,'-b');
-        plot(app.RocketUIAxes,xf,yf,'-b');
-        plot(app.RocketUIAxes,xf,-yf,'-b');
-        h2 = plot(app.RocketUIAxes,app.XCG,app.ZCG,'or');
-        plot(app.RocketUIAxes,app.XCG,app.ZCG,'+r');
-%         app.RocketUIAxes.YLim = [-app.D*2-3 app.D*2+3];
-%         app.RocketUIAxes.XLim = [-15 (15+app.RocketLength)];
-        xlabel(app.RocketUIAxes, 'X [cm]')
-        ylabel(app.RocketUIAxes, 'Z [cm]')
-        legend([h1,h2],'Rocket','CG');
-        axis(app.RocketUIAxes,'equal');
-        grid(app.RocketUIAxes,'on');
-        title(app.RocketUIAxes,'Rocket Geometry')
-        hold(app.RocketUIAxes,'off');
-        
-        
-        % Draw fins
-        xf = [-app.FinMaxChord/2 , -app.FinMaxChord/2+app.LmaxMaxChord , ...
-            app.FinMaxChord/2-app.LmaxMaxChord , app.FinMaxChord/2];
-        yf = [0 app.FinT/2 app.FinT/2 0];
-        h1 = plot(app.FinsUIAxes,xf,yf,'-b');
-        hold(app.FinsUIAxes,'on');
-        plot(app.FinsUIAxes,xf,-yf,'b');
-        
-        xf = [-app.FinMinChord/2 , -app.FinMinChord/2+app.LmaxMinChord , ...
-            app.FinMinChord/2-app.LmaxMinChord , app.FinMinChord/2];
-        yf = [0 app.FinT/2 app.FinT/2 0];
-        h2 = plot(app.FinsUIAxes,xf,yf,'-r');
-        plot(app.FinsUIAxes,xf,-yf,'r');
-%         app.FinsUIAxes.XLim = [-app.FinMaxChord/2-1 app.FinMaxChord/2+1];
-%         app.FinsUIAxes.YLim = [-app.FinT-0.1 app.FinT+0.1];
-        xlabel(app.FinsUIAxes, 'X [cm]')
-        ylabel(app.FinsUIAxes, 'Y [cm]')
-        grid(app.FinsUIAxes,'minor');
-        axis(app.FinsUIAxes,'equal');
-        legend([h1,h2],'Cross section at fin root','Cross section at fin tip');
-        title(app.FinsUIAxes,'Fin Cross Section Geometry')
-        hold(app.FinsUIAxes,'off');
-        
+            % Body coordinates
+            xb = [xn app.RocketLength app.RocketLength];
+            yb = [yn app.D/2 0];
+            % Fins coordinates
+            xf = [app.XLe(1)  app.XLe(1)+app.FinMaxChord app.XLe(2)+app.FinMinChord ...
+                app.XLe(2) app.XLe(1)];
+            yf = [app.D/2 app.D/2 app.D/2+app.FinHeight app.D/2+app.FinHeight app.D/2];
+            h1 = plot(app.RocketUIAxes,xb,yb,'-b');
+            hold(app.RocketUIAxes,'on');
+            plot(app.RocketUIAxes,xb,-yb,'-b');
+            plot(app.RocketUIAxes,xf,yf,'-b');
+            plot(app.RocketUIAxes,xf,-yf,'-b');
+            h2 = plot(app.RocketUIAxes,app.XCG,app.ZCG,'or');
+            plot(app.RocketUIAxes,app.XCG,app.ZCG,'+r');
+            app.RocketUIAxes.YLim = [-app.D*2-3 app.D*2+3];
+            app.RocketUIAxes.XLim = [-5 (5+app.RocketLength)];
+            xlabel(app.RocketUIAxes, 'X [cm]')
+            ylabel(app.RocketUIAxes, 'Z [cm]')
+            legend([h1,h2],'Rocket','CG');
+            axis(app.RocketUIAxes,'equal');
+            grid(app.RocketUIAxes,'on');
+            title(app.RocketUIAxes,'Rocket Geometry')
+            hold(app.RocketUIAxes,'off');
+            
+            
+            % Draw fins
+            xf = [-app.FinMaxChord/2 , -app.FinMaxChord/2+app.LmaxMaxChord , ...
+                app.FinMaxChord/2-app.LmaxMaxChord , app.FinMaxChord/2];
+            yf = [0 app.FinT/2 app.FinT/2 0];
+            h1 = plot(app.FinsUIAxes,xf,yf,'-b');
+            hold(app.FinsUIAxes,'on');
+            plot(app.FinsUIAxes,xf,-yf,'b');
+            
+            xf = [-app.FinMinChord/2 , -app.FinMinChord/2+app.LmaxMinChord , ...
+                app.FinMinChord/2-app.LmaxMinChord , app.FinMinChord/2];
+            yf = [0 app.FinT/2 app.FinT/2 0];
+            h2 = plot(app.FinsUIAxes,xf,yf,'-r');
+            plot(app.FinsUIAxes,xf,-yf,'r');
+            app.FinsUIAxes.XLim = [-app.FinMaxChord/2-0.5 app.FinMaxChord/2+0.5];
+            %         app.FinsUIAxes.YLim = [-app.FinT-0.1 app.FinT+0.1];
+            xlabel(app.FinsUIAxes, 'X [cm]')
+            ylabel(app.FinsUIAxes, 'Y [cm]')
+            grid(app.FinsUIAxes,'minor');
+            axis(app.FinsUIAxes,'equal');
+            legend([h1,h2],'Cross section at fin root','Cross section at fin tip');
+            title(app.FinsUIAxes,'Fin Cross Section Geometry')
+            hold(app.FinsUIAxes,'off');
         end
         
     end
@@ -202,7 +201,7 @@ classdef RocketGUI_V2_exported < matlab.apps.AppBase
             app.NoseLengthEditField.Value = app.NoseLength;
             app.XCGEditField.Value = app.XCG;
             app.ZCGEditField.Value = app.ZCG;
-            app.POWEREditField.Value = app.NPower;
+            app.PowerEditField.Value = app.NPower;
             app.NoseshapeDropDown.Value = app.NShape;
             app.FinShapeDropDown.Value = app.FinShape;
             app.XLE1EditField.Value = app.XLe(1);
@@ -221,17 +220,20 @@ classdef RocketGUI_V2_exported < matlab.apps.AppBase
             app.UITableMach.Data = [0.1 0.2 0.3 0.4 0.5 0.6 0.7 0.8 ]';
             app.UITableAlt.Data = [0 300 600 900 1200 1500 2000 2500 3000 3500]';
             
-            app.POWEREditField.Enable = false;
+            app.PowerEditField.Enable = false;
         end
 
         % Value changed function: NoseshapeDropDown
         function NoseshapeDropDownValueChanged(app, event)
             value = app.NoseshapeDropDown.Value;
             if ~strcmp(value,'POWER')
-                app.POWEREditField.Enable = false;
+                app.PowerEditField.Enable = false;
             else
-                app.POWEREditField.Enable = true;
+                app.PowerEditField.Enable = true;
+                app.NPower = app.PowerEditField.Value;
             end
+            app.NShape = value;
+            updatePlot(app);
         end
 
         % Value changed function: FinShapeDropDown
@@ -259,7 +261,7 @@ classdef RocketGUI_V2_exported < matlab.apps.AppBase
         % FinHeightEditField, FinThicknessEditField, LMaxEditField, 
         % MaxChordEditField, MinChordEditField, 
         % NoseLengthEditField, NumberoffinsEditField, 
-        % POWEREditField, RocketLengthEditField, XCGEditField, 
+        % PowerEditField, RocketLengthEditField, XCGEditField, 
         % XLE1EditField, XLE2EditField, ZCGEditField
         function TextBoxEdit(app, event)
             src = event.Source;
@@ -343,11 +345,26 @@ classdef RocketGUI_V2_exported < matlab.apps.AppBase
                 case 'FinHeight'
                     app.FinHeight = value;
                 case 'XCG'
-                    app.XCG = value;
+                    if value > app.RocketLength || value < 0
+                        msgbox('Invalid value of XCG. Cannot be > than rocket length or < 0','Warning');
+                        src.Value = app.XCG;
+                    else
+                        app.XCG = value;
+                    end
                 case 'ZCG'
-                    app.ZCG = value;
-                case 'NPower'
-                    app.NPower = value;
+                    if abs(value) >= app.D/2
+                        msgbox('Invalid value of XCG. Cannot be >= than rocket radius','Warning');
+                        src.Value = app.ZCG;
+                    else
+                        app.ZCG = value;
+                    end
+                case 'NosePower'
+                    if value > 1
+                        msgbox('Invalid value of nose power. Cannot be > 1','Warning');
+                        src.Value = app.NPower;
+                    else
+                        app.NPower = value;
+                    end
                 case 'FinThickness'
                     if value > app.D/2
                         msgbox('Invalid value of fin thickness. Cannot be bigger than rocket radius','Warning');
@@ -367,6 +384,13 @@ classdef RocketGUI_V2_exported < matlab.apps.AppBase
                         src.Value = app.NFins;
                     else
                         app.NFins = value;
+                    end
+                case 'Diameter'
+                    if value < 0
+                        msgbox('Invalid diameter. Cannot be < 0','Warning');
+                        src.Value = app.D;
+                    else
+                        app.D = value;
                     end
                 otherwise
             end
@@ -733,19 +757,19 @@ classdef RocketGUI_V2_exported < matlab.apps.AppBase
             app.NoseshapeDropDown.Position = [92 45 100 22];
             app.NoseshapeDropDown.Value = 'KARMAN';
 
-            % Create POWEREditFieldLabel
-            app.POWEREditFieldLabel = uilabel(app.GeneralparametersPanel);
-            app.POWEREditFieldLabel.HorizontalAlignment = 'right';
-            app.POWEREditFieldLabel.Position = [243 45 51 22];
-            app.POWEREditFieldLabel.Text = 'POWER';
+            % Create NosePowerEditFieldLabel
+            app.NosePowerEditFieldLabel = uilabel(app.GeneralparametersPanel);
+            app.NosePowerEditFieldLabel.HorizontalAlignment = 'right';
+            app.NosePowerEditFieldLabel.Position = [223 45 71 22];
+            app.NosePowerEditFieldLabel.Text = 'Nose Power';
 
-            % Create POWEREditField
-            app.POWEREditField = uieditfield(app.GeneralparametersPanel, 'numeric');
-            app.POWEREditField.Limits = [0 Inf];
-            app.POWEREditField.ValueChangedFcn = createCallbackFcn(app, @TextBoxEdit, true);
-            app.POWEREditField.Tag = 'NosePower';
-            app.POWEREditField.Position = [300 45 100 22];
-            app.POWEREditField.Value = 0.5;
+            % Create PowerEditField
+            app.PowerEditField = uieditfield(app.GeneralparametersPanel, 'numeric');
+            app.PowerEditField.Limits = [0 Inf];
+            app.PowerEditField.ValueChangedFcn = createCallbackFcn(app, @TextBoxEdit, true);
+            app.PowerEditField.Tag = 'NosePower';
+            app.PowerEditField.Position = [300 45 100 22];
+            app.PowerEditField.Value = 0.5;
 
             % Create DiameterEditFieldLabel
             app.DiameterEditFieldLabel = uilabel(app.GeneralparametersPanel);
