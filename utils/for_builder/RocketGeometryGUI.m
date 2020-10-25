@@ -15,35 +15,38 @@
 close all
 clear all
 clc
+
 %% Set default values - Dimensions in cm
-data = struct();
-data.D = 9;
-data.RocketLength = 202;
-data.NoseLength = 30;
-data.BodyLength = data.RocketLength - data.NoseLength;
-data.FinMaxChord = 17;
-data.FinMinChord = 8;
-data.FinHeight = 7.5;
-data.BottomDist = 0.0;
-data.XLe = data.RocketLength - data.BottomDist - [data.FinMaxChord ; ...
-    data.FinMaxChord-(data.FinMaxChord-data.FinMinChord)/2];
-data.XCG = 117.1;
-data.ZCG = 0;
-data.NShape = 'KARMAN';
-data.NPower = 0.5;
+rocketdata = struct();
+rocketdata.D = 9;
+rocketdata.RocketLength = 202;
+rocketdata.NoseLength = 30;
+rocketdata.BodyLength = rocketdata.RocketLength - rocketdata.NoseLength;
+rocketdata.FinMaxChord = 17;
+rocketdata.FinMinChord = 8;
+rocketdata.FinHeight = 7.5;
+rocketdata.BottomDist = 0.0;
+rocketdata.XLe = rocketdata.RocketLength - rocketdata.BottomDist - [rocketdata.FinMaxChord ; ...
+    rocketdata.FinMaxChord-(rocketdata.FinMaxChord-rocketdata.FinMinChord)/2];
+rocketdata.XCG = 117.1;
+rocketdata.ZCG = 0;
+rocketdata.NShape = 'KARMAN';
+rocketdata.NPower = 0.5;
 
 % Fin cross section
-data.FinT = 0.55;
-data.LDiagSection = 0.3; % Horizontal length of diagonal part of the section
-data.LmaxMaxChord = data.LDiagSection;
-data.LmaxMinChord = data.LDiagSection;
-data.LflatMinChord = data.FinMinChord-2*data.LDiagSection;
-data.LflatMaxChord = data.FinMaxChord-2*data.LDiagSection;
+rocketdata.FinT = 0.55;
+rocketdata.LDiagSection = 0.3; % Horizontal length of diagonal part of the section
+rocketdata.LmaxMaxChord = rocketdata.LDiagSection;
+rocketdata.LmaxMinChord = rocketdata.LDiagSection;
+rocketdata.LflatMinChord = rocketdata.FinMinChord-2*rocketdata.LDiagSection;
+rocketdata.LflatMaxChord = rocketdata.FinMaxChord-2*rocketdata.LDiagSection;
 
-data
+RocketGeomtryGUI(rocketdata);
+
+function RocketGeomtryGUI(data)
 %% Create layout
-f = figure('Visible','off','Position',[100 100 850 638]);
-f.Name = 'Rocket Geometry';
+fig = figure('Visible','off','Position',[100 100 850 638]);
+fig.Name = 'Rocket Geometry';
 
 RocketUIAxes = axes('Units','Pixels','Position',[56 355 503 265],'Title',...
     'Rocket');
@@ -55,9 +58,9 @@ Label = uicontrol('Style','text','String','Measures in [cm]',...
     'Position',[650 610 100 22]);
 
 RocketLengthLabel = uicontrol('Style','text','String','Rocket Length',...
-    'Position',[575 587 83 22],'Parent',f);
+    'Position',[575 587 83 22],'Parent',fig);
 RocketLengthEditField = uicontrol('Style','edit',...
-    'Position',[660 590 83 22 ]);
+    'Position',[660 590 83 22 ],'Tag','RocketLengthEdit');
 
 NoseLengthLabel = uicontrol('Style','text','String','Nose Length',...
     'Position',[575 562 83 22]);
@@ -110,7 +113,6 @@ NPowerEditField = uicontrol('Style','edit',...
     'Position',[800,365,43,22],'Enable','off');
 
 % Cross section
-
 ThicknessLabel = uicontrol('Style','text','String','Thickness',...
     'Position',[562 246 83 22]);
 ThicknessEditField = uicontrol('Style','edit',...
@@ -120,10 +122,13 @@ LMaxCLabel = uicontrol('Style','text','String','L max',...
     'Position',[562 222 103 22]);
 LmaxCEditField = uicontrol('Style','edit',...
     'Position',[660 225 83 22 ]);
-LmaxCEditField.Callback = @LMaxCEditFieldValueChanged;
 
+% Controls for saving
 Button = uicontrol('Style','pushbutton','String','Print DATCOM text',...
-    'Position',[640 145 120 26 ],'Callback',@PrintDATCOM);
+    'Position',[685 145 120 26 ],'Callback',@PrintDATCOM);
+
+cbxSave = uicontrol('Style','checkbox','String','Save for005',...
+    'Position',[600 145 80 26 ]);
 
 %% Set default values
 RocketLengthEditField.String = num2str(data.RocketLength);
@@ -137,13 +142,11 @@ XCGEditField.String = num2str(data.XCG);
 ZCGEditField.String = num2str(data.ZCG);
 NPowerEditField.String = num2str(data.NPower);
 
+
 ThicknessEditField.String = num2str(data.FinT);
 LmaxCEditField.String = num2str(data.LDiagSection);
 
-updateplot;
-
 %% Set Callbacks
-
 NoseLengthEditField.Callback = @NoseLengthEditFieldValueChanged;
 RocketLengthEditField.Callback = @RocketLengthEditFieldValueChanged;
 XCGEditField.Callback = @XCGEditFieldValueChanged;
@@ -156,9 +159,11 @@ FinHEditField.Callback = @FinHeightEditFieldValueChanged;
 ThicknessEditField.Callback = @FinThicknessEditFieldValueChanged;
 NShapePopup.Callback = {@popup_menu_Callback,NPowerEditField};
 NPowerEditField.Callback = @NPowerEditFieldValueChanged;
+LmaxCEditField.Callback = @LMaxCEditFieldValueChanged;
 
+updateplot;
 % Make the UI visible.
-f.Visible = 'on';
+fig.Visible = 'on';
 
 %% FUNCTIONS EVENETS
     function PrintDATCOM(src,event)
@@ -194,10 +199,13 @@ f.Visible = 'on';
         str = sprintf('%s LFLATU=%.4f,%.4f,$\n',str,data.LflatMaxChord/data.FinMaxChord,...
             data.LflatMinChord/data.FinMinChord);
              
-        fprintf(str)
-        fid = fopen('for005.dat','w');
-        fprintf(fid,str);
-        fclose(fid);
+        fprintf(str);
+        if cbxSave.Value == 1 % Checkbox enabled
+            fprintf(str)
+            fid = fopen('for005.dat','w');
+            fprintf(fid,str);
+            fclose(fid);
+        end
     end
 
     function popup_menu_Callback(source,eventdata,editfield) 
