@@ -23,7 +23,7 @@ datcom.design.Chord2 = 0.15;
 datcom.design.shape = 'parall';
 
 %% Fixed Parameters
-datcom.para.xcg = [2.2, 2.1];                       % [m] CG position [full, empty]
+datcom.para.xcg = [1.9, 1.8];                       % [m] CG position [full, empty]
 datcom.para.D = 0.15;                               % [m] rocket diameter
 datcom.para.S = datcom.para.D^2/4*pi;               % [m^2] rocket cross section
 datcom.para.Lnose = 0.3;                            % [m] nose length
@@ -41,7 +41,7 @@ datcom.xprot = 1; % axial position
 datcom.nloc = 3; % number of brakes
 datcom.lprot = 0.005; % brakes thickness
 datcom.wprot = 0.08; % brakes width
-datcom.hprot = 0:0.001:0.04; % bakes length, first entry must be always 0!
+datcom.hprot = 0:0.002:0.04; % brakes length, first entry must be always 0!
 
 %% Run 
 autoMatricesProtub(datcom);
