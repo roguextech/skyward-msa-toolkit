@@ -12,7 +12,7 @@ Release date: 16/04/2016
 
 %% LAUNCH SETUP
 % launchpad
-settings.z0 = 200;                                                                    %[m] Launchpad Altitude
+settings.z0 = 200;                                                                  %[m] Launchpad Altitude
 settings.lrampa = 4.9;                                                              %[m] LaunchPad route (distance from ground of the first hook)
 settings.lat0 = 44.519272;                                                          % Launchpad latitude
 settings.lon0 = 11.642333;                                                          % Launchpad longitude
@@ -69,7 +69,7 @@ clear ('motors','name')
 
 settings.C = 0.15;                                                  % [m]      Caliber (Fuselage Diameter)
 settings.S = pi*settings.C^2/4;                                     % [m^2]    Cross-sectional Surface
-L = 3;                                                            % [m]      Rocket length
+L = 3;                                                              % [m]      Rocket length
 
 %% MASS GEOMERTY DETAILS
 % x-axis: along the fuselage
@@ -120,7 +120,7 @@ settings.Altitudes = s.State.Altitudes';
 settings.Machs = s.State.Machs';
 clear('s');
 
-settings.control = '0%';                                          % aerobrakes 0% 50% or 100% opened
+settings.control = '0%';                                            % aerobrakes 0% 50% or 100% opened
 
 %% PARACHUTES DETAILS
 % parachute 1
@@ -175,8 +175,8 @@ settings.wind.model = false;
 % input Day and Hour as arrays to run stochastic simulations
 settings.wind.DayMin = 105;                         % [d] Minimum Day of the launch
 settings.wind.DayMax = 105;                         % [d] Maximum Day of the launch
-settings.wind.HourMin = 4;                         % [h] Minimum Hour of the day
-settings.wind.HourMax = 4;                         % [h] Maximum Hour of the day
+settings.wind.HourMin = 4;                          % [h] Minimum Hour of the day
+settings.wind.HourMax = 4;                          % [h] Maximum Hour of the day
 settings.wind.ww = 0;                               % [m/s] Vertical wind speed
 
 %%%%% Input wind

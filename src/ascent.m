@@ -10,10 +10,10 @@ INPUTS:
                                 * (x y z), NED{north, east, down} horizontal frame; 
                                 * (u v w), body frame velocities;
                                 * (p q r), body frame angular rates;
-                                * (thetax thetay thetaz), body angles;
                                 * m , total mass;
                                 * (Ixx Iyy Izz), Inertias;
                                 * (q0 q1 q2 q3), attitude unit quaternion.
+                                * (thetax thetay thetaz), body angles;
  
 
             - settings, rocket data structure;
@@ -312,7 +312,7 @@ end
 if -z < settings.lrampa*sin(OMEGA)      % No torque on the Launch
     
     Fg = m*g*sin(OMEGA);                % [N] force due to the gravity
-    X = 1.4*0.5*rho*V_norm^2*S*CA;
+    X = 0.5*rho*V_norm^2*S*CA;
     F = -Fg +T -X;
     du = F/m;
     
@@ -342,9 +342,9 @@ else
     qdynL_V = 0.5*rho*V_norm*S*C; 
     
     if c == 1
-        X = 1.4*qdyn*S*CA;              %[N] x-body component of the aerodynamics force
+        X = qdyn*S*CA;              %[N] x-body component of the aerodynamics force
     else
-        X = 1.2*qdyn*S*CA;              %[N] x-body component of the aerodynamics force
+        X = qdyn*S*CA;              %[N] x-body component of the aerodynamics force
     end
         
     Y = qdyn*S*CYB*beta;            %[N] y-body component of the aerodynamics force

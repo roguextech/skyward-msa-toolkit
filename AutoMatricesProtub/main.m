@@ -41,7 +41,7 @@ datcom.xprot = 1; % axial position
 datcom.nloc = 3; % number of brakes
 datcom.lprot = 0.005; % brakes thickness
 datcom.wprot = 0.08; % brakes width
-datcom.hprot = 0:0.002:0.04; % brakes length, first entry must be always 0!
+datcom.hprot = [0, 0.02, 0.04]; % brakes length, first entry must be always 0!
 
 %% Run 
 autoMatricesProtub(datcom);

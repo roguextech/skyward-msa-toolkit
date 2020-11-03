@@ -181,8 +181,8 @@ for i = 1:No
             fprintf(fid, '  DCENTR = ');
             fprintf(fid, '%.3f, \r\n', D);
             %%%% DEXIT
-            fprintf(fid, '  DEXIT = ');
-            fprintf(fid, '%.3f, \r\n', D);
+            fprintf(fid, '  DEXIT = 0.,');
+            fprintf(fid, '\r\n');
             %%%% BASE
             fprintf(fid, '  BASE = .FALSE.,$');
             

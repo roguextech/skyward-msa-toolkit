@@ -28,22 +28,22 @@ datcom.s.Alt = 0:200:4000;
 
 %% Design Parameters
 %%%%%%% fins
-datcom.design.Chord1 = 0.30:0.01:0.31;                          % [m] chord fixed length
-datcom.design.Chord2 = 0.15:0.01:0.16;                          % [m] chord free length 
+datcom.design.Chord1 = 0.28:0.01:0.31;                          % [m] chord fixed length
+datcom.design.Chord2 = 0.14:0.01:0.18;                          % [m] chord free length 
 rect = true; iso = true; parall = true;                         % choose the shapes that you wanna try
 
 %%%%%%% ogive
 datcom.design.Lnose = 0.28:0.01:0.3;                            % [m] ogive length
 datcom.design.NosePower = [];                                   % [/] Power coefficient of the NoseCone, put a empty vector to avoid power ogive.
-Karman = true; Haack = false; Ogive = false;                    % choose the shapes that you wanna try 
+Karman = true; Haack = true; Ogive = true;                      % choose the shapes that you wanna try 
 
 %% Fixed Parameters
-datcom.para.xcg = [2, 1.9];                                     % [m] CG position [full, empty]
+datcom.para.xcg = [1.9, 1.8];                                   % [m] CG position [full, empty]
 datcom.para.D = settings.C;                                     % [m] rocket diameter
 datcom.para.S = settings.S;                                     % [m^2] rocket cross section
 datcom.para.Lcenter = 2.5;                                      % [m] Lcenter : Centerbody length
-datcom.para.Npanel = 4;                                         % [m] number of fins
-datcom.para.Phif = [0 90 180 270];                              % [deg] Angle of each panel
+datcom.para.Npanel = 3;                                         % [m] number of fins
+datcom.para.Phif = [0 120 240];                                 % [deg] Angle of each panel
 datcom.para.Ler = 0.003;                                        % [deg] Leading edge radius
 datcom.para.d = 0;                                              % [m] rocket tip-fin distance
 datcom.para.zup_raw = 0.0015;                                   % [m] fin semi-thickness 

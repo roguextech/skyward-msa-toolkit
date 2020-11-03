@@ -163,8 +163,8 @@ for k = 1:2
         fprintf(fid, '  DCENTR = ');
         fprintf(fid, '%.3f, \r\n', D);
         %%%% DEXIT
-        fprintf(fid, '  DEXIT = ');
-        fprintf(fid, '%.3f, \r\n', D);
+        fprintf(fid, '  DEXIT = 0.,');
+        fprintf(fid, '\r\n');
         %%%% BASE
         fprintf(fid, '  BASE = .FALSE.,$');
         
@@ -260,9 +260,9 @@ for k = 1:2
         
         %%% Datcom and parsing
         if ismac
-            system('./datcom for005.dat' );
+            [~, ~] = system('./datcom for005.dat' );
         else
-            system('datcom.exe for005.dat' );
+            [~, ~] = system('datcom.exe for005.dat' );
         end
         
         value = 0;
@@ -270,7 +270,7 @@ for k = 1:2
             value = exist('for006.dat','file');
             pause(0.01);
         end
-        clc
+        
         if k == 1
             % initialize joined empty matrix and state
             
