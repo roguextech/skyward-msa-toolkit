@@ -33,7 +33,6 @@ Ler = datcom.para.Ler;
 d = datcom.para.d;
 zup_raw = datcom.para.zup_raw;
 Lmaxu_raw = datcom.para.Lmaxu_raw;
-C1Hratio = datcom.para.C1Hratio;
 
 shape = datcom.design.shape;
 C1 = datcom.design.Chord1;
@@ -41,7 +40,7 @@ C2 = datcom.design.Chord2;
 Lnose = datcom.design.Lnose;
 Pow = datcom.design.NosePower;
 OgType = datcom.design.OgType;
-H = C1/C1Hratio;
+H = datcom.design.Heigth;
 
 
 Nm = length(Mach);

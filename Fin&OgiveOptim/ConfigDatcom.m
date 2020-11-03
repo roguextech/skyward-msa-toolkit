@@ -21,15 +21,16 @@ Release date: 18/10/2019
 
 %% States
 % State values in which the aerodynamic coefficients will be computed
-datcom.s.Mach = 0.05:0.05:1;
-datcom.s.Alpha = [-10 -7.5 -5 -2.5 -1.5 -1 -0.5 -0.1 0.1 0.5 1 1.5 2.5 5 7.5 10];
-datcom.s.Beta = [-0.1 0.1];
-datcom.s.Alt = 0:200:4000;
+datcom.s.Mach = 0.1:0.1:1;
+datcom.s.Alpha = [-2.5 -1.5 -1 -0.5 0 0.5 1 1.5 2.5];
+datcom.s.Beta = [-0.1 0 0.1];
+datcom.s.Alt = 0:400:4000;
 
 %% Design Parameters
 %%%%%%% fins
-datcom.design.Chord1 = 0.28:0.01:0.31;                          % [m] chord fixed length
-datcom.design.Chord2 = 0.14:0.01:0.18;                          % [m] chord free length 
+datcom.design.Chord1 = 0.1:0.02:0.3;                            % [m] chord fixed length
+datcom.design.Chord2 = 0.1:0.02:0.3;                            % [m] chord free length 
+datcom.design.Heigth = 0.1:0.02:0.3;                            % [m] chord free length 
 rect = true; iso = true; parall = true;                         % choose the shapes that you wanna try
 
 %%%%%%% ogive
@@ -48,7 +49,6 @@ datcom.para.Ler = 0.003;                                        % [deg] Leading 
 datcom.para.d = 0;                                              % [m] rocket tip-fin distance
 datcom.para.zup_raw = 0.0015;                                   % [m] fin semi-thickness 
 datcom.para.Lmaxu_raw = 0.006;                                  % [m] Fraction of chord from leading edge to max thickness
-datcom.para.C1Hratio = 2;                                       % [/] fin chord-heigth ratio
 
 %% Do not touch these parameters 
 Shape = ["rect", "iso", "parall"];                              
