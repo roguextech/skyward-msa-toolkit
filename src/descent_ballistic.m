@@ -123,9 +123,9 @@ M_value = M;
 
 %% AERODYNAMICS ANGLES
 
-if not(u < 1e-3 || V_norm < 1e-3)
+if not(ur < 1e-9 || V_norm < 1e-9)
     alpha = atan(wr/ur);
-    beta = asin(vr/V_norm);
+    beta = atan(vr/ur);             % beta = asin(vr/V_norm); is the classical notation, Datcom uses this one though. 
 else
     alpha = 0;
     beta = 0;
@@ -182,17 +182,31 @@ end
 %% CHOSING THE CONDITION VALUE
 % interpolation of the coefficients with the value in the nearest condition of the Coeffs matrix
 
-CA = interp4_easy(givA,givM,givB,givH,CoeffsE.CA,alpha,M,beta,-z);
-CYB = interp4_easy(givA,givM,givB,givH,CoeffsE.CYB,alpha,M,beta,-z);
-CNA = interp4_easy(givA,givM,givB,givH,CoeffsE.CNA,alpha,M,beta,-z);
-Cl = interp4_easy(givA,givM,givB,givH,CoeffsE.CLL,alpha,M,beta,-z);
-Clp = interp4_easy(givA,givM,givB,givH,CoeffsE.CLLP,alpha,M,beta,-z);
-Cma = interp4_easy(givA,givM,givB,givH,CoeffsE.CMA,alpha,M,beta,-z);
-Cmad = interp4_easy(givA,givM,givB,givH,CoeffsE.CMAD,alpha,M,beta,-z);
-Cmq = interp4_easy(givA,givM,givB,givH,CoeffsE.CMQ,alpha,M,beta,-z);
-Cnb = interp4_easy(givA,givM,givB,givH,CoeffsE.CLNB,alpha,M,beta,-z);
-Cnr = interp4_easy(givA,givM,givB,givH,CoeffsE.CLNR,alpha,M,beta,-z);
-Cnp = interp4_easy(givA,givM,givB,givH,CoeffsE.CLNP,alpha,M,beta,-z);
+c = 1; % descent with no aerobrakes
+
+[CA, angle0] = interp4_easy(givA,givM,givB,givH,CoeffsE.CA(:, :, :, :, c),alpha,M,beta,-z);
+CYB = interp4_easy(givA,givM,givB,givH,CoeffsE.CYB(:, :, :, :, c),alpha,M,beta,-z);
+CY0 = interp4_easy(givA,givM,givB,givH,CoeffsE.CY(:, :, :, :, c),alpha,M,beta,-z);
+CNA = interp4_easy(givA,givM,givB,givH,CoeffsE.CNA(:, :, :, :, c),alpha,M,beta,-z);
+CN0 = interp4_easy(givA,givM,givB,givH,CoeffsE.CN(:, :, :, :, c),alpha,M,beta,-z);
+Cl = interp4_easy(givA,givM,givB,givH,CoeffsE.CLL(:, :, :, :, c),alpha,M,beta,-z);
+Clp = interp4_easy(givA,givM,givB,givH,CoeffsE.CLLP(:, :, :, :, c),alpha,M,beta,-z);
+Cma = interp4_easy(givA,givM,givB,givH,CoeffsE.CMA(:, :, :, :, c),alpha,M,beta,-z);
+Cm0 = interp4_easy(givA,givM,givB,givH,CoeffsE.CM(:, :, :, :, c),alpha,M,beta,-z);
+Cmad = interp4_easy(givA,givM,givB,givH,CoeffsE.CMAD(:, :, :, :, c),alpha,M,beta,-z);
+Cmq = interp4_easy(givA,givM,givB,givH,CoeffsE.CMQ(:, :, :, :, c),alpha,M,beta,-z);
+Cnb = interp4_easy(givA,givM,givB,givH,CoeffsE.CLNB(:, :, :, :, c),alpha,M,beta,-z);
+Cn0 = interp4_easy(givA,givM,givB,givH,CoeffsE.CLN(:, :, :, :, c),alpha,M,beta,-z);
+Cnr = interp4_easy(givA,givM,givB,givH,CoeffsE.CLNR(:, :, :, :, c),alpha,M,beta,-z);
+Cnp = interp4_easy(givA,givM,givB,givH,CoeffsE.CLNP(:, :, :, :, c),alpha,M,beta,-z);
+
+% compute CN,CY,Cm,Cn (linearized with respect to alpha and beta):
+alpha0 = angle0(1); beta0 = angle0(2);
+
+CN = (CN0 + CNA*(alpha-alpha0));
+CY = (CY0 + CYB*(beta-beta0));
+Cm = (Cm0 + Cma*(alpha-alpha0));
+Cn = (Cn0 + Cnb*(beta-beta0));
 
 %% FORCES
 % first computed in the body-frame reference system
@@ -201,8 +215,8 @@ qdyn = 0.5*rho*V_norm^2;        % [Pa] dynamics pressure
 qdynL_V = 0.5*rho*V_norm*S*C;   % 
 
 X = qdyn*S*CA;                  % [N] x-body component of the aerodynamics force
-Y = qdyn*S*CYB*beta;            % [N] y-body component of the aerodynamics force
-Z = qdyn*S*CNA*alpha;           % [N] z-body component of the aerodynamics force
+Y = qdyn*S*CY;                  % [N] y-body component of the aerodynamics force
+Z = qdyn*S*CN;                  % [N] z-body component of the aerodynamics force
 Fg = quatrotate(Q,[0 0 m*g])';  % [N] force due to the gravity
 
 F = Fg +[-X,+Y,-Z]';            % [N] total forces vector
@@ -216,8 +230,8 @@ dw = F(3)/m-p*v+q*u;
 
 % Rotation
 dp = (Iyy-Izz)/Ixx*q*r + qdynL_V/Ixx*(V_norm*Cl+Clp*p*C/2);
-dq = (Izz-Ixx)/Iyy*p*r + qdynL_V/Iyy*(V_norm*Cma*alpha + (Cmad+Cmq)*q*C/2);
-dr = (Ixx-Iyy)/Izz*p*q + qdynL_V/Izz*(V_norm*Cnb*beta + (Cnr*r+Cnp*p)*C/2);
+dq = (Izz-Ixx)/Iyy*p*r + qdynL_V/Iyy*(V_norm*Cm + (Cmad+Cmq)*q*C/2);
+dr = (Ixx-Iyy)/Izz*p*q + qdynL_V/Izz*(V_norm*Cn + (Cnr*r+Cnp*p)*C/2);
 
 % Quaternion
 OM = 1/2* [ 0 -p -q -r  ;

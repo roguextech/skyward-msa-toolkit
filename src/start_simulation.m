@@ -17,7 +17,7 @@ path = genpath(pwd);
 addpath(path);
 
 %% LOAD DATA
-run('config.m');
+config;
 
 if not(settings.ballistic)
     settings.Npara = length(settings.para);

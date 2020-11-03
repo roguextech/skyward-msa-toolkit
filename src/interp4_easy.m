@@ -1,4 +1,4 @@
-function [V] = interp4_easy(X1, X2, X3, X4, F, x1, x2, x3, x4)
+function [V, angle0] = interp4_easy(X1, X2, X3, X4, F, x1, x2, x3, x4)
 
 %{ 
 
@@ -11,6 +11,7 @@ INPUTS:
 
 OUTPUTS:    
             - V interpolated coefficients.
+            - angle0: array of nearest alpha and beta.
 
 Author: Ruben Di Battista
 Skyward Experimental Rocketry | CRD Dept | crd@skywarder.eu
@@ -30,7 +31,7 @@ end
 
 V = F(index(1),index(2),index(3),index(4));
 
-
+angle0 = [X1(index(1)); X3(index(3))]; 
 
 end
 
