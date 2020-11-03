@@ -137,9 +137,9 @@ end
 raw_data = cell2mat(raw_data);
 
 %% savemat
-realM = [M(1), zeros(1,200)];
-realA = [A(1), zeros(1,200)];
-realB = [B(1), zeros(1,200)];
+realM = [M(1), NaN(1,200)];
+realA = [A(1), NaN(1,200)];
+realB = [B(1), NaN(1,200)];
 
 iM = 1;
 iA = 1;

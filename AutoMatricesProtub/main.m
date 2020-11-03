@@ -11,9 +11,9 @@ Release date: 18/10/2019
 
 %% States
 % State values in which the aerodynamic coefficients will be computed
-datcom.s.Mach = 0.1:0.1:1;
-datcom.s.Alpha = [-10 -5 -2.5 -1.5 -1 -0.5 -0.1 0.1 0.5 1 1.5 2.5 5 10];
-datcom.s.Beta = [-0.1 0.1];
+datcom.s.Mach = 0.05:0.05:1;
+datcom.s.Alpha = [-10 -7.5 -5 -2.5 -1.5 -1 -0.5 -0.1 0 0.1 0.5 1 1.5 2.5 5 7.5 10];
+datcom.s.Beta = [-1 -0.1 0 0.1 1];
 datcom.s.Alt = 0:500:4000;
 
 %% Design Parameters
@@ -45,4 +45,3 @@ datcom.hprot = [0, 0.02, 0.04]; % brakes length, first entry must be always 0!
 
 %% Run 
 autoMatricesProtub(datcom);
-

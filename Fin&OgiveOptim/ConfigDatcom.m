@@ -33,7 +33,7 @@ datcom.design.Chord2 = 0.14:0.01:0.18;                          % [m] chord free
 rect = true; iso = true; parall = true;                         % choose the shapes that you wanna try
 
 %%%%%%% ogive
-datcom.design.Lnose = 0.28:0.01:0.3;                            % [m] ogive length
+datcom.design.Lnose = 0.25:0.02:0.45;                           % [m] ogive length
 datcom.design.NosePower = [];                                   % [/] Power coefficient of the NoseCone, put a empty vector to avoid power ogive.
 Karman = true; Haack = true; Ogive = true;                      % choose the shapes that you wanna try 
 
