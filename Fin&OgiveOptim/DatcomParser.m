@@ -1,11 +1,25 @@
-function [Coeffs, State] = DatcomParser(mat_name)
+function [Coeffs, State] = datcomParser(varargin)
+
+if not(isempty(varargin))
+    mat_name = varargin{1};
+    savemat = true;
+else
+    savemat = false;
+end
 
 linestring = fileread('for006.dat');
 
 %% blocksplit
 pattern = '\*+ \<FLIGHT CONDITIONS AND REFERENCE QUANTITIES \*+';
 blocks = regexp(linestring,pattern,'split');
+block1 = blocks(1);
 blocks = blocks(2:end);
+
+%% error check
+error_check = regexp(block1,'(** ERROR **)','tokens');
+if not(isempty(error_check{1}))
+    error('Attention: Error in the ''for006.dat'' file.');
+end
 
 %% get_coeffs_name
 pattern =  ' *\<ALPHA\> *([\w -/]*)';
@@ -15,7 +29,7 @@ index = 1;
 for i = 1:4
     block = blocks{i};
     token = regexp(block,pattern,'tokens');
-   
+    
     % convert cells inside token into strings
     for k = 1:length(token)
         token{k} = char(token{k});
@@ -64,7 +78,7 @@ B = str2num(strjoin(B));
 pattern = '^[-\d](?=[\d\.])';
 pattern2 = '\n\t?';
 
-block = blocks{2}; 
+block = blocks{2};
 lines = regexp(block,pattern2,'split');
 index = 0;
 new_1 = cell(200,1);
@@ -130,7 +144,7 @@ for i = 1:length(blocks)
     new_1 = transpose(cell2mat(new_1(1:index)));
     
     raw_data{i} = new_1;
-            
+    
 end
 
 
@@ -164,21 +178,21 @@ realM = realM(1:iM);
 realA = realA(1:iA);
 realB = realB(1:iB);
 
-    for j = 1:length(names)
-        Coeffs.(names{j}) = zeros(length(alpha),iM,iB,iA);
-    end
+for j = 1:length(names)
+    Coeffs.(names{j}) = zeros(length(alpha),iM,iB,iA);
+end
 
 for i = 1:length(blocks)/4
     index = i;
-    iA = find(realA==A(index));
-    iB = find(realB==B(index));
-    iM = find(realM==M(index));
+    iA = realA==A(index);
+    iB = realB==B(index);
+    iM = realM==M(index);
     
     for j = 1:length(names)
         Coeffs.(names{j})(:,iM,iB,iA) = raw_data(:,length(names)*(i-1)+j);
     end
     
-   
+    
 end
 
 State.Machs = realM;
@@ -186,7 +200,9 @@ State.Alphas = alpha;
 State.Betas = realB;
 State.Altitudes = realA;
 
-save(mat_name,'State','Coeffs');
+if savemat
+    save(mat_name,'State','Coeffs');
+end
 
 end
 

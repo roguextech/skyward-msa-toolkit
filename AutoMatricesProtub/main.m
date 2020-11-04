@@ -11,37 +11,38 @@ Release date: 18/10/2019
 
 %% States
 % State values in which the aerodynamic coefficients will be computed
-datcom.s.Mach = 0.05:0.05:1;
-datcom.s.Alpha = [-10 -7.5 -5 -2.5 -1.5 -1 -0.5 -0.1 0 0.1 0.5 1 1.5 2.5 5 7.5 10];
-datcom.s.Beta = [-1 -0.1 0 0.1 1];
-datcom.s.Alt = 0:500:4000;
+datcom.Mach = 0.05:0.05:1;
+datcom.Alpha = [-10 -7.5 -5 -2.5 -1.5 -1 -0.5 -0.1 0 0.1 0.5 1 1.5 2.5 5 7.5 10];
+datcom.Beta = [-1 -0.1 0 0.1 1];
+datcom.Alt = 0:200:4000;
 
 %% Design Parameters
-% looping for various dimension of the fins [m]
-datcom.design.Chord1 = 0.3; 
-datcom.design.Chord2 = 0.15; 
-datcom.design.shape = 'parall';
+datcom.Chord1 = 0.3; 
+datcom.Chord2 = 0.15; 
+datcom.Height = 0.15;                            
+datcom.shape = 'parall';
 
 %% Fixed Parameters
-datcom.para.xcg = [1.9, 1.8];                       % [m] CG position [full, empty]
-datcom.para.D = 0.15;                               % [m] rocket diameter
-datcom.para.S = datcom.para.D^2/4*pi;               % [m^2] rocket cross section
-datcom.para.Lnose = 0.3;                            % [m] nose length
-datcom.para.Lcenter = 2.5;                          % [m] Lcenter : Centerbody length
-datcom.para.Npanel = 3;                             % [m] number of fins
-datcom.para.Phif = [0 120 240];                     % [deg] Angle of each panel
-datcom.para.Ler = 0.003;                            % [deg] Leading edge radius
-datcom.para.d = 0;                                  % [m] rocket tip-fin distance
-datcom.para.zup_raw = 0.0015;                       % [m] fin semi-thickness 
-datcom.para.Lmaxu_raw = 0.006;                      % [m] Fraction of chord from leading edge to max thickness
-datcom.para.C1Hratio = 2;                           % [/] fin chord-heigth ratio
+vars.xcg = [1.9, 1.8];                       % [m] CG position [full, empty]
+datcom.D = 0.15;                               % [m] rocket diameter
+datcom.Lnose = 0.3;                            % [m] nose length
+datcom.Lcenter = 2.5;                          % [m] Lcenter : Centerbody length
+datcom.Npanel = 3;                             % [m] number of fins
+datcom.Phif = [0 120 240];                     % [deg] Angle of each panel
+datcom.Ler = 0.003;                            % [deg] Leading edge radius
+datcom.d = 0;                                  % [m] rocket tip-fin distance
+datcom.zup_raw = 0.0015;                       % [m] fin semi-thickness 
+datcom.Lmaxu_raw = 0.006;                      % [m] Fraction of chord from leading edge to max thickness
+%% Ogive parameters
+datcom.OgType = 'KARMAN';
+datcom.NosePower = 1/2;
 
 %% Protuberance parameters
 datcom.xprot = 1; % axial position 
 datcom.nloc = 3; % number of brakes
 datcom.lprot = 0.005; % brakes thickness
 datcom.wprot = 0.082; % brakes width
-datcom.hprot = [0, 0.046/2, 0.046]; % brakes length, first entry must be always 0!
+vars.hprot = [0, 0.046/2, 0.046]; % brakes length, first entry must be always 0!
 
 %% Run 
-autoMatricesProtub(datcom);
+autoMatricesProtub(datcom,vars);
