@@ -34,15 +34,15 @@ Nt = length(datcom.design.OgType);
 
 DatcomDummy = datcom;
 DatcomDummy.design.Chord1 = datcom.design.Chord1(end);
-DatcomDummy.design.Chord2 = datcom.design.Chord2(floor(N2/2));
-DatcomDummy.design.Heigth = datcom.design.Heigth(floor(N3/2));
+DatcomDummy.design.Chord2 = datcom.design.Chord2(ceil(N2/2));
+DatcomDummy.design.Heigth = datcom.design.Heigth(ceil(N3/2));
 DatcomDummy.design.Shape = datcom.design.Shape(1);
 
 [~, DummyTime] = AutoMatricesFins(DatcomDummy, false);
 
 seq1 = repelem(1:N1, N2);
 seq2 = repmat(1:N2, 1, N1);
-N1N2 = length(nonzeros(datcom.design.Chord1(seq1) > datcom.design.Chord1(seq2)));
+N1N2 = length(nonzeros(datcom.design.Chord1(seq1) > datcom.design.Chord2(seq2)));
 
 EstimTime = (N1N2*N3*Ns + No*Nt)*1.1*DummyTime; 
 
@@ -119,7 +119,7 @@ FOtime = toc;
 run ConfigDatcom.m
 datcom.design.Chord1 = dataFins{BestFin}.c_max;              
 datcom.design.Chord2 = dataFins{BestFin}.c_min;
-datcom.design.Height = dataFins{BestFin}.h;
+datcom.design.Heigth = dataFins{BestFin}.h;
 datcom.design.shape = dataFins{BestFin}.shape;
 [dataOgive, AMOgivetime] = AutoMatricesOgive(datcom);
 

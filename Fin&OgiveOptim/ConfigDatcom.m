@@ -21,22 +21,22 @@ Release date: 18/10/2019
 
 %% States
 % State values in which the aerodynamic coefficients will be computed
-datcom.s.Mach = 0.1:0.1:1;
-datcom.s.Alpha = [-2.5 -1.5 -1 -0.5 0 0.5 1 1.5 2.5];
-datcom.s.Beta = [-0.1 0 0.1];
-datcom.s.Alt = 0:400:4000;
+datcom.s.Mach = 0.05:0.05:1;
+datcom.s.Alpha = [-10 -7.5 -5 -2.5 -1.5 -1 -0.5 -0.1 0 0.1 0.5 1 1.5 2.5 5 7.5 10];
+datcom.s.Beta = [-1 -0.1 0 0.1 1];
+datcom.s.Alt = 0:500:4000;
 
 %% Design Parameters
 %%%%%%% fins
-datcom.design.Chord1 = 0.1:0.02:0.3;                            % [m] chord fixed length
-datcom.design.Chord2 = 0.1:0.02:0.3;                            % [m] chord free length 
-datcom.design.Heigth = 0.1:0.02:0.3;                            % [m] chord free length 
-rect = true; iso = true; parall = true;                         % choose the shapes that you wanna try
+datcom.design.Chord1 = 0.3;%0.28:0.02:0.32;                            % [m] chord fixed length
+datcom.design.Chord2 = 0.15;%0.1:0.02:0.16;                            % [m] chord free length 
+datcom.design.Heigth = 0.15;%0.1:0.02:0.16;                            % [m] chord free length 
+rect = false; iso = false; parall = true;                         % choose the shapes that you wanna try
 
 %%%%%%% ogive
-datcom.design.Lnose = 0.25:0.02:0.45;                           % [m] ogive length
+datcom.design.Lnose = 0.3;%0.35:0.02:0.41;                           % [m] ogive length
 datcom.design.NosePower = [];                                   % [/] Power coefficient of the NoseCone, put a empty vector to avoid power ogive.
-Karman = true; Haack = true; Ogive = true;                      % choose the shapes that you wanna try 
+Karman = true; Haack = false; Ogive = false;                      % choose the shapes that you wanna try 
 
 %% Fixed Parameters
 datcom.para.xcg = [1.9, 1.8];                                   % [m] CG position [full, empty]

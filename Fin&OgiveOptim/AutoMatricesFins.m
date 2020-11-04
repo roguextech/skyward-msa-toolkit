@@ -102,7 +102,7 @@ for i = 1:N1
                 for k = 1:2
                     if print
                         clc
-                        perc = round((i-1)/N1*100 + (j-1)/N2*(100/N1) + (hh-1)/N3*(100/N2) + (s-1)/Ns*(100/N1/N2/N3) + (k-1)/2*(100/N1/N2/N3/Ns));
+                        perc = round((i-1)/N1*100 + (j-1)/N2*(100/N1) + (hh-1)/N3*(100/N1/N2) + (s-1)/Ns*(100/N1/N2/N3) + (k-1)/2*(100/N1/N2/N3/Ns));
                         fprintf('----------------- Fins Aerodynamics Prediction ----------------- \n')
                         fprintf(' Progress %d %% \n', perc);
                     end

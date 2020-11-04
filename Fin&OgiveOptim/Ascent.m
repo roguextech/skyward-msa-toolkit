@@ -186,34 +186,41 @@ end
 %% CHOSING THE FULL CONDITION VALUE
 % interpolation of the coefficients with the value in the nearest condition of the Coeffs matrix
 
-CAf = interp4_easy(A_datcom,M_datcom,B_datcom,H_datcom,CoeffsF.CA,alpha,M,beta,-z);
+[CAf, angle0] = interp4_easy(A_datcom,M_datcom,B_datcom,H_datcom,CoeffsF.CA,alpha,M,beta,-z);
 CYBf = interp4_easy(A_datcom,M_datcom,B_datcom,H_datcom,CoeffsF.CYB,alpha,M,beta,-z);
+CY0f = interp4_easy(A_datcom,M_datcom,B_datcom,H_datcom,CoeffsF.CY,alpha,M,beta,-z);
 CNAf = interp4_easy(A_datcom,M_datcom,B_datcom,H_datcom,CoeffsF.CNA,alpha,M,beta,-z);
+CN0f = interp4_easy(A_datcom,M_datcom,B_datcom,H_datcom,CoeffsF.CN,alpha,M,beta,-z);
 Clf = interp4_easy(A_datcom,M_datcom,B_datcom,H_datcom,CoeffsF.CLL,alpha,M,beta,-z);
 Clpf = interp4_easy(A_datcom,M_datcom,B_datcom,H_datcom,CoeffsF.CLLP,alpha,M,beta,-z);
 Cmaf = interp4_easy(A_datcom,M_datcom,B_datcom,H_datcom,CoeffsF.CMA,alpha,M,beta,-z);
+Cm0f = interp4_easy(A_datcom,M_datcom,B_datcom,H_datcom,CoeffsF.CM,alpha,M,beta,-z);
 Cmadf = interp4_easy(A_datcom,M_datcom,B_datcom,H_datcom,CoeffsF.CMAD,alpha,M,beta,-z);
 Cmqf = interp4_easy(A_datcom,M_datcom,B_datcom,H_datcom,CoeffsF.CMQ,alpha,M,beta,-z);
 Cnbf = interp4_easy(A_datcom,M_datcom,B_datcom,H_datcom,CoeffsF.CLNB,alpha,M,beta,-z);
+Cn0f = interp4_easy(A_datcom,M_datcom,B_datcom,H_datcom,CoeffsF.CLN,alpha,M,beta,-z);
 Cnrf = interp4_easy(A_datcom,M_datcom,B_datcom,H_datcom,CoeffsF.CLNR,alpha,M,beta,-z);
 Cnpf = interp4_easy(A_datcom,M_datcom,B_datcom,H_datcom,CoeffsF.CLNP,alpha,M,beta,-z);
-% XCPf = - interp4_easy(A_datcom,M_datcom,B_datcom,H_datcom,CoeffsF.X_C_P,alpha,M,beta,-z);
+
 
 %% CHOSING THE EMPTY CONDITION VALUE
 % interpolation of the coefficients with the value in the nearest condition of the Coeffs matrix
 
-CAe = interp4_easy(A_datcom,M_datcom,B_datcom,H_datcom,CoeffsE.CA,alpha,M,beta,-z);
-CYBe = interp4_easy(A_datcom,M_datcom,B_datcom,H_datcom,CoeffsE.CYB,alpha,M,beta,-z);
-CNAe = interp4_easy(A_datcom,M_datcom,B_datcom,H_datcom,CoeffsE.CNA,alpha,M,beta,-z);
-Cle = interp4_easy(A_datcom,M_datcom,B_datcom,H_datcom,CoeffsE.CLL,alpha,M,beta,-z);
-Clpe = interp4_easy(A_datcom,M_datcom,B_datcom,H_datcom,CoeffsE.CLLP,alpha,M,beta,-z);
-Cmae = interp4_easy(A_datcom,M_datcom,B_datcom,H_datcom,CoeffsE.CMA,alpha,M,beta,-z);
-Cmade = interp4_easy(A_datcom,M_datcom,B_datcom,H_datcom,CoeffsE.CMAD,alpha,M,beta,-z);
-Cmqe = interp4_easy(A_datcom,M_datcom,B_datcom,H_datcom,CoeffsE.CMQ,alpha,M,beta,-z);
-Cnbe = interp4_easy(A_datcom,M_datcom,B_datcom,H_datcom,CoeffsE.CLNB,alpha,M,beta,-z);
-Cnre = interp4_easy(A_datcom,M_datcom,B_datcom,H_datcom,CoeffsE.CLNR,alpha,M,beta,-z);
-Cnpe = interp4_easy(A_datcom,M_datcom,B_datcom,H_datcom,CoeffsE.CLNP,alpha,M,beta,-z);
-% XCPe = - interp4_easy(A_datcom,M_datcom,B_datcom,H_datcom,CoeffsE.X_C_P,alpha,M,beta,-z);
+CAe = interp4_easy(A_datcom,M_datcom,B_datcom,H_datcom,CoeffsE.CA ,alpha,M,beta,-z);
+CYBe = interp4_easy(A_datcom,M_datcom,B_datcom,H_datcom,CoeffsE.CYB ,alpha,M,beta,-z);
+CY0e = interp4_easy(A_datcom,M_datcom,B_datcom,H_datcom,CoeffsE.CY ,alpha,M,beta,-z);
+CNAe = interp4_easy(A_datcom,M_datcom,B_datcom,H_datcom,CoeffsE.CNA ,alpha,M,beta,-z);
+CN0e = interp4_easy(A_datcom,M_datcom,B_datcom,H_datcom,CoeffsE.CN ,alpha,M,beta,-z);
+Cle = interp4_easy(A_datcom,M_datcom,B_datcom,H_datcom,CoeffsE.CLL ,alpha,M,beta,-z);
+Clpe = interp4_easy(A_datcom,M_datcom,B_datcom,H_datcom,CoeffsE.CLLP ,alpha,M,beta,-z);
+Cmae = interp4_easy(A_datcom,M_datcom,B_datcom,H_datcom,CoeffsE.CMA ,alpha,M,beta,-z);
+Cm0e = interp4_easy(A_datcom,M_datcom,B_datcom,H_datcom,CoeffsE.CM ,alpha,M,beta,-z);
+Cmade = interp4_easy(A_datcom,M_datcom,B_datcom,H_datcom,CoeffsE.CMAD ,alpha,M,beta,-z);
+Cmqe = interp4_easy(A_datcom,M_datcom,B_datcom,H_datcom,CoeffsE.CMQ ,alpha,M,beta,-z);
+Cnbe = interp4_easy(A_datcom,M_datcom,B_datcom,H_datcom,CoeffsE.CLNB ,alpha,M,beta,-z);
+Cn0e = interp4_easy(A_datcom,M_datcom,B_datcom,H_datcom,CoeffsE.CLN ,alpha,M,beta,-z);
+Cnre = interp4_easy(A_datcom,M_datcom,B_datcom,H_datcom,CoeffsE.CLNR ,alpha,M,beta,-z);
+Cnpe = interp4_easy(A_datcom,M_datcom,B_datcom,H_datcom,CoeffsE.CLNP ,alpha,M,beta,-z);
 
 %% LINEAR INTERPOLATION BETWEEN THE TWO CONDITIONS
 % Computing the value of the aerodynamics coefficients at a certain time
@@ -222,30 +229,44 @@ Cnpe = interp4_easy(A_datcom,M_datcom,B_datcom,H_datcom,CoeffsE.CLNP,alpha,M,bet
 if t < tb
     CA = t/tb*(CAe-CAf)+CAf;
     CYB = t/tb*(CYBe-CYBf)+CYBf;
+    CY0 = t/tb*(CY0e-CY0f)+CY0f;
     CNA = t/tb*(CNAe-CNAf)+CNAf;
+    CN0 = t/tb*(CN0e-CN0f)+CN0f;
     Cl = t/tb*(Cle-Clf)+Clf;
     Clp = t/tb*(Clpe-Clpf)+Clpf;
     Cma = t/tb*(Cmae-Cmaf)+Cmaf;
+    Cm0 = t/tb*(Cm0e-Cm0f)+Cm0f;
     Cmad = t/tb*(Cmade-Cmadf)+Cmadf;
     Cmq = t/tb*(Cmqe-Cmqf)+Cmqf;
     Cnb = t/tb*(Cnbe-Cnbf)+Cnbf;
+    Cn0 = t/tb*(Cn0e-Cn0f)+Cn0f;
     Cnr = t/tb*(Cnre-Cnrf)+Cnrf;
     Cnp = t/tb*(Cnpe-Cnpf)+Cnpf;
-%     XCP_value = t/tb*(XCPe-XCPf)+XCPf;
 else
     CA = CAe;
     CYB = CYBe;
+    CY0 = CY0e;
     CNA = CNAe;
+    CN0 = CN0e;
     Cl = Cle;
     Clp = Clpe;
     Cma = Cmae;
+    Cm0 = Cm0e;
     Cmad =Cmade;
     Cmq = Cmqe;
     Cnb = Cnbe;
+    Cn0 = Cn0e;
     Cnr = Cnre;
     Cnp = Cnpe;
-%     XCP_value = XCPe;
 end
+
+% compute CN,CY,Cm,Cn (linearized with respect to alpha and beta):
+alpha0 = angle0(1); beta0 = angle0(2);
+
+CN = (CN0 + CNA*(alpha-alpha0));
+CY = (CY0 + CYB*(beta-beta0));
+Cm = (Cm0 + Cma*(alpha-alpha0));
+Cn = (Cn0 + Cnb*(beta-beta0));
 
 if -z < settings.lrampa*sin(OMEGA)      % No torque on the Launch
     
@@ -276,8 +297,8 @@ else
     qdynL_V = 0.5*rho*V_norm*S*C;   
     
     X = qdyn*S*CA;                  %[N] x-body component of the aerodynamics force
-    Y = qdyn*S*CYB*beta;            %[N] y-body component of the aerodynamics force
-    Z = qdyn*S*CNA*alpha;           %[N] z-body component of the aerodynamics force
+    Y = qdyn*S*CY;            %[N] y-body component of the aerodynamics force
+    Z = qdyn*S*CN;           %[N] z-body component of the aerodynamics force
     Fg = quatrotate(Q,[0 0 m*g])';  %[N] force due to the gravity in body frame
     
     F = Fg +[-X+T,+Y,-Z]';          %[N] total forces vector
@@ -291,9 +312,9 @@ else
     
     % Rotation
     dp = (Iyy-Izz)/Ixx*q*r + qdynL_V/Ixx*(V_norm*Cl+Clp*p*C/2)-Ixxdot*p/Ixx;
-    dq = (Izz-Ixx)/Iyy*p*r + qdynL_V/Iyy*(V_norm*Cma*alpha + (Cmad+Cmq)*q*C/2)...
+    dq = (Izz-Ixx)/Iyy*p*r + qdynL_V/Iyy*(V_norm*Cm + (Cmad+Cmq)*q*C/2)...
         -Iyydot*q/Iyy;
-    dr = (Ixx-Iyy)/Izz*p*q + qdynL_V/Izz*(V_norm*Cnb*beta + (Cnr*r+Cnp*p)*C/2)...
+    dr = (Ixx-Iyy)/Izz*p*q + qdynL_V/Izz*(V_norm*Cn + (Cnr*r+Cnp*p)*C/2)...
         -Izzdot*r/Izz;
     
 end

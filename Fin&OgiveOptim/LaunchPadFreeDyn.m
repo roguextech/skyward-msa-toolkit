@@ -68,8 +68,8 @@ H_datcom = settings.Altitudes;
 M_datcom = settings.Machs;
 
 %% Axial Coefficient
-CAf = interp4_easy(A_datcom, M_datcom, B_datcom, H_datcom, CoeffsF.CA, alpha, M, beta, 0);
-CAe = interp4_easy(A_datcom, M_datcom, B_datcom, H_datcom, CoeffsE.CA, alpha, M, beta, 0);
+CAf = Interp4(A_datcom, M_datcom, B_datcom, H_datcom, CoeffsF.CA, alpha, M, beta, 0);
+CAe = Interp4(A_datcom, M_datcom, B_datcom, H_datcom, CoeffsE.CA, alpha, M, beta, 0);
 
 CA = t/tb*(CAe-CAf)+CAf;
     
