@@ -108,19 +108,12 @@ if settings.stoch.N == 1
     
     % TEMPERATURE AND MACH NUMBER
     
-    % pre-allocation
-    M = zeros(Na, 1); Tamb = M;
-    
-    for i = 1:Na
-        [Tamb(i), a, ~, ~] = atmosisa(za(i));
-        M(i) = abs_V(i)/a;
-    end
-    
+    M = data_ascent.interp.M;
     % determine the maximum Mach number
     [max_M, imax_M] = max(M);
     
     % determine latitude and longitude of the landing point
-    [lat_LP, lon_LP, ~] = ned2geodetic(xa(end), ya(end), 0, settings.lat0, settings.lon0, 0, wgs84Ellipsoid);
+    [lat_LP, lon_LP, ~] = ned2geodetic(x(end), y(end), 0, settings.lat0, settings.lon0, 0, wgs84Ellipsoid);
     
     % DATA RECORD (display)
         
