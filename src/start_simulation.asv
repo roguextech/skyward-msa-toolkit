@@ -68,37 +68,55 @@ toc
 %% DATA-PRINTING
 if settings.stoch.N == 1 
     
-    Na = length(Ya(:, 1));
+    Na = length(Ya(:,1));
+
+    % POSITIONS
+    xa = Ya(:,1);
+    ya = Ya(:,2);
+    za = -Ya(:,3);
+    Xa = [xa, ya, za]; 
     
-    za = -Ya(:, 3);
-    Xa = Ya(:, 1:3);
-    Va = Ya(:, 4:6);
+    x = Yf(:,1);
+    y = Yf(:,2);
+    z = -Yf(:,3);
     
-    x = Yf(:, 1);
-    y = Yf(:, 2);    
-    z = -Yf(:, 3); 
+    % VELOCITIES
+    ua = Ya(:,4);
+    va = Ya(:,5);
+    wa = -Ya(:,6);
+    Va = [ua, va, wa];
     
+    % MAXIMUM POSITIONS, VELOCITIES AND ACCELERATION 
     load('ascent_plot.mat');
-    Aa = data_ascent.accelerations.body_acc;
-    M = data_ascent.interp.M;
-    V_apo = norm(data_ascent.state.Y(end, 4:6) - ...
-        data_ascent.wind.body_wind(1:3, end)');
+    A = data_ascent.accelerations.body_acc;
     
-    abs_X = vecnorm(Xa');
-    abs_V = vecnorm(Va');
-    abs_A = vecnorm(Aa');
+    % pre-allocation
+    abs_X = zeros(Na, 1); abs_V = abs_X; abs_A = abs_X;
+    
+    % determine the norm of every row element
+    for k = 1:Na
+        abs_X(k) = norm(Xa(k, :));
+        abs_V(k) = norm(Va(k, :));
+        abs_A(k) = norm(A(k, :));
+    end    
     
     [max_dist, imax_dist] = max(abs_X);
     [max_v, imax_v] = max(abs_V);
     [max_a, imax_a] = max(abs_A);
-    [max_M, imax_M] = max(M);
-    
     iexit = find(abs_X <= settings.lrampa);  % checking where the missile is undocked from the hook of the launch pad
     iexit = iexit(end);
-
-    [lat, lon, ~] = ned2geodetic(x, y, 0, settings.lat0, settings.lon0, 0, wgs84Ellipsoid);
-   
+    
+    % TEMPERATURE AND MACH NUMBER
+    
+    M = data_ascent.interp.M;
+    % determine the maximum Mach number
+    [max_M, imax_M] = max(M);
+    
+    % determine latitude and longitude of the landing point
+    [lat_LP, lon_LP, ~] = ned2geodetic(x(end), y(end), 0, settings.lat0, settings.lon0, 0, wgs84Ellipsoid);
+    
     % DATA RECORD (display)
+        
     disp(' ')
     disp('DATA RECORD:')
     fprintf('apogee reached: %g [m] \n', za(end));
@@ -123,10 +141,8 @@ if settings.stoch.N == 1
     fprintf('speed at launch pad exit: %g [m/s] \n', abs_V(iexit))
     fprintf('time: %g [sec] \n\n', Ta(iexit))
     
-    fprintf('latitude of landing point: %10.8f [deg] \n', lat(end));
-    fprintf('longitude of landing point: %10.8f [deg] \n\n', lon(end));
-
-    fprintf('apogee velocity relative to wind: %g [m/s] \n', V_apo);
+%     fprintf('latitude of landing point: %10.8f [deg] \n', lat_LP);
+%     fprintf('longitude of landing point: %10.8f [deg] \n\n', lon_LP);
 
 else      
     % Mean Apogee Time
@@ -167,6 +183,13 @@ end
 %% PLOTS
 if settings.plots
     run('plots.m')
+end
+
+if settings.stoch.N == 1
+    V_apo = norm(data_ascent.state.Y(end, 4:6) - ...
+        data_ascent.wind.body_wind(1:3, end)');
+    fprintf('apogee velocity relative to wind: %g [m/s] \n', V_apo);
+    delete('ascent_plot.mat')
 end
 
 clearvars -except T data_ascent data_para data_bal flag LP

@@ -53,8 +53,8 @@ Release date: 13/01/2018
 %}
 
 % recalling the state
-x = Y(1);
-y = Y(2);
+% x = Y(1);
+% y = Y(2);
 z = Y(3);
 u = Y(4);
 v = Y(5);
@@ -70,9 +70,6 @@ m = Y(14);
 Ixx = Y(15);
 Iyy = Y(16);
 Izz = Y(17);
-
-
-[lat, lon, ~] = ned2geodetic(x, y, 0, settings.lat0, settings.lon0, 0, wgs84Ellipsoid);     % geographic coordinates
 
 %% QUATERION ATTITUDE
 
@@ -429,7 +426,7 @@ parout.interp.alt = -z;
 parout.wind.NED_wind = [uw, vw, ww];
 parout.wind.body_wind = wind;
 
-parout.velocities=Vels;
+parout.velocities = Vels;
 
 parout.forces.AeroDyn_Forces = [X, Y, Z];
 parout.forces.T = T;
@@ -452,7 +449,4 @@ parout.coeff.Cnb = Cnb;
 parout.coeff.Cnr = Cnr;
 parout.coeff.Cnp = Cnp;
 parout.coeff.XCP = XCP_value;
-
-parout.geo_cord.lat = lat;
-parout.geo_cord.lon = lon;
 

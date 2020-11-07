@@ -48,8 +48,8 @@ Release date: 13/01/2018
 %}
 
 % recalling the state
-x = Y(1);
-y = Y(2);
+% x = Y(1);
+% y = Y(2);
 z = Y(3);
 u = Y(4);
 v = Y(5);
@@ -65,9 +65,6 @@ m = settings.m0;
 Ixx = settings.Ixxe;
 Iyy = settings.Iyye;
 Izz = settings.Izze;
-
-[lat, lon, ~] = ned2geodetic(x, y, 0, settings.lat0, settings.lon0, 0, wgs84Ellipsoid);     % geographic coordinates
-
 
 Q = [ q0 q1 q2 q3];
 Q_conj = [ q0 -q1 -q2 -q3];
@@ -289,8 +286,5 @@ parout.coeff.Cmq = Cmq;
 parout.coeff.Cnb = Cnb;
 parout.coeff.Cnr = Cnr;
 parout.coeff.Cnp = Cnp;
-
-parout.geo_cord.lat = lat;
-parout.geo_cord.lon = lon;
 
 end

@@ -10,8 +10,6 @@ Release date: 13/01/2018
 %}
 
 if settings.stoch.N == 1
-    
-    load('ascent_plot.mat')
     if settings.ballistic
         load('descent_plot.mat')
         delete('descent_plot.mat')
@@ -74,6 +72,8 @@ if settings.stoch.N == 1
     grid on, xlabel('time [s]'), ylabel('roll angle [deg]')
     
     %% 3D TRAJECTORY
+    
+    
     figure('Name','3D Trajectory - All Flight','NumberTitle','off');
     plot3(y,x,z,'Linewidth',2.5), axis equal, hold on, grid on;
     title('Trajectory')
@@ -245,7 +245,9 @@ if settings.stoch.N == 1
     end
     
     plot(0, 0, 'r.','markersize',14);
-    plot(Yf(end, 2), -Yf(end, 3), 'rx','markersize',7);  
+    plot(Yf(end, 2), -Yf(end, 3), 'rx','markersize',7);
+    
+    delete('ascent_plot.mat')
     
 else   %%%% STOCHASTIC PLOTS (only if N>1)
     
