@@ -94,9 +94,19 @@ if settings.stoch.N == 1
             z_plot = zeros(length(theta_plot), 1);
             plot3(y_plot, x_plot, z_plot, '--r')
         end
-        
+       
     else
-        % adding the terrain map
+        % adding satellite 3D trajectory    
+        [lat, lon, h] = ned2geodetic(x, y, -z, settings.lat0, settings.lon0, settings.z0, wgs84Ellipsoid);
+        uif = uifigure;
+        g = geoglobe(uif);
+        geoplot3(g,lat,lon,h,'b','Linewidth',2.5)
+        campos(g, 41.838362, 13.987354, 6000)
+        camheading(g, 100)
+        campitch(g, -25)
+    
+        
+        % adding surf terrain map
         X_t = -6000:30:6000;
         Y_t = -6000:30:6000;
         L_X = length(X_t);
@@ -255,20 +265,24 @@ else   %%%% STOCHASTIC PLOTS (only if N>1)
     % Position Scaled map in background
     figure('Name', 'Landing Points', 'NumberTitle','off')
     if settings.landing_map
-        imshow(settings.map_file, 'YData', -settings.map_yaxis, 'XData', settings.map_xaxis);
-        set(gca, 'YDir', 'normal'); % set y axis with ascending increasing values
-    end
+        [lat_LP, lon_LP, ~] = ned2geodetic(LP(:,1), LP(:,2), 0, settings.lat0, settings.lon0, 0, wgs84Ellipsoid);
+        geoplot(lat_LP,lon_LP,'.r','MarkerSize',11);
+        hold on
+        geoplot(settings.lat0, settings.lon0,'ro', 'MarkerSize', 16, 'MarkerFacecolor', 'b');
+        geobasemap('satellite');
+        geolimits([settings.lat0-settings.lim_lat settings.lat0+settings.lim_lat], [settings.lon0-settings.lim_lon settings.lon0+settings.lim_lon]);
+    else
     axis on; hold on
     plot(LP(:, 2), LP(:, 1), '.r','MarkerSize', 11);
     plot(0,0,'*b','MarkerSize', 10);
+    xlabel('m')
+    ylabel('m')
+    end
     if settings.ballistic 
         title('Landing Points in ballistic');
     else   
         title('Landing Points with 2nd drouge');
     end
-    xlabel('m')
-    ylabel('m')
-    axis image
     
     %% LANDING POINTS 3D
     if settings.terrain
@@ -307,14 +321,5 @@ else   %%%% STOCHASTIC PLOTS (only if N>1)
         plot(LPOPout(:, 2),LPOPout(:, 1), 'o', 'MarkerEdgeColor', 'k', 'MarkerfaceColor', 'k');
         legend({'Launch Site', 'safe points', 'not-safe points'})
     end
-    
-    %% APOGEE POINTS
-    figure('Name','Apogee Points','NumberTitle','off');
-    plot(xapom, yapom, 'bs', 'MarkerSize', 20, 'MarkerFacecolor', 'b'), hold on;
-    plot(X(:, 1), X(:, 2),'k+');
-    legend('Mean Apogee Point', 'Apogee Points');
-    title('Apogee Points'), xlabel('North [m]'), ylabel('East [m]');
-    view(90, 270)
-    axis equal
     
 end

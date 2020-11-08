@@ -9,3 +9,4 @@ sources.tar.gz
 *~
 *.exe
 fin_optimization/opt_tool/Auto_Matrices/datcom
+*.asv

@@ -12,13 +12,14 @@ Release date: 16/04/2016
 
 %% LAUNCH SETUP
 % launchpad
-settings.z0 = 200;                                                                  %[m] Launchpad Altitude
+settings.z0 = 1416;                                                                  %[m] Launchpad Altitude
 settings.lrampa = 4.9;                                                              %[m] LaunchPad route (distance from ground of the first hook)
-settings.lat0 = 44.519272;                                                          % Launchpad latitude
-settings.lon0 = 11.642333;                                                          % Launchpad longitude
+settings.lat0 = 41.810093;                                                          % Launchpad latitude
+settings.lon0 = 14.052546;                                                          % Launchpad longitude
 settings.terrain = false;
-if settings.terrain
-    settings.funZ = funZ_gen('zdata.mat', settings.lat0, settings.lon0, true, 'xy');    % Altitude map computation
+% ATTENTION: works only at Roccaraso ~ (41.810093 14.052546) 
+if settings.terrain  
+     settings.funZ = funZ_gen('zdata.mat', settings.lat0, settings.lon0, true, 'xy');    % Altitude map computation
 end
 
 % launchpad directions
@@ -69,7 +70,7 @@ clear ('motors','name')
 
 settings.C = 0.15;                                                  % [m]      Caliber (Fuselage Diameter)
 settings.S = pi*settings.C^2/4;                                     % [m^2]    Cross-sectional Surface
-L = 3;                                                              % [m]      Rocket length
+settings.L = 3;                                                              % [m]      Rocket length
 
 %% MASS GEOMERTY DETAILS
 % x-axis: along the fuselage
@@ -120,7 +121,7 @@ settings.Altitudes = s.State.Altitudes';
 settings.Machs = s.State.Machs';
 clear('s');
 
-settings.control = '0%';                                            % aerobrakes 0% 50% or 100% opened
+settings.control = '100%';                                            % aerobrakes 0% 50% or 100% opened
 
 %% PARACHUTES DETAILS
 % parachute 1
@@ -199,8 +200,8 @@ settings.wind.input_uncertainty = [1, 1];
 
 % Wind is generated randomly from the minimum to the maximum parameters which defines the wind.
 % Setting the same values for min and max will fix the parameters of the wind.
-settings.wind.MagMin = 10;                           % [m/s] Minimum Magnitude
-settings.wind.MagMax = 10;                          % [m/s] Maximum Magnitude
+settings.wind.MagMin = 2;                           % [m/s] Minimum Magnitude
+settings.wind.MagMax = 4;                          % [m/s] Maximum Magnitude
 settings.wind.ElMin = 0*pi/180;                     % [rad] Minimum Elevation, user input in degrees (ex. 0)
 settings.wind.ElMax = 0*pi/180;                     % [rad] Maximum Elevation, user input in degrees (ex. 0) (Max == 90 Deg)
 settings.wind.AzMin = (180)*pi/180;                   % [rad] Minimum Azimuth, user input in degrees (ex. 90)
@@ -215,12 +216,12 @@ settings.wind.AzMax = (180)*pi/180;                   % [rad] Maximum Azimuth, u
 %% BALLISTIC SIMULATION
 % Set to True to run a ballistic (without drogues) simulation
 
-settings.ballistic = true;
+settings.ballistic = false;
 
 %% STOCHASTIC DETAILS
 % If N > 1 the stochastic routine is started
 
-settings.stoch.N = 1;                               % Number of cases
+settings.stoch.N = 3;                               % Number of cases
 
 %%% launch probability details
 settings.stoch.prob.x_lim = 2e3;                    % Max ovest displacement [m]
@@ -237,7 +238,9 @@ settings.prob.SafeEllipse.alpha = 10;
 settings.plots = true;
 
 %% LANDING POINTS
-settings.landing_map = false;
-settings.map_file = 'map_bologna.jpg';            % name of map for landing points
-settings.map_xaxis = [-800 800];                  % limits for the data of the landing map
-settings.map_yaxis = [-800 800];
+% satellite maps of the landing zone 
+settings.landing_map = true;
+
+% delta limit on the coordinates 
+settings.lim_lat = 0.04; 
+settings.lim_lon = 0.025;
