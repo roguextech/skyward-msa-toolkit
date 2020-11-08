@@ -1,4 +1,32 @@
 function [Coeffs, State] = datcomParser(varargin)
+%{ 
+
+DATCOMPARSER - function to parse the 'for006.dat' file and to generate the
+               matrices of the aerodynamic coefficients.
+
+INPUTS:
+            - varargin: it can be either a string that contains the name of
+                        .mat file that is saved in the Current Folder or it
+                        can be an empty field and the .mat file is not
+                        saved. (Read NOTES for more informations.)
+
+OUTPUTS: 
+            - Coeffs:   struct in which the fields are the matrices 
+                        of the aerodynamic coefficients. (e.g. Coeffs.CA)
+            - State:    struct in which the fields are the arrays of the
+                        aerodynamic states (Alpha, Mach, Beta, Altitude)
+                        used to compute the aerodynamic coefficients.
+
+NOTES: If the function is used with the syntax 
+'[Coeffs, State] = datcomParser()' the file .mat is not saved in the 
+Current Folder. If the function is used with the syntax 
+'[Coeffs, State] = datcomParser('name')' a file called 'name.mat' is saved
+in the Current Folder. This file contains the two structs Coeffs and
+State that can be loaded into the workspace in any future moment using the
+command MATLAB function 'load'. Note that the file 'for006.dat' that has to
+be parsed must be in the Current Folder.
+
+%}
 
 if not(isempty(varargin))
     mat_name = varargin{1};
