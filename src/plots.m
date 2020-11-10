@@ -81,7 +81,7 @@ if settings.stoch.N == 1
     
     % randomly generation of colors:
     Np = settings.Npara;
-    Colors = rand(3, Np);
+    Colors = rand(3, Np);    
     
     % adding concentric circles
     if not(settings.terrain)
@@ -96,16 +96,7 @@ if settings.stoch.N == 1
         end
        
     else
-        % adding satellite 3D trajectory    
-        [lat, lon, h] = ned2geodetic(x, y, -z, settings.lat0, settings.lon0, settings.z0, wgs84Ellipsoid);
-        uif = uifigure;
-        g = geoglobe(uif);
-        geoplot3(g,lat,lon,h,'b','Linewidth',2.5)
-        campos(g, 41.838362, 13.987354, 6000)
-        camheading(g, 100)
-        campitch(g, -25)
     
-        
         % adding surf terrain map
         X_t = -6000:30:6000;
         Y_t = -6000:30:6000;
@@ -139,6 +130,17 @@ if settings.stoch.N == 1
     else
         legend(h(:), {'Apogee', 'Landing point', 'Launch point', 'burning time position'},...
             'Location', 'northeast', 'Fontsize', 18);
+    end
+    
+    if settings.satellite3D
+        % adding satellite 3D trajectory
+        [lat, lon, h] = ned2geodetic(x, y, -z, settings.lat0, settings.lon0, settings.z0, wgs84Ellipsoid);
+        uif = uifigure;
+        g = geoglobe(uif);
+        geoplot3(g,lat,lon,h,'b','Linewidth',2.5);
+        campos(g, settings.lat0, settings.lon0, 6000);
+        camheading(g, 'auto');
+        campitch(g, -25);
     end
     
     %% HORIZONTAL-FRAME VELOCITIES(subplotted)

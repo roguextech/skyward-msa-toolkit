@@ -12,12 +12,17 @@ Release date: 16/04/2016
 
 %% LAUNCH SETUP
 % launchpad
-settings.z0 = 1416;                                                                  %[m] Launchpad Altitude
+settings.z0 = 1416;                                                                 %[m] Launchpad Altitude
 settings.lrampa = 4.9;                                                              %[m] LaunchPad route (distance from ground of the first hook)
 settings.lat0 = 41.810093;                                                          % Launchpad latitude
 settings.lon0 = 14.052546;                                                          % Launchpad longitude
-settings.terrain = false;
+
+% 39.201778, -8.138368   pont the sor  coordinates 
+% 109 pont the sor z0
+settings.satellite3D = fasle;
+
 % ATTENTION: works only at Roccaraso ~ (41.810093 14.052546) 
+settings.terrain = false;
 if settings.terrain  
      settings.funZ = funZ_gen('zdata.mat', settings.lat0, settings.lon0, true, 'xy');    % Altitude map computation
 end
@@ -216,12 +221,12 @@ settings.wind.AzMax = (180)*pi/180;                   % [rad] Maximum Azimuth, u
 %% BALLISTIC SIMULATION
 % Set to True to run a ballistic (without drogues) simulation
 
-settings.ballistic = false;
+settings.ballistic = true;
 
 %% STOCHASTIC DETAILS
 % If N > 1 the stochastic routine is started
 
-settings.stoch.N = 3;                               % Number of cases
+settings.stoch.N = 1;                               % Number of cases
 
 %%% launch probability details
 settings.stoch.prob.x_lim = 2e3;                    % Max ovest displacement [m]
