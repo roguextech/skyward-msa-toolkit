@@ -67,6 +67,7 @@ end
 
 %% get_coeffs_name
 pattern =  ' *\<ALPHA\> *([\w -/]*)';
+pattern1 = '[\./-]';
 names = cell(26, 1);
 index = 1;
 
@@ -79,19 +80,15 @@ for i = 1:4
         token{k} = char(token{k});
     end
     
-    dummy = strjoin(token);
-    dummy = split(dummy);
-    
-    % replaceBadChars
+    dummy = split(join(token(:)));
     correct = dummy;
-    pattern1 = '[\./-]';
+    
     for j = 1:length(dummy)
         name = dummy{j};
         a = regexprep(name(1:end-1), pattern1, '_');
         b = regexprep(name(end), pattern1, '');
         correct{j} = [a, b];
     end
-    
     names(index:index+length(correct)-1) = correct;
     index = index+length(correct);
 end
@@ -141,9 +138,9 @@ for i = 1:NA
 end
 A = A(1:i);
 
-M = repmat(M, 1, NB*NA);
-B = repmat(repelem(B, 1, NM), 1, NA);
-A = repelem(A, 1, NM*NB);
+Mrep = repmat(M, 1, NB*NA);
+Brep = repmat(repelem(B, 1, NM), 1, NA);
+Arep = repelem(A, 1, NM*NB);
 
 %% get alphas
 pattern = '^[-\d](?=[\d\.])';
@@ -216,57 +213,31 @@ for i = 1:Nb
 end
 
 %% savemat
-realM = [M(1), NaN(1, 200)];
-realA = [A(1), NaN(1, 200)];
-realB = [B(1), NaN(1, 200)];
-
-iM = 1;
-iA = 1;
-iB = 1;
-
-for i = 2:length(M)
-    if not(any(realM == M(i)))
-        iM = iM + 1;
-        realM(iM) = M(i);
-    end
-    if not(any(realA == A(i)))
-        iA = iA + 1;
-        realA(iA) = A(i);
-    end
-    if not(any(realB == B(i)))
-        iB = iB + 1;
-        realB(iB) = B(i);
-    end
-end
-
-realM = realM(1:iM);
-realA = realA(1:iA);
-realB = realB(1:iB);
-
+CC = cell(NL, 1);
 for j = 1:NL
-    Coeffs.(names{j}) = zeros(length(alpha), iM, iB, iA);
+    CC{j} =  zeros(Na, NM, NB, NA);
 end
 
 for i = 1:Nb/4
-    index = i;
-    iA = realA==A(index);
-    iB = realB==B(index);
-    iM = realM==M(index);
+    iA = A==Arep(i);
+    iB = B==Brep(i);
+    iM = M==Mrep(i);
     
     for j = 1:NL
-        Coeffs.(names{j})(:, iM, iB, iA) = raw_data(:, length(names)*(i-1)+j);
+        CC{j}(:, iM, iB, iA) = raw_data(:, NL*(i-1)+j);
     end
-    
-    
 end
 
-State.Machs = realM;
+for j = 1:NL
+    Coeffs.(names{j}) = CC{j};
+end
+
+State.Machs = M;
 State.Alphas = alpha;
-State.Betas = realB;
-State.Altitudes = realA;
+State.Betas = B;
+State.Altitudes = A;
 
 if savemat
     save(mat_name, 'State', 'Coeffs');
 end
-
 
