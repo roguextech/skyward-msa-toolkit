@@ -1,4 +1,25 @@
 function createFor006(datcom)
+%{ 
+
+CREATEFOR006 - function to create the 'for006.dat' file.
+
+INPUTS:
+            - datcom:  struct containing all the values to be inserted in
+                        the for005
+
+OUTPUTS: 
+
+Author: Giulio Pacifici
+Skyward Experimental Rocketry | CRD Dept | crd@skywarder.eu
+email: giulio.pacifici@skywarder.eu
+Release date: 21/10/2019
+
+Author: Adriano Filippo Inno
+Skyward Experimental Rocketry | CRD Dept | crd@skywarder.eu
+email: adriano.filippo.inno@skywarder.eu
+
+%}
+
 %% recalling the variables
 Mach = datcom.Mach;
 Alpha = datcom.Alpha;
@@ -28,6 +49,7 @@ Nm = length(Mach);
 Na = length(Alpha);
 Nb = length(Beta);
 Nalt = length(Alt);
+
 %% protuberance data
 if isfield(datcom,'xprot') && datcom.hprot ~= 0 
     protub_flag = 1;
@@ -41,6 +63,7 @@ if isfield(datcom,'xprot') && datcom.hprot ~= 0
 else
     protub_flag = 0;
 end
+
 %% datcom
 Xle1 = Lcenter + Lnose - d - C1;
 diffC = C1-C2;

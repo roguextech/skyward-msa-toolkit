@@ -96,7 +96,7 @@ for i = 1:N1
                     createFor006(MD);
                     
                     %%% parsing
-                    [Coeffs, State] = datcomParser();
+                    [Coeffs, State] = datcomParser5();
                     
                     data{i, j, hh, s}.(mass_condition{k}).Coeffs = Coeffs;
                     data{i, j, hh, s}.(mass_condition{k}).State = State;

@@ -1,6 +1,6 @@
 %{
 
-FIN_OPT - This script chose the best fin set between the chosen.
+Optimization - This script compute the best finset and ogive between the chosen.
 For every set, missile datcom is used to predict the aerodynamic coefficients.
 
 Author: Matteo Pozzoli
@@ -8,6 +8,11 @@ Skyward Experimental Rocketry | CRD Dept | crd@skywarder.eu
 email: matteo.pozzoli@skywarder.eu
 Website: http://www.skywarder.eu
 Release date: 14/10/2019
+
+Author: Adriano Filippo Inno
+Skyward Experimental Rocketry | CRD Dept | crd@skywarder.eu
+email: adriano.filippo.inno@skywarder.eu
+Update date: 21/10/20
 
 %}
 

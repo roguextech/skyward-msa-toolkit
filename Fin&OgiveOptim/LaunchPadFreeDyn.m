@@ -1,33 +1,17 @@
 function dY = LaunchPadFreeDyn(t, Y, settings, Q0)
-% ODE-Function of the 6DOF Rigid Rocket Model
-% State = ( x y z | u v w | p q r | q0 q1 q2 q3 | m | Ixx Iyy Izz )
-%
-% (x y z): NED Earth's Surface Centered Frame ("Inertial") coordinates
-% (u v w): body frame velocities
-% (p q r): body frame angular rates
-% m : total mass
-% (Ixx Iyy Izz): Inertias
-% (q0 q1 q2 q3): attitude unit quaternion
-%
-%
-% NOTE: To get the NED velocities the body-frame must be multiplied for the
-% conjugated of the current attitude quaternion
-% E.G.
-%
-%
-% quatrotate(quatconj(Y(:,10:13)),Y(:,4:6))
+%{
+ODE-Function to compute the dynamics on the launchpad
+State = ( x y z | u | m )
 
-% Author: Ruben Di Battista
-% Skyward Experimental Rocketry | CRD Dept | crd@skywarder.eu
-% email: ruben.dibattista@skywarder.eu
-% Website: http://www.skywarder.eu
-% April 2014; Last revision: 31.XII.2014
-% License:  2-clause BSD
-
-% Author: Francesco Colombi
-% Skyward Experimental Rocketry | CRD Dept | crd@skywarder.eu
-% email: francesco.colombi@skywarder.eu
-% Release date: 16/04/2016
+(x y z): NED Earth's Surface Centered Frame ("Inertial") coordinates
+u: body frame velocity
+m: mass
+    
+Author: Adriano Filippo Inno
+Skyward Experimental Rocketry | CRD Dept | crd@skywarder.eu
+email: adriano.filippo.inno@skywarder.eu
+Release date: 18/10/2019
+%}
 
 % x = Y(1);
 % y = Y(2);

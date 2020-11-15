@@ -1,20 +1,21 @@
 function [uw, vw, ww, Az] = WindConstGenerator(Az, Mag)
-% windgen(AzMin,AzMax,ElMin,ElMax,MagMin,MagMax)
-% function that generates wind components in NED axes based on altitude
-%
-% Vector Orientation
-% AzMin = 0; Minimum angle of Azimuth from North
-% AzMax = 2*pi; Maximum angle of Azimuth from North
-% ElMin = 0; Minimum angle of Elevation
-% ElMax = pi/2; Maximum angle of Elevatiom
+%{
+ windgen(AzMin,AzMax,ElMin,ElMax,MagMin,MagMax)
+function that generates wind components in NED axes based on altitude
 
-% Author: Ruben Di Battista
-% Skyward Experimental Rocketry | CRD Dept | crd@skywarder.eu
-% email: ruben.dibattista@skywarder.eu
-% Website: http://www.skywarder.eu
-% April 2014; Last revision: 25.IV.2014
-% License:  2-clause BSD
+Vector Orientation
+AzMin = 0; Minimum angle of Azimuth from North
+AzMax = 2*pi; Maximum angle of Azimuth from North
+ElMin = 0; Minimum angle of Elevation
+ElMax = pi/2; Maximum angle of Elevatiom
 
+Author: Ruben Di Battista
+Skyward Experimental Rocketry | CRD Dept | crd@skywarder.eu
+email: ruben.dibattista@skywarder.eu
+Website: http://www.skywarder.eu
+April 2014; Last revision: 25.IV.2014
+License:  2-clause BSD
+%}
 
 % Random Wind Vector
 El = 0;

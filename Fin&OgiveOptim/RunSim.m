@@ -1,16 +1,21 @@
 function apogee = RunSim(settings)
 
-% Author: Ruben Di Battista
-% Skyward Experimental Rocketry | CRD Dept | crd@skywarder.eu
-% email: ruben.dibattista@skywarder.eu
-% Website: http://www.skywarder.eu
-% April 2014; Last revision: 31.XII.2014
-% License:  2-clause BSD
+%{
 
-% Author: Francesco Colombi
-% Skyward Experimental Rocketry | CRD Dept | crd@skywarder.eu
-% email: francesco.colombi@skywarder.eu
-% Release date: 16/04/2016
+RunSim - This function tests the fins simulating the ascent
+
+Author: Matteo Pozzoli
+Skyward Experimental Rocketry | CRD Dept | crd@skywarder.eu
+email: matteo.pozzoli@skywarder.eu
+Website: http://www.skywarder.eu
+Release date: 14/10/2019
+
+Author: Adriano Filippo Inno
+Skyward Experimental Rocketry | CRD Dept | crd@skywarder.eu
+email: adriano.filippo.inno@skywarder.eu
+Update date: 21/10/20
+
+%}
 
 %% STARTING CONDITIONS
 
@@ -30,7 +35,6 @@ X0a = [X0; V0; W0; Q0; settings.m0; settings.Ixxf; settings.Iyyf; settings.Izzf]
 [~,Ya] = ode113(@Ascent, [0, tf], X0a, settings.ode.optionsasc, settings, uw, vw, ww);
 
 %% CALCULATE OUTPUT QUANTITIES
-
 apogee = -Ya(end, 3);
 
 

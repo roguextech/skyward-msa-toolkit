@@ -1,13 +1,14 @@
 function [value,isterminal,direction] = EventApogee(t,Y,settings,varargin)
-% Event function to stop simulation at apogee
+%{
+Event function to stop simulation at apogee
 
-% Author: Ruben Di Battista
-% Skyward Experimental Rocketry | CRD Dept | crd@skywarder.eu
-% email: ruben.dibattista@skywarder.eu
-% Website: http://www.skywarder.eu
-% April 2014; Last revision: 25.IV.2014
-% License:  2-clause BSD
-
+Author: Ruben Di Battista
+Skyward Experimental Rocketry | CRD Dept | crd@skywarder.eu
+email: ruben.dibattista@skywarder.eu
+Website: http://www.skywarder.eu
+April 2014; Last revision: 25.IV.2014
+License:  2-clause BSD
+%}
 Q = Y(10:13)';
 
 %Inertial Frame velocities

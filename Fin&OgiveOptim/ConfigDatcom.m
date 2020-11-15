@@ -2,16 +2,6 @@
 CONFIG - This script sets up all the parameters for missile Datcom
 All the parameters are stored in the "datcom" structure.
 
-Author: Ruben Di Battista
-Skyward Experimental Rocketry | CRD Dept | crd@skywarder.eu
-email: ruben.dibattista@skywarder.eu
-Website: http://www.skywarder.eu
-License: 2-clause BSD
-
-Author: Francesco Colombi
-Skyward Experimental Rocketry | CRD Dept | crd@skywarder.eu
-email: francesco.colombi@skywarder.eu
-
 Author: Adriano Filippo Inno
 Skyward Experimental Rocketry | CRD Dept | crd@skywarder.eu
 email: adriano.filippo.inno@skywarder.eu
@@ -21,22 +11,22 @@ Release date: 18/10/2019
 
 %% States
 % State values in which the aerodynamic coefficients will be computed
-datcom.s.Mach = 0.05:0.05:1;
-datcom.s.Alpha = [-10 -7.5 -5 -2.5 -1.5 -1 -0.5 -0.1 0 0.1 0.5 1 1.5 2.5 5 7.5 10];
-datcom.s.Beta = [-1 -0.1 0 0.1 1];
+datcom.s.Mach = 0.1:0.1:1;
+datcom.s.Alpha = [-7.5 -5 -2.5 -1.5 -1 -0.5 -0.1 0 0.1 0.5 1 1.5 2.5 5 7.5];
+datcom.s.Beta = [-0.1 0 0.1];
 datcom.s.Alt = 0:500:4000;
 
 %% Design Parameters
 %%%%%%% fins
-datcom.design.Chord1 = 0.3;%0.28:0.02:0.32;                            % [m] chord fixed length
-datcom.design.Chord2 = 0.15;%0.1:0.02:0.16;                            % [m] chord free length 
-datcom.design.Heigth = 0.15;%0.1:0.02:0.16;                            % [m] chord free length 
-rect = false; iso = false; parall = true;                         % choose the shapes that you wanna try
+datcom.design.Chord1 = 0.1:0.02:0.3;                            % [m] chord fixed length
+datcom.design.Chord2 = 0.1:0.02:0.3;                            % [m] chord free length 
+datcom.design.Heigth = 0.1:0.02:0.3;                            % [m] chord free length 
+rect = false; iso = false; parall = true;                       % choose the shapes that you wanna try
 
 %%%%%%% ogive
-datcom.design.Lnose = 0.3;%0.35:0.02:0.41;                           % [m] ogive length
+datcom.design.Lnose = 0.2:0.02:0.4;                             % [m] ogive length
 datcom.design.NosePower = [];                                   % [/] Power coefficient of the NoseCone, put a empty vector to avoid power ogive.
-Karman = true; Haack = false; Ogive = false;                      % choose the shapes that you wanna try 
+Karman = true; Haack = false; Ogive = false;                    % choose the shapes that you wanna try 
 
 %% Fixed Parameters
 datcom.para.xcg = [1.9, 1.8];                                   % [m] CG position [full, empty]

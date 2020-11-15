@@ -1,14 +1,12 @@
 function [value, isterminal, direction] = EventPad(~, Y, settings, varargin)
-% Event function to stop simulation at apogee
+%{ 
+Event function to stop simulation at the launchpad exit
 
-% Author: Ruben Di Battista
-% Skyward Experimental Rocketry | CRD Dept | crd@skywarder.eu
-% email: ruben.dibattista@skywarder.eu
-% Website: http://www.skywarder.eu
-% April 2014; Last revision: 25.IV.2014
-% License:  2-clause BSD
-
-%Stop checking if I'm in Propulsion Phase
+Author: Adriano Filippo Inno
+Skyward Experimental Rocketry | CRD Dept | crd@skywarder.eu
+email: adriano.filippo.inno@skywarder.eu
+Update date: 21/10/20
+%}
 
 value = - Y(3) - settings.lrampa*sin(settings.OMEGA);
 
