@@ -19,7 +19,7 @@ settings.lon0 = 14.052546;                                                      
 
 % 39.201778, -8.138368   pont the sor  coordinates 
 % 109 pont the sor z0
-settings.satellite3D = fasle;
+settings.satellite3D = false;
 
 % ATTENTION: works only at Roccaraso ~ (41.810093 14.052546) 
 settings.terrain = false;
