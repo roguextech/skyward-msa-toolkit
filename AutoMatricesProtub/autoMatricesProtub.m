@@ -6,37 +6,29 @@ n_hprot = length(vars.hprot);
 
 %% datcom
 for k = 1:2
-    for n = 1:n_hprot
-        
-        datcom.xcg = vars.xcg(k);
-        datcom.hprot = vars.hprot(n);
+    datcom.xcg = vars.xcg(k);
+    if k == 1
+        datcom.hprot = vars.hprot(1);
         createFor006(datcom);
-        
-        if k == 1
-            % initialize joined empty matrix and state
-            
-            [CoeffsF, State] = datcomParser('full');
-            State.hprot = vars.hprot;
-            CoeffsE = struct();
-            fn = fieldnames(CoeffsF);
+        [CoeffsF, State] = datcomParser5('full');
+        State.hprot = vars.hprot;
+        CoeffsE = struct();
+        fn = fieldnames(CoeffsF);
+    else
+        for n = 1:n_hprot
+            datcom.hprot = vars.hprot(n);
+            createFor006(datcom);
             
             for f = 1:numel(fn)
                 CoeffsE.(fn{f}) = zeros([size(CoeffsF.(fn{f})),n_hprot]);
             end
-            
-        else
-            
-            currentCoeffs = datcomParser();
+
+            currentCoeffs = datcomParser5();
             
             for f = 1:numel(fn)
                 CoeffsE.(fn{f})(:,:,:,:,n) = currentCoeffs.(fn{f});
             end
-            
-            
         end
-        
-        
-        
     end
 end
 
