@@ -37,29 +37,33 @@ Ns = length(datcom.design.Shape);
 No = length(datcom.design.Lnose);
 Nt = length(datcom.design.OgType);
 
-DatcomDummy = datcom;
-DatcomDummy.design.Chord1 = datcom.design.Chord1(end);
-DatcomDummy.design.Chord2 = datcom.design.Chord2(ceil(N2/2));
-DatcomDummy.design.Heigth = datcom.design.Heigth(ceil(N3/2));
-DatcomDummy.design.Shape = datcom.design.Shape(1);
 
-[~, DummyTime] = AutoMatricesFins(DatcomDummy, false);
+if N1*N2*N3*Ns + No*Nt > 1
+    DatcomDummy = datcom;
+    DatcomDummy.design.Chord1 = datcom.design.Chord1(end);
+    DatcomDummy.design.Chord2 = datcom.design.Chord2(ceil(N2/2));
+    DatcomDummy.design.Heigth = datcom.design.Heigth(ceil(N3/2));
+    DatcomDummy.design.Shape = datcom.design.Shape(1);
+    
+    [~, DummyTime] = AutoMatricesFins(DatcomDummy, false);
+    
+    seq1 = repelem(1:N1, N2);
+    seq2 = repmat(1:N2, 1, N1);
+    N1N2 = length(nonzeros(datcom.design.Chord1(seq1) > datcom.design.Chord2(seq2)));
+    
+    EstimTime = (N1N2*N3*Ns + No*Nt)*1.1*DummyTime;
+    
+    h = floor(EstimTime/3600);
+    m = floor((EstimTime - h*3600)/60);
+    Message = strcat('The estimated time to complete the process is', " ",...
+        num2str(h), " ", 'hours and', " ", num2str(m), " ",...
+        'minutes would you like to continue?');
+    answer = questdlg(Message, 'Important', 'Yes', 'No', 'Yes');
+    
+    if isempty(answer) || strcmp(answer, 'No')
+        return
+    end
 
-seq1 = repelem(1:N1, N2);
-seq2 = repmat(1:N2, 1, N1);
-N1N2 = length(nonzeros(datcom.design.Chord1(seq1) > datcom.design.Chord2(seq2)));
-
-EstimTime = (N1N2*N3*Ns + No*Nt)*1.1*DummyTime; 
-
-h = floor(EstimTime/3600);
-m = floor((EstimTime - h*3600)/60);
-Message = strcat('The estimated time to complete the process is', " ",...
-     num2str(h), " ", 'hours and', " ", num2str(m), " ",...
-     'minutes would you like to continue?');
-answer = questdlg(Message, 'Important', 'Yes', 'No', 'Yes');
-
-if isempty(answer) || strcmp(answer, 'No')
-    return
 end
 
 %% COMPUTING AERODYNAMIC DATA

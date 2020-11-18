@@ -12,7 +12,7 @@ Release date: 16/04/2016
 
 %% LAUNCH SETUP
 % launchpad
-settings.z0 = 1416;                                                                 %[m] Launchpad Altitude
+settings.z0 = 200;                                                                 %[m] Launchpad Altitude
 settings.lrampa = 4.9;                                                              %[m] LaunchPad route (distance from ground of the first hook)
 settings.lat0 = 41.810093;                                                          % Launchpad latitude
 settings.lon0 = 14.052546;                                                          % Launchpad longitude
@@ -126,7 +126,7 @@ settings.Altitudes = s.State.Altitudes';
 settings.Machs = s.State.Machs';
 clear('s');
 
-settings.control = '100%';                                            % aerobrakes 0% 50% or 100% opened
+settings.control = '0%';                                            % aerobrakes 0% 50% or 100% opened
 
 %% PARACHUTES DETAILS
 % parachute 1
@@ -205,12 +205,12 @@ settings.wind.input_uncertainty = [1, 1];
 
 % Wind is generated randomly from the minimum to the maximum parameters which defines the wind.
 % Setting the same values for min and max will fix the parameters of the wind.
-settings.wind.MagMin = 2;                           % [m/s] Minimum Magnitude
-settings.wind.MagMax = 4;                          % [m/s] Maximum Magnitude
+settings.wind.MagMin = 10;                           % [m/s] Minimum Magnitude
+settings.wind.MagMax = 10;                          % [m/s] Maximum Magnitude
 settings.wind.ElMin = 0*pi/180;                     % [rad] Minimum Elevation, user input in degrees (ex. 0)
 settings.wind.ElMax = 0*pi/180;                     % [rad] Maximum Elevation, user input in degrees (ex. 0) (Max == 90 Deg)
-settings.wind.AzMin = (180)*pi/180;                   % [rad] Minimum Azimuth, user input in degrees (ex. 90)
-settings.wind.AzMax = (180)*pi/180;                   % [rad] Maximum Azimuth, user input in degrees (ex. 90)
+settings.wind.AzMin = (360)*pi/180;                   % [rad] Minimum Azimuth, user input in degrees (ex. 90)
+settings.wind.AzMax = (360)*pi/180;                   % [rad] Maximum Azimuth, user input in degrees (ex. 90)
 
 % NOTE: wind azimuth angle indications (wind directed towards):
 % 0 deg (use 360 instead of 0)  -> North

@@ -15,3 +15,6 @@ email: salvatore.andrea.bella@skywarder.eu
 
 ## Mauro De Francesco
 email: mauro.defrancesco@skywarder.eu
+
+## Adriano Filippo Inno
+email: adriano.filippo.inno@skywarder.eu

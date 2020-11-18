@@ -18,13 +18,13 @@ datcom.s.Alt = 0:500:4000;
 
 %% Design Parameters
 %%%%%%% fins
-datcom.design.Chord1 = 0.1:0.02:0.3;                            % [m] chord fixed length
-datcom.design.Chord2 = 0.1:0.02:0.3;                            % [m] chord free length 
-datcom.design.Heigth = 0.1:0.02:0.3;                            % [m] chord free length 
+datcom.design.Chord1 = 0.3:0.01:0.4;                           % [m] chord fixed length
+datcom.design.Chord2 = 0.13:0.01:0.15;                            % [m] chord free length 
+datcom.design.Heigth = 0.13:0.01:0.15;                            % [m] chord free length 
 rect = false; iso = false; parall = true;                       % choose the shapes that you wanna try
 
 %%%%%%% ogive
-datcom.design.Lnose = 0.2:0.02:0.4;                             % [m] ogive length
+datcom.design.Lnose = 0.3;%0.25:0.01:0.3;                             % [m] ogive length
 datcom.design.NosePower = [];                                   % [/] Power coefficient of the NoseCone, put a empty vector to avoid power ogive.
 Karman = true; Haack = false; Ogive = false;                    % choose the shapes that you wanna try 
 

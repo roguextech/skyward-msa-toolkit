@@ -20,7 +20,7 @@ Release date: 18/10/2019
   m = Y(5);
 
 %% QUATERION ATTITUDE
-Q_conj = [Q0(1) -Q0(2:4)'];
+Q_conj = [Q0(1), -Q0(2:4)'];
 
 % Body to Inertial velocities
 Vels = quatrotate(Q_conj, [u 0 0]);
