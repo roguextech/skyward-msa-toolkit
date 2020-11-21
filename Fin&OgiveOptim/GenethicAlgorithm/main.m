@@ -21,7 +21,7 @@ run ConfigDatcom.m
 tic
 
 %% VARIABLES BOUNDARIES
-% Lower boundary
+%%% Lower boundary
 lb(1) = 30;     % 1 --> chord1         [cm]
 lb(2) = 10;     % 2 --> chord2         [cm]
 lb(3) = 10;     % 3 --> heigth         [cm]
@@ -29,7 +29,7 @@ lb(4) = 1;      % 4 --> Fin type       [/]
 lb(5) = 30;     % 5 --> Ogive Length   [cm]
 lb(6) = 1;      % 6 --> Ogive Type     [/]
 
-% Upper boundary
+%%% Upper boundary
 ub(1) = 50;     % 1 --> chord1         [cm]
 ub(2) = 20;     % 2 --> chord2         [cm]
 ub(3) = 20;     % 3 --> heigth         [cm]
@@ -37,13 +37,23 @@ ub(4) = 3;      % 4 --> Fin type       [/]
 ub(5) = 50;     % 5 --> Ogive Length   [cm]
 ub(6) = 6;      % 6 --> Ogive Type     [/]
 
+%%% Inequality constraint (A*x < b)
+% imposing the fixed chord, x(1), to be greater than the free chord x(2)
+% so -x(1) + x(2) < 0
+% imposing the fixed chord, x(1), to be greater than the heigth x(3) to
+% reduce the flessibility, so -x(1) + x(3) < 0
+% 
+A = [-1 1 0 0 0 0
+     -1 0 1 0 0 0 ];
+b = [0; 0];
+
 IntCon = 1:6;
 options = optimoptions('ga', 'MaxStallGenerations', 15, 'FunctionTolerance', ...
     1, 'MaxGenerations', 200, 'PlotFcn', {'gaplotbestindiv', 'gaplotbestf'},...
     'Display', 'iter');
 nonlcon = @(x) XCPcheck(x, datcom, settings);
 fitnessfcn = @(x) OptimizationGA(x, datcom, settings);
-[x, fval, exitflag] = ga(fitnessfcn, 6, [], [], [], [],...
+[x, fval, exitflag] = ga(fitnessfcn, 6, A, b, [], [],...
     lb, ub, nonlcon, IntCon, options);
 
 toc

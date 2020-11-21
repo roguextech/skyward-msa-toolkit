@@ -9,22 +9,30 @@ for k = 1:2
     datcom.xcg = vars.xcg(k);
     if k == 1
         datcom.hprot = vars.hprot(1);
+        clc
+        fprintf('----------------- Aerobrakes Aerodynamics Prediction ----------------- \n')
         createFor006(datcom);
         [CoeffsF, State] = datcomParser5('full');
+        clc
+        perc = round(100/(n_hprot + 1)) ;
+        fprintf('----------------- Aerobrakes Aerodynamics Prediction ----------------- \n')
+        fprintf(' Progress %d %% \n', perc);
         State.hprot = vars.hprot;
         CoeffsE = struct();
         fn = fieldnames(CoeffsF);
+        for f = 1:numel(fn)
+            CoeffsE.(fn{f}) = zeros([size(CoeffsF.(fn{f})),n_hprot]);
+        end
     else
         for n = 1:n_hprot
             datcom.hprot = vars.hprot(n);
             createFor006(datcom);
-            
-            for f = 1:numel(fn)
-                CoeffsE.(fn{f}) = zeros([size(CoeffsF.(fn{f})),n_hprot]);
-            end
-
+            clc
+            perc = round((n)/(n_hprot+1)*(100)) ;
+            fprintf('----------------- Aerobrakes Aerodynamics Prediction ----------------- \n')
+            fprintf(' Progress %d %% \n', perc);
             currentCoeffs = datcomParser5();
-            
+
             for f = 1:numel(fn)
                 CoeffsE.(fn{f})(:,:,:,:,n) = currentCoeffs.(fn{f});
             end

@@ -268,7 +268,7 @@ else   %%%% STOCHASTIC PLOTS (only if N>1)
     figure('Name', 'Landing Points', 'NumberTitle','off')
     if settings.landing_map
         [lat_LP, lon_LP, ~] = ned2geodetic(LP(:,1), LP(:,2), 0, settings.lat0, settings.lon0, 0, wgs84Ellipsoid);
-        geoplot(lat_LP,lon_LP,'.r','MarkerSize',11);
+        geoplot(lat_LP, lon_LP, '.r','MarkerSize',11);
         hold on
         geoplot(settings.lat0, settings.lon0,'ro', 'MarkerSize', 16, 'MarkerFacecolor', 'b');
         geobasemap('satellite');
@@ -319,8 +319,8 @@ else   %%%% STOCHASTIC PLOTS (only if N>1)
         figure('Name', 'Last Parachute Opening Points', 'NumberTitle', 'off')
         plot(0, 0, 'ro', 'MarkerSize', 20, 'MarkerFacecolor', 'b');
         hold on
-        plot(LPOPin(:, 2),LPOPin(:, 1), 'o', 'MarkerEdgeColor', 'r', 'MarkerfaceColor', 'r');
-        plot(LPOPout(:, 2),LPOPout(:, 1), 'o', 'MarkerEdgeColor', 'k', 'MarkerfaceColor', 'k');
+        plot(LPOPin(:, 2), LPOPin(:, 1), 'o', 'MarkerEdgeColor', 'r', 'MarkerfaceColor', 'r');
+        plot(LPOPout(:, 2), LPOPout(:, 1), 'o', 'MarkerEdgeColor', 'k', 'MarkerfaceColor', 'k');
         legend({'Launch Site', 'safe points', 'not-safe points'})
     end
     
