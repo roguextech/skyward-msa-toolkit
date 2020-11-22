@@ -238,6 +238,7 @@ State.Betas = B;
 State.Altitudes = A;
 
 if savemat
-    save(mat_name, 'State', 'Coeffs');
+    Geometry = varargin{2};
+    save(mat_name, 'State', 'Coeffs', 'Geometry'); 
 end
 

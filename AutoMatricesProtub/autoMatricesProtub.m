@@ -3,6 +3,16 @@ function [AMtime] = autoMatricesProtub(datcom,vars)
 tic
 
 n_hprot = length(vars.hprot);
+Geometry.Chord1 = datcom.Chord1;
+Geometry.Chord2 = datcom.Chord2;
+Geometry.Height = datcom.Height;
+Geometry.shape = datcom.shape;
+Geometry.D = datcom.D;
+Geometry.Lnose = datcom.Lnose;
+Geometry.Lcenter = datcom.Lcenter;
+Geometry.Npanel = datcom.Npanel;
+Geometry.OgType = datcom.OgType;
+Geometry.xcg = vars.xcg(1);
 
 %% datcom
 for k = 1:2
@@ -12,7 +22,7 @@ for k = 1:2
         clc
         fprintf('----------------- Aerobrakes Aerodynamics Prediction ----------------- \n')
         createFor006(datcom);
-        [CoeffsF, State] = datcomParser5('full');
+        [CoeffsF, State] = datcomParser5('full',Geometry);
         clc
         perc = round(100/(n_hprot + 1)) ;
         fprintf('----------------- Aerobrakes Aerodynamics Prediction ----------------- \n')
@@ -42,7 +52,8 @@ end
 
 %% Save joined empty .mat file
 Coeffs = CoeffsE;
-save('empty','State','Coeffs');
+Geometry.xcg = datcom.xcg;
+save('empty','State','Coeffs','Geometry');
 
 %%
 

@@ -12,7 +12,7 @@ Release date: 16/04/2016
 
 %% LAUNCH SETUP
 % launchpad
-settings.z0 = 200;                                                                 %[m] Launchpad Altitude
+settings.z0 = 109;                                                                 %[m] Launchpad Altitude
 settings.lrampa = 4.9;                                                              %[m] LaunchPad route (distance from ground of the first hook)
 settings.lat0 = 41.810093;                                                          % Launchpad latitude
 settings.lon0 = 14.052546;                                                          % Launchpad longitude
@@ -126,7 +126,7 @@ settings.Altitudes = s.State.Altitudes';
 settings.Machs = s.State.Machs';
 clear('s');
 
-settings.control = '0%';                                            % aerobrakes 0% 50% or 100% opened
+settings.control = '100%';                                            % aerobrakes 0% 50% or 100% opened
 
 %% PARACHUTES DETAILS
 % parachute 1
