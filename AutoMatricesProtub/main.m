@@ -23,10 +23,10 @@ datcom.Height = 0.15;
 datcom.shape = 'parall';
 
 %% Fixed Parameters
-vars.xcg = [1.9, 1.8];                          % [m] CG position [full, empty]
+vars.xcg = [1.75, 1.62];                        % [m] CG position [full, empty]
 datcom.D = 0.15;                                % [m] rocket diameter
 datcom.Lnose = 0.37;                            % [m] nose length
-datcom.Lcenter = 2.5;                           % [m] Lcenter : Centerbody length
+datcom.Lcenter = 2.4;                           % [m] Lcenter : Centerbody length
 datcom.Npanel = 3;                              % [m] number of fins
 datcom.Phif = [0 120 240];                      % [deg] Angle of each panel
 datcom.Ler = 0.003;                             % [deg] Leading edge radius

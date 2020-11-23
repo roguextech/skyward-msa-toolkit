@@ -60,14 +60,14 @@ settings.S = pi*settings.C^2/4;             % [m^2]    Cross-sectional Surface
 % z-axis: downward
 
 % inertias for full configuration (with all the propellant embarqued) obtained with CAD's
-settings.Ixxf = 0.008795446;                    % [kg*m^2] Inertia to x-axis
-settings.Iyyf = 2.050393979;                    % [kg*m^2] Inertia to y-axis
-settings.Izzf = 2.050413838;                    % [kg*m^2] Inertia to z-axis
+settings.Ixxf = 0.0540;                     % [kg*m^2] Inertia to x-axis
+settings.Iyyf = 13.7274;                    % [kg*m^2] Inertia to y-axis
+settings.Izzf = 13.7302;                    % [kg*m^2] Inertia to z-axis
 
 % inertias for empty configuration (all the propellant consumed) obtained with CAD's
-settings.Ixxe = 0.008472446;                    % [kg*m^2] Inertia to x-axis
-settings.Iyye = 1.712284592;                    % [kg*m^2] Inertia to y-axis
-settings.Izze = 1.712304085;                    % [kg*m^2] Inertia to z-axis
+settings.Ixxe = 0.0498;                     % [kg*m^2] Inertia to x-axis
+settings.Iyye = 11.5612;                    % [kg*m^2] Inertia to y-axis
+settings.Izze = 11.5640;                    % [kg*m^2] Inertia to z-axis
 
 %% INTEGRATION OPTIONS
 settings.ode.final_time =  2000;                                                % [s] Final integration time

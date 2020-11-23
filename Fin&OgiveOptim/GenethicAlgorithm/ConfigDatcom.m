@@ -17,10 +17,10 @@ datcom.Beta = [-0.1 0 0.1];
 datcom.Alt = 0:500:4000; 
 
 %% Fixed Parameters
-datcom.xcg = [1.6, 1.5];                                   % [m] CG position from the end of Lcenter [full, empty]
+datcom.xcg = [1.75, 1.62] - 0.4;                           % [m] CG position from the end of Lcenter [full, empty]
 datcom.D = settings.C;                                     % [m] rocket diameter
 datcom.S = settings.S;                                     % [m^2] rocket cross section
-datcom.Lcenter = 2.5;                                      % [m] Lcenter : Centerbody length
+datcom.Lcenter = 2.4;                                      % [m] Lcenter : Centerbody length
 datcom.Npanel = 3;                                         % [m] number of fins
 datcom.Phif = [0 120 240];                                 % [deg] Angle of each panel
 datcom.Ler = 0.003;                                        % [deg] Leading edge radius
