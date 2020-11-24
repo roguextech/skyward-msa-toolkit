@@ -7,19 +7,19 @@ settings.lrampa = 3;               %[m] LaunchPad route (launchpad length-distan
 % launchpad directions
 % for a single run the maximum and the minimum value of the following
 % angles must be the same.
-settings.OMEGA = 84*pi/180;        %[rad] Minimum Elevation Angle, user input in degrees (ex. 80)
+settings.OMEGA = 85*pi/180;        %[rad] Minimum Elevation Angle, user input in degrees (ex. 80)
 settings.PHI = 0*pi/180;           %[rad] Maximum Azimuth Angle from North Direction, user input in degrees (ex. 90)
 
 %% ENGINE DETAILS
 
 % load motors data 
 DATA_PATH = '../data/';
-filename_full = strcat(DATA_PATH,'MotorsList.mat');
-motors = load(filename_full,'MotorsByItot');
-motors = motors.MotorsByItot;
+filename = strcat(DATA_PATH,'Motors.mat');
+Motors = load(filename);
+motors = [Motors.Cesaroni Motors.Aerotech];
 
 % save in settings the acceptable motors 
-settings.Itot_range = [8300 8700];
+settings.Itot_range = [8000 9000];
 j=1;
 for i=1:size(motors,2)
     

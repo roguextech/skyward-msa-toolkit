@@ -40,18 +40,20 @@ settings.PHIsigma = 0*pi/180;         % Stocasthic simulation only
 %% ENGINE DETAILS
 % load motors data 
 DATA_PATH = '../data/';
-filename_full = strcat(DATA_PATH,'MotorsList.mat');
-motors = load(filename_full,'MotorsByName');
-motors = motors.MotorsByName;
+filename = strcat(DATA_PATH,'Motors.mat');
+Motors = load(filename);
+motors = [Motors.Cesaroni Motors.Aerotech];
 
 %name = 'M2020';
 name = 'M1890';
 % name = 'M1800';
-settings.motor.exp_time = motors.(name).t;
-settings.motor.exp_thrust = motors.(name).T;
-settings.mp = motors.(name).mp;                                            % [kg]   Propellant Mass                                                
-settings.tb = motors.(name).t(end) ;                                                     % [s]    Burning time
-settings.mfr = settings.mp/settings.tb;                                               % [kg/s] Mass Flow Rate
+
+n_name = [motors.MotorName] == name;
+settings.motor.exp_time = motors(n_name).t;
+settings.motor.exp_thrust = motors(n_name).T;
+settings.mp = motors(n_name).mp;                                    % [kg]   Propellant Mass                                                
+settings.tb = motors(n_name).t(end) ;                               % [s]    Burning time
+settings.mfr = settings.mp/settings.tb;                             % [kg/s] Mass Flow Rate
 settings.ms = 21;                                                   % [kg]   Total Mass
 settings.m0 = settings.ms + settings.mp;                            % [kg]   Structural Mass
 settings.mnc = 0.400;                                               % [kg]   Nosecone Mass
