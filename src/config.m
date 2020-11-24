@@ -128,7 +128,7 @@ settings.Altitudes = s.State.Altitudes';
 settings.Machs = s.State.Machs';
 clear('s');
 
-settings.control = '100%';                                            % aerobrakes 0% 50% or 100% opened
+settings.control = '0%';                                            % aerobrakes 0% 50% or 100% opened
 
 %% PARACHUTES DETAILS
 % parachute 1

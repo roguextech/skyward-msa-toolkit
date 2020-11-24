@@ -63,7 +63,7 @@ datcom.Alt = 0;
 createFor006(datcom);
 [CoeffsF, ~] = datcomParser5();
 %%%
-datcom.xcg = xcg(2);
+datcom.xcg = xcg(2) + datcom.Lnose;
 createFor006(datcom);
 [CoeffsE, ~] = datcomParser5();
 

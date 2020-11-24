@@ -12,9 +12,9 @@ Release date: 18/10/2019
 %% States
 % State values in which the aerodynamic coefficients will be computed
 datcom.Mach = 0.1:0.1:1;
-datcom.Alpha = [-7.5 -5 -2.5 -1.5 -1 -0.5 -0.1 0 0.1 0.5 1 1.5 2.5 5 7.5];
-datcom.Beta = [-0.1 0 0.1];
-datcom.Alt = 0:500:4000; 
+datcom.Alpha = [-20 -15 -10 -7.5 -5 -2.5 -1 -0.1 0 0.1 1 2.5 5 7.5 10 15 20];
+datcom.Beta = 0;
+datcom.Alt = 0:1000:4000; 
 
 %% Fixed Parameters
 datcom.xcg = [1.75, 1.62] - 0.4;                           % [m] CG position from the end of Lcenter [full, empty]
