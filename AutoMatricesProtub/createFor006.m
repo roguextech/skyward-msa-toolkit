@@ -1,4 +1,25 @@
 function createFor006(datcom)
+%{ 
+
+CREATEFOR006 - function to create the 'for006.dat' file.
+
+INPUTS:
+            - datcom:  struct containing all the values to be inserted in
+                        the for005
+
+OUTPUTS: 
+
+Author: Giulio Pacifici
+Skyward Experimental Rocketry | CRD Dept | crd@skywarder.eu
+email: giulio.pacifici@skywarder.eu
+Release date: 21/10/2019
+
+Author: Adriano Filippo Inno
+Skyward Experimental Rocketry | CRD Dept | crd@skywarder.eu
+email: adriano.filippo.inno@skywarder.eu
+
+%}
+
 %% recalling the variables
 Mach = datcom.Mach;
 Alpha = datcom.Alpha;
@@ -17,17 +38,23 @@ Lnose = datcom.Lnose;
 OgType = datcom.OgType;
 Lcenter = datcom.Lcenter;
 Npanel = datcom.Npanel;
-Phif = datcom.Phif;
 Ler = datcom.Ler;
 d = datcom.d;
 zup_raw = datcom.zup_raw;
 Lmaxu_raw = datcom.Lmaxu_raw;
 H = datcom.Height;
 
+if Npanel == 3
+    Phif = [0, 120, 240];
+elseif Npanel == 4
+    Phif = [0, 90, 180, 270];
+end
+
 Nm = length(Mach);
 Na = length(Alpha);
 Nb = length(Beta);
 Nalt = length(Alt);
+
 %% protuberance data
 if isfield(datcom,'xprot') && datcom.hprot ~= 0 
     protub_flag = 1;
@@ -41,6 +68,7 @@ if isfield(datcom,'xprot') && datcom.hprot ~= 0
 else
     protub_flag = 0;
 end
+
 %% datcom
 Xle1 = Lcenter + Lnose - d - C1;
 diffC = C1-C2;
@@ -139,7 +167,7 @@ fprintf(fid, '%.3f,$', D);
 fprintf(fid, '\r\n $AXIBOD\r\n');
 %%%% TNOSE
 fprintf(fid, '  TNOSE = %s, \r\n', OgType);
-if strcmp(OgType,'POWER')
+if strcmp(OgType, 'POWER')
     fprintf(fid, '  POWER = %.3f, \r\n', datcom.NosePower);
 end
 %%%% LNOSE

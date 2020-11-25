@@ -34,7 +34,6 @@ datcom.para.D = settings.C;                                     % [m] rocket dia
 datcom.para.S = settings.S;                                     % [m^2] rocket cross section
 datcom.para.Lcenter = 2.5;                                      % [m] Lcenter : Centerbody length
 datcom.para.Npanel = 3;                                         % [m] number of fins
-datcom.para.Phif = [0 120 240];                                 % [deg] Angle of each panel
 datcom.para.Ler = 0.003;                                        % [deg] Leading edge radius
 datcom.para.d = 0;                                              % [m] rocket tip-fin distance
 datcom.para.zup_raw = 0.0015;                                   % [m] fin semi-thickness 

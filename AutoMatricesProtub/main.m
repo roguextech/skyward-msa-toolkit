@@ -28,7 +28,6 @@ datcom.D = 0.15;                                % [m] rocket diameter
 datcom.Lnose = 0.4;                            % [m] nose length
 datcom.Lcenter = 2.4;                           % [m] Lcenter : Centerbody length
 datcom.Npanel = 4;                              % [m] number of fins
-datcom.Phif = [0 90 180 270];                      % [deg] Angle of each panel
 datcom.Ler = 0.003;                             % [deg] Leading edge radius
 datcom.d = 0;                                   % [m] rocket tip-fin distance
 datcom.zup_raw = 0.0015;                        % [m] fin semi-thickness 

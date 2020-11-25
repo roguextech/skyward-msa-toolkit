@@ -47,7 +47,7 @@ A = [-1 1 0 0 0 0
      -1 0 1 0 0 0 ];
 b = [0; 0];
 
-IntCon = 1:6;
+IntCon = 1;
 options = optimoptions('ga', 'MaxStallGenerations', 15, 'FunctionTolerance', ...
     1, 'MaxGenerations', 200, 'PlotFcn', {'gaplotbestindiv', 'gaplotbestf'},...
     'Display', 'iter');

@@ -38,12 +38,17 @@ Lnose = datcom.Lnose;
 OgType = datcom.OgType;
 Lcenter = datcom.Lcenter;
 Npanel = datcom.Npanel;
-Phif = datcom.Phif;
 Ler = datcom.Ler;
 d = datcom.d;
 zup_raw = datcom.zup_raw;
 Lmaxu_raw = datcom.Lmaxu_raw;
 H = datcom.Height;
+
+if Npanel == 3
+    Phif = [0, 120, 240];
+elseif Npanel == 4
+    Phif = [0, 90, 180, 270];
+end
 
 Nm = length(Mach);
 Na = length(Alpha);
