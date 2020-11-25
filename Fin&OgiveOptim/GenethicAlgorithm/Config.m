@@ -21,7 +21,7 @@ Release date: 18/10/2019
 
 %% LAUNCH SETUP
 % launchpad 
-settings.z0 = 200;                   %[m] Launchpad Altitude
+settings.z0 = 109;                   %[m] Launchpad Altitude
 settings.lrampa = 4.9;                %[m] LaunchPad route (launchpad length-distance from ground of the first hook)
 
 % launchpad directions

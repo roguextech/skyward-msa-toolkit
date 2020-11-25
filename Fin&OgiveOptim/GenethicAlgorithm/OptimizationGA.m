@@ -45,5 +45,13 @@ datcom.xcg = xcg(2) + datcom.Lnose;
 createFor006(datcom);
 [settings.CoeffsE, ~] = datcomParser5();
 
-apogee = RunSim(settings);
-apogee = -apogee;
+apogee1 = RunSim(settings);
+settings.wind.Az = (180)*pi/180;
+apogee2 = RunSim(settings);
+
+settings.wind.Mag = 1;
+settings.wind.Az = (360)*pi/180;
+apogee3 = RunSim(settings);
+settings.wind.Az = (180)*pi/180;
+apogee4 = RunSim(settings);
+apogee = (- apogee1 - apogee2 - apogee3 - apogee4)/4 ;
