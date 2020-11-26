@@ -68,13 +68,11 @@ delete('for003.dat', 'for004.dat', 'for005.dat', 'for006.dat', 'for009.dat',...
 fprintf('COMPUTATIONAL EFFORT: \n\n')
 fprintf('- Total time, %g [s]\n\n\n', computationalTime)
 fprintf('FINS RESULTS: \n\n')
-fprintf('- shape, %s \n', 'isoscele')
-
-if x(3) == 1
+if x(4) == 1
     fprintf('- shape, %s \n', 'isoscele')
-elseif x(3) == 2
+elseif x(4) == 2
     fprintf('- shape, %s \n', 'rectangular')
-elseif x(3) == 3
+elseif x(4) == 3
     fprintf('- shape, %s \n', 'paralleloid')
 end
 
