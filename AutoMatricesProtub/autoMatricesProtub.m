@@ -50,6 +50,10 @@ for k = 1:2
     end
 end
 
+clc
+fprintf('----------------- Aerobrakes Aerodynamics Prediction ----------------- \n')
+fprintf(' Progress %d %% \n', 100);
+
 %% Save joined empty .mat file
 Coeffs = CoeffsE;
 Geometry.xcg = datcom.xcg;
