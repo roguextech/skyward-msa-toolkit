@@ -22,7 +22,7 @@ Release date: 18/10/2019
 %% LAUNCH SETUP
 % launchpad 
 settings.z0 = 109;                   %[m] Launchpad Altitude
-settings.lrampa = 4.9;                %[m] LaunchPad route (launchpad length-distance from ground of the first hook)
+settings.lrampa = 4.9;               %[m] LaunchPad route (launchpad length-distance from ground of the first hook)
 
 % launchpad directions
 % for a single run the maximum and the minimum value of the following
@@ -74,11 +74,9 @@ settings.ode.final_time =  2000;                                                
 settings.ode.optionsasc = odeset('Events', @EventApogee,'InitialStep',1);      %ODE options for ascend
 settings.ode.optionspad = odeset('Events', @EventPad);                         %ODE options for ascend
 
-%% Random wind model
-% Wind is generated randomly from the minimum to the maximum parameters which defines the wind.
-% Setting the same values for min and max will fix the parameters of the wind.
+%% wind
 settings.wind.Mag = 10;                   % [m/s] Magnitude
-settings.wind.Az = (360)*pi/180;          % [rad] Azimuth, user input in degrees (ex. 90)
+% settings.wind.Az = (360)*pi/180;          % [rad] Azimuth, user input in degrees (ex. 90)
 
 % NOTE: wind aziumt angle indications (wind directed towards):
 % 0 deg (use 360 instead of 0)  -> North

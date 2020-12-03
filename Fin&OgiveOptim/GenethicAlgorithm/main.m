@@ -22,7 +22,7 @@ tic
 
 %% VARIABLES BOUNDARIES
 %%% Lower boundary
-lb(1) = 15;     % 1 --> chord1         [cm]
+lb(1) = 25;     % 1 --> chord1         [cm]
 lb(2) = 5;     % 2 --> chord2         [cm]
 lb(3) = 5;     % 3 --> heigth         [cm]
 lb(4) = 3;      % 4 --> Fin type       [/]
@@ -30,7 +30,7 @@ lb(5) = 25;     % 5 --> Ogive Length   [cm]
 lb(6) = 1;      % 6 --> Ogive Type     [/]
 
 %%% Upper boundary
-ub(1) = 30;     % 1 --> chord1         [cm]
+ub(1) = 50;     % 1 --> chord1         [cm]
 ub(2) = 20;     % 2 --> chord2         [cm]
 ub(3) = 20;     % 3 --> heigth         [cm]
 ub(4) = 3;      % 4 --> Fin type       [/]

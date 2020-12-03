@@ -35,7 +35,7 @@ end
 datcom.Mach = 0.05;
 datcom.Alpha = [-0.1, 0, 0.1];
 datcom.Beta = 0;
-datcom.Alt = 0;
+datcom.Alt = settings.z0;
 
 %%
 %%%
@@ -52,26 +52,50 @@ Q0 = angle2quat(settings.PHI, settings.OMEGA, 0*pi/180, 'ZYX')';
 
 [Tpad, Ypad] = ode113(@LaunchPadFreeDyn, [0, 10], X0pad, settings.ode.optionspad,...
     settings, Q0, Coeffs0.CA(2));
-AlphaStab = ceil(atan(settings.wind.Mag/Ypad(end, 4))*180/pi);
 
 %% COMPUTING THE LAUNCHPAD STABILITY DATA
-datcom.Mach = Ypad(end, 4)/340;
-datcom.Alpha = [(AlphaStab-1), AlphaStab, (AlphaStab+1)];
-datcom.Beta = 0;
-datcom.Alt = 0;
-%%%
-createFor006(datcom);
-[CoeffsF, ~] = datcomParser5();
-%%%
-datcom.xcg = xcg(2) + datcom.Lnose;
-createFor006(datcom);
-[CoeffsE, ~] = datcomParser5();
+[~, a, ~, ~] = atmoscoesa(settings.z0);
+datcom.Mach = Ypad(end, 4)/a;
+datcom.Alt = settings.z0;
+XCPlon = zeros(8, 1);
+XCPlat = zeros(8, 1);
+Az = linspace(0, 360-360/8, 8)*pi/180;
+for i = 1:8 
+    [uw, vw, ww] = WindConstGenerator(Az(i), settings.wind.Mag);
+    inertialWind = [uw, vw, ww];
+    bodyWind = quatrotate(Q0', inertialWind);
+    bodyVelocity = [Ypad(end, 4), 0, 0];
+    V = bodyVelocity - bodyWind;
+    ur = V(1); vr = V(2); wr = V(3);
+    alphaExit = ceil(atan(wr/ur));
+    betaExit = ceil(atan(vr/ur));
+    
+    alphaVectorPositive =  [abs(alphaExit) 1 2.5 5 10 15 20];
+    alphaVectorPositive = sort(alphaVectorPositive);
+    datcom.Alpha = unique(sort([-alphaVectorPositive, 0, alphaVectorPositive]));
+    indexAlpha = find(alphaExit == datcom.Alpha);
+    
+    datcom.Beta = betaExit;
+    
+    datcom.xcg = xcg(1) + datcom.Lnose;
+    createFor006(datcom);
+    [CoeffsF, ~] = datcomParser5();
+    %%%
+    datcom.xcg = xcg(2) + datcom.Lnose;
+    createFor006(datcom);
+    [CoeffsE, ~] = datcomParser5();
 
-xcpf = -CoeffsF.X_C_P(2);
-xcpe = -CoeffsE.X_C_P(2);
-XCP_pad = Tpad(end)/settings.tb*(xcpe - xcpf) + xcpf;
+    XCPfullLon = -CoeffsF.X_C_P(indexAlpha);
+    XCPemptyLon = -CoeffsE.X_C_P(indexAlpha);
+    XCPlon(i) = Tpad(end)/settings.tb*(XCPemptyLon - XCPfullLon) + XCPfullLon;
+    
+    XCPfullLat = -CoeffsF.CLN(indexAlpha)/CoeffsF.CY(indexAlpha);
+    XCPemptyLat = -CoeffsE.CLN(indexAlpha)/CoeffsE.CY(indexAlpha);
+    XCPlat(i) = Tpad(end)/settings.tb*(XCPemptyLat - XCPfullLat) + XCPfullLat;
+end
 
+XCPconstraining = min([XCPlon; XCPlat]);
 
 ceq = [];
 
-c = settings.cal_min - XCP_pad; 
+c = settings.cal_min - XCPconstraining; 
