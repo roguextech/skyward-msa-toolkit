@@ -65,14 +65,19 @@ for i = 1:8
     inertialWind = [uw, vw, ww];
     bodyWind = quatrotate(Q0', inertialWind);
     bodyVelocity = [Ypad(end, 4), 0, 0];
-    V = bodyVelocity - bodyWind;
-    ur = V(1); vr = V(2); wr = V(3);
-    alphaExit = ceil(atan(wr/ur));
-    betaExit = ceil(atan(vr/ur));
+    Vr = bodyVelocity - bodyWind;
+    ur = Vr(1); vr = Vr(2); wr = Vr(3);
+    alphaExit = round(atand(wr/ur), 1);
+    betaExit = round(atand(vr/ur), 1);
     
-    alphaVectorPositive =  [abs(alphaExit) 1 2.5 5 10 15 20];
-    alphaVectorPositive = sort(alphaVectorPositive);
-    datcom.Alpha = unique(sort([-alphaVectorPositive, 0, alphaVectorPositive]));
+    if alphaExit ~= 0
+        alphaVectorPositive =  [abs(alphaExit) 1 2.5 5 10 15 20];
+        alphaVectorPositive = sort(alphaVectorPositive);
+        datcom.Alpha = unique(sort([-alphaVectorPositive, 0, alphaVectorPositive]));
+    else 
+        datcom.Alpha = [-7.5 -5 -2.5 -1 0 1 2.5 5 7.5];
+    end
+    
     indexAlpha = find(alphaExit == datcom.Alpha);
     
     datcom.Beta = betaExit;
@@ -89,9 +94,13 @@ for i = 1:8
     XCPemptyLon = -CoeffsE.X_C_P(indexAlpha);
     XCPlon(i) = Tpad(end)/settings.tb*(XCPemptyLon - XCPfullLon) + XCPfullLon;
     
-    XCPfullLat = -CoeffsF.CLN(indexAlpha)/CoeffsF.CY(indexAlpha);
-    XCPemptyLat = -CoeffsE.CLN(indexAlpha)/CoeffsE.CY(indexAlpha);
-    XCPlat(i) = Tpad(end)/settings.tb*(XCPemptyLat - XCPfullLat) + XCPfullLat;
+    if betaExit ~= 0
+        XCPfullLat = -CoeffsF.CLN(indexAlpha)/CoeffsF.CY(indexAlpha);
+        XCPemptyLat = -CoeffsE.CLN(indexAlpha)/CoeffsE.CY(indexAlpha);
+        XCPlat(i) = Tpad(end)/settings.tb*(XCPemptyLat - XCPfullLat) + XCPfullLat;
+    else
+        XCPlat(i) = 10;
+    end
 end
 
 XCPconstraining = min([XCPlon; XCPlat]);

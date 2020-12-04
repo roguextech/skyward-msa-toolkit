@@ -177,8 +177,8 @@ for i = 1:Nb
     lines = splitlines(block);
     
     j = 1;
-    line = [];
-    while isempty(line) || not(all(not(isletter(line))))
+    line = "a";
+    while not( contains(line, 'NaN') || all(not(isletter(line))) ) || isempty(line)
         line = strtrim(lines{j});
         j = j + 1;
     end
@@ -192,8 +192,8 @@ for i = 1:Nb
     j = j + Na - 1;
     
     if not(all(not(contains(lines(j:end), 'ALPHA'))))
-        line = [];
-        while isempty(line) ||not(all(not(isletter(line))))
+        line = "a";
+        while not( contains(line, 'NaN') || all(not(isletter(line))) ) || isempty(line)
             line = strtrim(lines{j});
             j = j + 1;
         end

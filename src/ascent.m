@@ -247,7 +247,7 @@ Cnbf = interp4_easy(A_datcom, M_datcom, B_datcom, H_datcom, CoeffsF.CLNB, alpha,
 Cn0f = interp4_easy(A_datcom, M_datcom, B_datcom, H_datcom, CoeffsF.CLN, alpha, M, beta, -z);
 Cnrf = interp4_easy(A_datcom, M_datcom, B_datcom, H_datcom, CoeffsF.CLNR, alpha, M, beta, -z);
 Cnpf = interp4_easy(A_datcom, M_datcom, B_datcom, H_datcom, CoeffsF.CLNP, alpha, M, beta, -z);
-XCPf = interp4_easy(A_datcom, M_datcom, B_datcom, H_datcom, CoeffsF.X_C_P,alpha_tot, M, 0, -z);
+XCPf = interp4_easy(A_datcom, M_datcom, B_datcom, H_datcom, CoeffsF.X_C_P, alpha_tot, M, 0, -z);
 
 %% CHOSING THE EMPTY CONDITION VALUE
 % interpolation of the coefficients with the value in the nearest condition of the Coeffs matrix
