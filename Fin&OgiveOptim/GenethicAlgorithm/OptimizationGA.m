@@ -46,13 +46,13 @@ createFor006(datcom);
 [settings.CoeffsE, ~] = datcomParser5();
 
 settings.wind.Az = (360)*pi/180;
-apogee1 = RunSim(settings);
+apogee1 = RunSim(settings)
 settings.wind.Az = (180)*pi/180;
-apogee2 = RunSim(settings);
+apogee2 = RunSim(settings)
 
 settings.wind.Mag = 1;
 settings.wind.Az = (360)*pi/180;
-apogee3 = RunSim(settings);
+apogee3 = RunSim(settings)
 settings.wind.Az = (180)*pi/180;
-apogee4 = RunSim(settings);
+apogee4 = RunSim(settings)
 apogee = (- apogee1 - apogee2 - apogee3 - apogee4)/4 ;

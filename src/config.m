@@ -44,8 +44,8 @@ filename = strcat(DATA_PATH,'Motors.mat');
 Motors = load(filename);
 motors = [Motors.Cesaroni Motors.Aerotech];
 
-%name = 'M2020';
-name = 'M1890';
+name = 'M2020';
+% name = 'M1890';
 % name = 'M1800';
 
 n_name = [motors.MotorName] == name;

@@ -32,8 +32,8 @@ settings.PHI = 0*pi/180;            %[rad] Maximum Azimuth Angle from North Dire
 
 %% ENGINE DETAILS
 load('MotorsList.mat'); motors = MotorsByName;
-%name = 'M2020';
-name = 'M1890';
+name = 'M2020';
+% name = 'M1890';
 % name = 'M1800';
 settings.motor.exp_time = motors.(name).t;
 settings.motor.exp_thrust = motors.(name).T;
@@ -76,13 +76,6 @@ settings.ode.optionspad = odeset('Events', @EventPad);                         %
 
 %% wind
 settings.wind.Mag = 10;                   % [m/s] Magnitude
-% settings.wind.Az = (360)*pi/180;          % [rad] Azimuth, user input in degrees (ex. 90)
-
-% NOTE: wind aziumt angle indications (wind directed towards):
-% 0 deg (use 360 instead of 0)  -> North
-% 90 deg                        -> East
-% 180 deg                       -> South
-% 270 deg                       -> West
 
 %% Optimization Choice
 settings.cal_min = 1.5;                    % minum stability margin required
