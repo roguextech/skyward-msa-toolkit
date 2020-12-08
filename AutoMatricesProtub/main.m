@@ -44,5 +44,6 @@ datcom.lprot = 0.005; % brakes thickness
 datcom.wprot = 0.088; % brakes width
 vars.hprot = linspace(0, 0.0387, 30); % brakes length, first entry must be always 0!
 
+
 %% Run 
 autoMatricesProtub(datcom, vars);
