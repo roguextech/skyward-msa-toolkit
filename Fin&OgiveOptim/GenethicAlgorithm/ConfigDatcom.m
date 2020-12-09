@@ -14,7 +14,7 @@ Release date: 18/10/2019
 datcom.Mach = 0.1:0.1:1;
 datcom.Alpha = [-20 -15 -10 -7.5 -5 -2.5 -1 -0.1 0 0.1 1 2.5 5 7.5 10 15 20];
 datcom.Beta = 0;
-datcom.Alt = 0:1000:4000; 
+datcom.Alt = settings.z0 + 0:1000:4000; 
 
 %% Fixed Parameters
 datcom.xcg = [1.75, 1.62] - 0.4;                           % [m] CG position from the end of Lcenter [full, empty]

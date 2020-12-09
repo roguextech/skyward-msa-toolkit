@@ -73,7 +73,6 @@ normQ = norm(Q);
 Q = Q/normQ;
 
 %% ADDING WIND (supposed to be added in NED axes);
-
 if settings.wind.model
    
     if settings.stoch.N > 1
@@ -101,7 +100,6 @@ V_norm = norm([ur vr wr]);
 
 %% CONSTANTS
 % Everything related to empty condition (descent-fase)
-
 S = settings.S;              % [m^2] cross surface
 C = settings.C;              % [m]   caliber
 CoeffsE = settings.CoeffsE;  % [/] Empty Rocket Coefficients
@@ -109,17 +107,16 @@ g = 9.80655;                 % [N/kg] module of gravitational field at zero
 T = 0;
     
 %% ATMOSPHERE DATA
-
 if -z < 0     % z is directed as the gravity vector
     z = 0;
 end
 
-[~, a, P, rho] = atmosisa(-z+settings.z0);
+absoluteAltitude = -z + settings.z0;
+[~, a, P, rho] = atmosisa(absoluteAltitude);
 M = V_norm/a;
 M_value = M;
 
 %% AERODYNAMICS ANGLES
-
 if not(ur < 1e-9 || V_norm < 1e-9)
     alpha = atan(wr/ur);
     beta = atan(vr/ur);             % beta = asin(vr/V_norm); is the classical notation, Datcom uses this one though. 
@@ -131,49 +128,52 @@ end
 alpha_value = alpha;
 beta_value = beta;
 
-
 %% DATCOM COEFFICIENTS
-
-givA = settings.Alphas*pi/180;
-givB = settings.Betas*pi/180;
-givH = settings.Altitudes;
-givM = settings.Machs;
+A_datcom = settings.Alphas*pi/180;
+B_datcom = settings.Betas*pi/180;
+H_datcom = settings.Altitudes;
+M_datcom = settings.Machs;
 
 %% INTERPOLATION AT THE BOUNDARIES
-
-if M > givM(end)
-   
-    M = givM(end);
-
-end
-
-if M < givM(1)
-   
-    M = givM(1);
-
-end
-
-if alpha > givA(end)
+if M > M_datcom(end)
     
-    alpha = givA(end);
-
-elseif alpha < givA(1)
-       
-        alpha = givA(1);
-
-end
-
-if beta > givB(end)
-    beta = givB(end);
-elseif beta < givB(1)
-        beta = givB(1);
-end
-
-if -z > givH(end)
-    z = -givH(end);
+    M = M_datcom(end);
     
-elseif -z < givH(1)
-        z = -givH(1);
+end
+
+if M < M_datcom(1)
+    
+    M = M_datcom(1);
+    
+end
+
+if alpha > A_datcom(end)
+    
+    alpha = A_datcom(end);
+    
+elseif alpha < A_datcom(1)
+    
+    alpha = A_datcom(1);
+    
+end
+
+if beta > B_datcom(end)
+    
+    beta = B_datcom(end);
+    
+elseif beta < B_datcom(1)
+    
+    beta = B_datcom(1);
+end
+
+if absoluteAltitude > H_datcom(end)
+    
+    absoluteAltitude = H_datcom(end);
+    
+elseif absoluteAltitude < H_datcom(1)
+    
+    absoluteAltitude = H_datcom(1);
+    
 end
 
 %% CHOSING THE CONDITION VALUE
@@ -181,21 +181,21 @@ end
 
 c = 1; % descent with no aerobrakes
 
-[CA, angle0] = interp4_easy(givA,givM,givB,givH,CoeffsE.CA(:, :, :, :, c),alpha,M,beta,-z);
-CYB = interp4_easy(givA,givM,givB,givH,CoeffsE.CYB(:, :, :, :, c),alpha,M,beta,-z);
-CY0 = interp4_easy(givA,givM,givB,givH,CoeffsE.CY(:, :, :, :, c),alpha,M,beta,-z);
-CNA = interp4_easy(givA,givM,givB,givH,CoeffsE.CNA(:, :, :, :, c),alpha,M,beta,-z);
-CN0 = interp4_easy(givA,givM,givB,givH,CoeffsE.CN(:, :, :, :, c),alpha,M,beta,-z);
-Cl = interp4_easy(givA,givM,givB,givH,CoeffsE.CLL(:, :, :, :, c),alpha,M,beta,-z);
-Clp = interp4_easy(givA,givM,givB,givH,CoeffsE.CLLP(:, :, :, :, c),alpha,M,beta,-z);
-Cma = interp4_easy(givA,givM,givB,givH,CoeffsE.CMA(:, :, :, :, c),alpha,M,beta,-z);
-Cm0 = interp4_easy(givA,givM,givB,givH,CoeffsE.CM(:, :, :, :, c),alpha,M,beta,-z);
-Cmad = interp4_easy(givA,givM,givB,givH,CoeffsE.CMAD(:, :, :, :, c),alpha,M,beta,-z);
-Cmq = interp4_easy(givA,givM,givB,givH,CoeffsE.CMQ(:, :, :, :, c),alpha,M,beta,-z);
-Cnb = interp4_easy(givA,givM,givB,givH,CoeffsE.CLNB(:, :, :, :, c),alpha,M,beta,-z);
-Cn0 = interp4_easy(givA,givM,givB,givH,CoeffsE.CLN(:, :, :, :, c),alpha,M,beta,-z);
-Cnr = interp4_easy(givA,givM,givB,givH,CoeffsE.CLNR(:, :, :, :, c),alpha,M,beta,-z);
-Cnp = interp4_easy(givA,givM,givB,givH,CoeffsE.CLNP(:, :, :, :, c),alpha,M,beta,-z);
+[CA, angle0] = interp4_easy(A_datcom, M_datcom, B_datcom, H_datcom, CoeffsE.CA(:, :, :, :, c), alpha, M, beta, absoluteAltitude);
+CYB = interp4_easy(A_datcom, M_datcom, B_datcom, H_datcom, CoeffsE.CYB(:, :, :, :, c), alpha, M, beta, absoluteAltitude);
+CY0 = interp4_easy(A_datcom, M_datcom, B_datcom, H_datcom, CoeffsE.CY(:, :, :, :, c), alpha, M, beta, absoluteAltitude);
+CNA = interp4_easy(A_datcom, M_datcom, B_datcom, H_datcom, CoeffsE.CNA(:, :, :, :, c), alpha, M, beta, absoluteAltitude);
+CN0 = interp4_easy(A_datcom, M_datcom, B_datcom, H_datcom, CoeffsE.CN(:, :, :, :, c), alpha, M, beta, absoluteAltitude);
+Cl = interp4_easy(A_datcom, M_datcom, B_datcom, H_datcom, CoeffsE.CLL(:, :, :, :, c), alpha, M, beta, absoluteAltitude);
+Clp = interp4_easy(A_datcom, M_datcom, B_datcom, H_datcom, CoeffsE.CLLP(:, :, :, :, c), alpha, M, beta, absoluteAltitude);
+Cma = interp4_easy(A_datcom, M_datcom, B_datcom, H_datcom, CoeffsE.CMA(:, :, :, :, c), alpha, M, beta, absoluteAltitude);
+Cm0 = interp4_easy(A_datcom, M_datcom, B_datcom, H_datcom, CoeffsE.CM(:, :, :, :, c), alpha, M, beta, absoluteAltitude);
+Cmad = interp4_easy(A_datcom, M_datcom, B_datcom, H_datcom, CoeffsE.CMAD(:, :, :, :, c), alpha, M, beta, absoluteAltitude);
+Cmq = interp4_easy(A_datcom, M_datcom, B_datcom, H_datcom, CoeffsE.CMQ(:, :, :, :, c), alpha, M, beta, absoluteAltitude);
+Cnb = interp4_easy(A_datcom, M_datcom, B_datcom, H_datcom, CoeffsE.CLNB(:, :, :, :, c), alpha, M, beta, absoluteAltitude);
+Cn0 = interp4_easy(A_datcom, M_datcom, B_datcom, H_datcom, CoeffsE.CLN(:, :, :, :, c), alpha, M, beta, absoluteAltitude);
+Cnr = interp4_easy(A_datcom, M_datcom, B_datcom, H_datcom, CoeffsE.CLNR(:, :, :, :, c), alpha, M, beta, absoluteAltitude);
+Cnp = interp4_easy(A_datcom, M_datcom, B_datcom, H_datcom, CoeffsE.CLNP(:, :, :, :, c), alpha, M, beta, absoluteAltitude);
 
 % compute CN,CY,Cm,Cn (linearized with respect to alpha and beta):
 alpha0 = angle0(1); beta0 = angle0(2);
@@ -207,7 +207,6 @@ Cn = (Cn0 + Cnb*(beta-beta0));
 
 %% FORCES
 % first computed in the body-frame reference system
-
 qdyn = 0.5*rho*V_norm^2;        % [Pa] dynamics pressure
 qdynL_V = 0.5*rho*V_norm*S*C;   % 
 
@@ -219,7 +218,6 @@ Fg = quatrotate(Q,[0 0 m*g])';  % [N] force due to the gravity
 F = Fg +[-X,+Y,-Z]';            % [N] total forces vector
 
 %% STATE DERIVATIVES
-
 % velocity
 du = F(1)/m-q*w+r*v;
 dv = F(2)/m-r*u+p*w;
@@ -239,7 +237,6 @@ OM = 1/2* [ 0 -p -q -r  ;
 dQQ = OM*Q'; 
 
 %% FINAL DERIVATIVE STATE ASSEMBLING
-
 dY(1:3) = Vels;
 dY(4) = du;
 dY(5) = dv;
@@ -248,10 +245,9 @@ dY(7) = dp;
 dY(8) = dq;
 dY(9) = dr;
 dY(10:13) = dQQ;
-dY=dY';
+dY = dY';
 
 %% SAVING THE QUANTITIES FOR THE PLOTS
-
 parout.integration.t = t;
 
 parout.interp.M = M_value;
@@ -262,7 +258,7 @@ parout.interp.alt = -z;
 parout.wind.NED_wind = [uw, vw, ww];
 parout.wind.body_wind = wind;
 
-parout.velocities=Vels;
+parout.velocities = Vels;
 
 parout.forces.AeroDyn_Forces = [X, Y, Z];
 parout.forces.T = T;

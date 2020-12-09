@@ -72,7 +72,6 @@ Iyy = Y(16);
 Izz = Y(17);
 
 %% QUATERION ATTITUDE
-
 Q = [q0 q1 q2 q3];
 Q_conj = [q0 -q1 -q2 -q3];
 normQ = norm(Q);
@@ -83,8 +82,6 @@ end
 
 
 %% ADDING WIND (supposed to be added in NED axes);
-
-
 if settings.wind.model
    
     if settings.stoch.N > 1
@@ -110,17 +107,16 @@ Vels = quatrotate(Q_conj,[u v w]);
 V_norm = norm([ur vr wr]);
 
 %% ATMOSPHERE DATA
-
 if -z < 0     % z is directed as the gravity vector
     z = 0;
 end
 
-[~, a, P, rho] = atmosisa(-z+settings.z0);
+absoluteAltitude = -z + settings.z0;
+[~, a, P, rho] = atmosisa(absoluteAltitude);
 M = V_norm/a;
 M_value = M;
 
 %% CONSTANTS
-
 S = settings.S;              % [m^2] cross surface
 C = settings.C;              % [m]   caliber
 CoeffsE = settings.CoeffsE;  % Empty Rocket Coefficients
@@ -145,7 +141,6 @@ Izze = settings.Izze;        % [kg*m^2] Inertia to z-axis
 
 
 %% TIME-DEPENDENTS VARIABLES
-
 dI = 1/tb*([Ixxf Iyyf Izzf]'-[Ixxe Iyye Izze]');
 
 if t<tb
@@ -164,7 +159,6 @@ else             % for t >= tb the fligth condition is the empty one(no interpol
 end
 
 %% AERODYNAMICS ANGLES
-
 if not(ur < 1e-9 || V_norm < 1e-9)
     alpha = atan(wr/ur);
     beta = atan(vr/ur);                         % beta = asin(vr/V_norm); is the classical notation, Datcom uses this one though. 
@@ -180,14 +174,12 @@ beta_value = beta;
 
 
 %% DATCOM COEFFICIENTS
-
 A_datcom = settings.Alphas*pi/180;
 B_datcom = settings.Betas*pi/180;
 H_datcom = settings.Altitudes;
 M_datcom = settings.Machs;
 
 %% INTERPOLATION AT THE BOUNDARIES
-
 if M > M_datcom(end)
     
     M = M_datcom(end);
@@ -219,35 +211,35 @@ elseif beta < B_datcom(1)
     beta = B_datcom(1);
 end
 
-if -z > H_datcom(end)
+if absoluteAltitude > H_datcom(end)
     
-    z = -H_datcom(end);
+    absoluteAltitude = H_datcom(end);
     
-elseif -z < H_datcom(1)
+elseif absoluteAltitude < H_datcom(1)
     
-    z = -H_datcom(1);
+    absoluteAltitude = H_datcom(1);
     
 end
 
 %% CHOSING THE FULL CONDITION VALUE
 % interpolation of the coefficients with the value in the nearest condition of the Coeffs matrix
 
-[CAf, angle0] = interp4_easy(A_datcom, M_datcom, B_datcom, H_datcom, CoeffsF.CA, alpha, M, beta, -z);
-CYBf = interp4_easy(A_datcom, M_datcom, B_datcom, H_datcom, CoeffsF.CYB, alpha, M, beta, -z);
-CY0f = interp4_easy(A_datcom, M_datcom, B_datcom, H_datcom, CoeffsF.CY, alpha, M, beta, -z);
-CNAf = interp4_easy(A_datcom, M_datcom, B_datcom, H_datcom, CoeffsF.CNA, alpha, M, beta, -z);
-CN0f = interp4_easy(A_datcom, M_datcom, B_datcom, H_datcom, CoeffsF.CN, alpha, M, beta, -z);
-Clf = interp4_easy(A_datcom, M_datcom, B_datcom, H_datcom, CoeffsF.CLL, alpha, M, beta, -z);
-Clpf = interp4_easy(A_datcom, M_datcom, B_datcom, H_datcom, CoeffsF.CLLP, alpha, M, beta, -z);
-Cmaf = interp4_easy(A_datcom, M_datcom, B_datcom, H_datcom, CoeffsF.CMA, alpha, M, beta, -z);
-Cm0f = interp4_easy(A_datcom, M_datcom, B_datcom, H_datcom, CoeffsF.CM, alpha, M, beta, -z);
-Cmadf = interp4_easy(A_datcom, M_datcom, B_datcom, H_datcom, CoeffsF.CMAD, alpha, M, beta, -z);
-Cmqf = interp4_easy(A_datcom, M_datcom, B_datcom, H_datcom, CoeffsF.CMQ, alpha, M, beta, -z);
-Cnbf = interp4_easy(A_datcom, M_datcom, B_datcom, H_datcom, CoeffsF.CLNB, alpha, M, beta, -z);
-Cn0f = interp4_easy(A_datcom, M_datcom, B_datcom, H_datcom, CoeffsF.CLN, alpha, M, beta, -z);
-Cnrf = interp4_easy(A_datcom, M_datcom, B_datcom, H_datcom, CoeffsF.CLNR, alpha, M, beta, -z);
-Cnpf = interp4_easy(A_datcom, M_datcom, B_datcom, H_datcom, CoeffsF.CLNP, alpha, M, beta, -z);
-XCPf = interp4_easy(A_datcom, M_datcom, B_datcom, H_datcom, CoeffsF.X_C_P, alpha_tot, M, 0, -z);
+[CAf, angle0] = interp4_easy(A_datcom, M_datcom, B_datcom, H_datcom, CoeffsF.CA, alpha, M, beta, absoluteAltitude);
+CYBf = interp4_easy(A_datcom, M_datcom, B_datcom, H_datcom, CoeffsF.CYB, alpha, M, beta, absoluteAltitude);
+CY0f = interp4_easy(A_datcom, M_datcom, B_datcom, H_datcom, CoeffsF.CY, alpha, M, beta, absoluteAltitude);
+CNAf = interp4_easy(A_datcom, M_datcom, B_datcom, H_datcom, CoeffsF.CNA, alpha, M, beta, absoluteAltitude);
+CN0f = interp4_easy(A_datcom, M_datcom, B_datcom, H_datcom, CoeffsF.CN, alpha, M, beta, absoluteAltitude);
+Clf = interp4_easy(A_datcom, M_datcom, B_datcom, H_datcom, CoeffsF.CLL, alpha, M, beta, absoluteAltitude);
+Clpf = interp4_easy(A_datcom, M_datcom, B_datcom, H_datcom, CoeffsF.CLLP, alpha, M, beta, absoluteAltitude);
+Cmaf = interp4_easy(A_datcom, M_datcom, B_datcom, H_datcom, CoeffsF.CMA, alpha, M, beta, absoluteAltitude);
+Cm0f = interp4_easy(A_datcom, M_datcom, B_datcom, H_datcom, CoeffsF.CM, alpha, M, beta, absoluteAltitude);
+Cmadf = interp4_easy(A_datcom, M_datcom, B_datcom, H_datcom, CoeffsF.CMAD, alpha, M, beta, absoluteAltitude);
+Cmqf = interp4_easy(A_datcom, M_datcom, B_datcom, H_datcom, CoeffsF.CMQ, alpha, M, beta, absoluteAltitude);
+Cnbf = interp4_easy(A_datcom, M_datcom, B_datcom, H_datcom, CoeffsF.CLNB, alpha, M, beta, absoluteAltitude);
+Cn0f = interp4_easy(A_datcom, M_datcom, B_datcom, H_datcom, CoeffsF.CLN, alpha, M, beta, absoluteAltitude);
+Cnrf = interp4_easy(A_datcom, M_datcom, B_datcom, H_datcom, CoeffsF.CLNR, alpha, M, beta, absoluteAltitude);
+Cnpf = interp4_easy(A_datcom, M_datcom, B_datcom, H_datcom, CoeffsF.CLNP, alpha, M, beta, absoluteAltitude);
+XCPf = interp4_easy(A_datcom, M_datcom, B_datcom, H_datcom, CoeffsF.X_C_P, alpha_tot, M, 0, absoluteAltitude);
 
 %% CHOSING THE EMPTY CONDITION VALUE
 % interpolation of the coefficients with the value in the nearest condition of the Coeffs matrix
@@ -268,22 +260,22 @@ else
     c = 1;
 end
 
-CAe = interp4_easy(A_datcom, M_datcom, B_datcom, H_datcom, CoeffsE.CA(:, :, :, :, c), alpha, M, beta, -z);
-CYBe = interp4_easy(A_datcom, M_datcom, B_datcom, H_datcom, CoeffsE.CYB(:, :, :, :, c), alpha, M, beta, -z);
-CY0e = interp4_easy(A_datcom, M_datcom, B_datcom, H_datcom, CoeffsE.CY(:, :, :, :, c), alpha, M, beta, -z);
-CNAe = interp4_easy(A_datcom, M_datcom, B_datcom, H_datcom, CoeffsE.CNA(:, :, :, :, c), alpha, M, beta, -z);
-CN0e = interp4_easy(A_datcom, M_datcom, B_datcom, H_datcom, CoeffsE.CN(:, :, :, :, c), alpha, M, beta, -z);
-Cle = interp4_easy(A_datcom, M_datcom, B_datcom, H_datcom, CoeffsE.CLL(:, :, :, :, c), alpha, M, beta, -z);
-Clpe = interp4_easy(A_datcom, M_datcom, B_datcom, H_datcom, CoeffsE.CLLP(:, :, :, :, c), alpha, M, beta, -z);
-Cmae = interp4_easy(A_datcom, M_datcom, B_datcom, H_datcom, CoeffsE.CMA(:, :, :, :, c), alpha, M, beta, -z);
-Cm0e = interp4_easy(A_datcom, M_datcom, B_datcom, H_datcom, CoeffsE.CM(:, :, :, :, c), alpha, M, beta, -z);
-Cmade = interp4_easy(A_datcom, M_datcom, B_datcom, H_datcom, CoeffsE.CMAD(:, :, :, :, c), alpha, M, beta, -z);
-Cmqe = interp4_easy(A_datcom, M_datcom, B_datcom, H_datcom, CoeffsE.CMQ(:, :, :, :, c), alpha, M, beta, -z);
-Cnbe = interp4_easy(A_datcom, M_datcom, B_datcom, H_datcom, CoeffsE.CLNB(:, :, :, :, c), alpha, M, beta, -z);
-Cn0e = interp4_easy(A_datcom, M_datcom, B_datcom, H_datcom, CoeffsE.CLN(:, :, :, :, c), alpha, M, beta, -z);
-Cnre = interp4_easy(A_datcom, M_datcom, B_datcom, H_datcom, CoeffsE.CLNR(:, :, :, :, c), alpha, M, beta, -z);
-Cnpe = interp4_easy(A_datcom, M_datcom, B_datcom, H_datcom, CoeffsE.CLNP(:, :, :, :, c), alpha, M, beta, -z);
-XCPe = interp4_easy(A_datcom, M_datcom, B_datcom, H_datcom, CoeffsE.X_C_P(:, :, :, :, c), alpha_tot, M, 0, -z);
+CAe = interp4_easy(A_datcom, M_datcom, B_datcom, H_datcom, CoeffsE.CA(:, :, :, :, c), alpha, M, beta, absoluteAltitude);
+CYBe = interp4_easy(A_datcom, M_datcom, B_datcom, H_datcom, CoeffsE.CYB(:, :, :, :, c), alpha, M, beta, absoluteAltitude);
+CY0e = interp4_easy(A_datcom, M_datcom, B_datcom, H_datcom, CoeffsE.CY(:, :, :, :, c), alpha, M, beta, absoluteAltitude);
+CNAe = interp4_easy(A_datcom, M_datcom, B_datcom, H_datcom, CoeffsE.CNA(:, :, :, :, c), alpha, M, beta, absoluteAltitude);
+CN0e = interp4_easy(A_datcom, M_datcom, B_datcom, H_datcom, CoeffsE.CN(:, :, :, :, c), alpha, M, beta, absoluteAltitude);
+Cle = interp4_easy(A_datcom, M_datcom, B_datcom, H_datcom, CoeffsE.CLL(:, :, :, :, c), alpha, M, beta, absoluteAltitude);
+Clpe = interp4_easy(A_datcom, M_datcom, B_datcom, H_datcom, CoeffsE.CLLP(:, :, :, :, c), alpha, M, beta, absoluteAltitude);
+Cmae = interp4_easy(A_datcom, M_datcom, B_datcom, H_datcom, CoeffsE.CMA(:, :, :, :, c), alpha, M, beta, absoluteAltitude);
+Cm0e = interp4_easy(A_datcom, M_datcom, B_datcom, H_datcom, CoeffsE.CM(:, :, :, :, c), alpha, M, beta, absoluteAltitude);
+Cmade = interp4_easy(A_datcom, M_datcom, B_datcom, H_datcom, CoeffsE.CMAD(:, :, :, :, c), alpha, M, beta, absoluteAltitude);
+Cmqe = interp4_easy(A_datcom, M_datcom, B_datcom, H_datcom, CoeffsE.CMQ(:, :, :, :, c), alpha, M, beta, absoluteAltitude);
+Cnbe = interp4_easy(A_datcom, M_datcom, B_datcom, H_datcom, CoeffsE.CLNB(:, :, :, :, c), alpha, M, beta, absoluteAltitude);
+Cn0e = interp4_easy(A_datcom, M_datcom, B_datcom, H_datcom, CoeffsE.CLN(:, :, :, :, c), alpha, M, beta, absoluteAltitude);
+Cnre = interp4_easy(A_datcom, M_datcom, B_datcom, H_datcom, CoeffsE.CLNR(:, :, :, :, c), alpha, M, beta, absoluteAltitude);
+Cnpe = interp4_easy(A_datcom, M_datcom, B_datcom, H_datcom, CoeffsE.CLNP(:, :, :, :, c), alpha, M, beta, absoluteAltitude);
+XCPe = interp4_easy(A_datcom, M_datcom, B_datcom, H_datcom, CoeffsE.X_C_P(:, :, :, :, c), alpha_tot, M, 0, absoluteAltitude);
 
 %% LINEAR INTERPOLATION BETWEEN THE TWO CONDITIONS
 % Computing the value of the aerodynamics coefficients at a certain time
@@ -361,7 +353,6 @@ else
     
     %% FORCES
     % first computed in the body-frame reference system
-    
     qdyn = 0.5*rho*V_norm^2;        %[Pa] dynamics pressure
     qdynL_V = 0.5*rho*V_norm*S*C; 
     
@@ -378,7 +369,6 @@ else
     F = Fg +[-X+T,+Y,-Z]';          %[N] total forces vector
     
     %% STATE DERIVATIVES
-    
     % velocity
     du = F(1)/m-q*w+r*v;
     dv = F(2)/m-r*u+p*w;
@@ -401,7 +391,6 @@ OM = 1/2* [ 0 -p -q -r  ;
 dQQ = OM*Q';
 
 %% FINAL DERIVATIVE STATE ASSEMBLING
-
 dY(1:3) = Vels;
 dY(4) = du;
 dY(5) = dv;
@@ -418,7 +407,6 @@ dY(18:20) = [p q r];
 dY = dY';
 
 %% SAVING THE QUANTITIES FOR THE PLOTS
-
 parout.integration.t = t;
 
 parout.interp.M = M_value;
