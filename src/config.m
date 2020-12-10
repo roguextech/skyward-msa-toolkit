@@ -11,18 +11,21 @@ Release date: 16/04/2016
 %}
 
 %% LAUNCH SETUP
-% launchpad
-settings.z0 = 109;                                                                 %[m] Launchpad Altitude
+% launchpad pont the sor
+settings.z0 = 109;                                                                  %[m] Launchpad Altitude
 settings.lrampa = 4.9;                                                              %[m] LaunchPad route (distance from ground of the first hook)
-settings.lat0 = 41.810093;                                                          % Launchpad latitude
-settings.lon0 = 14.052546;                                                          % Launchpad longitude
+settings.lat0 = 39.201778;                                                          % Launchpad latitude
+settings.lon0 = -8.138368;                                                          % Launchpad longitude
 
-% 39.201778, -8.138368   pont the sor  coordinates 
-% 109 pont the sor z0
+% launchpad roccaraso
+% settings.z0 = 109;                                                                  %[m] Launchpad Altitude
+% settings.lrampa = 4.9;                                                              %[m] LaunchPad route (distance from ground of the first hook)
+% settings.lat0 = 41.810093;                                                          % Launchpad latitude
+% settings.lon0 = 14.052546;                                                          % Launchpad longitude
+
 settings.satellite3D = false;
 
-% ATTENTION: works only at Roccaraso ~ (41.810093 14.052546) 
-settings.terrain = false;
+settings.terrain = false;       % ATTENTION: it works only at Roccaraso
 if settings.terrain  
      settings.funZ = funZ_gen('zdata.mat', settings.lat0, settings.lon0, true, 'xy');    % Altitude map computation
 end
@@ -42,35 +45,24 @@ settings.PHIsigma = 0*pi/180;         % Stocasthic simulation only
 DATA_PATH = '../data/';
 filename = strcat(DATA_PATH,'Motors.mat');
 Motors = load(filename);
-motors = [Motors.Cesaroni Motors.Aerotech];
+Motors = [Motors.Cesaroni Motors.Aerotech];
 
 name = 'M2020';
 % name = 'M1890';
 % name = 'M1800';
 % name = 'M2000R';
 
-n_name = [motors.MotorName] == name;
-settings.motor.exp_time = motors(n_name).t;
-settings.motor.exp_thrust = motors(n_name).T;
-settings.mp = motors(n_name).mp;                                    % [kg]   Propellant Mass                                                
-settings.tb = motors(n_name).t(end) ;                               % [s]    Burning time
+n_name = [Motors.MotorName] == name;
+settings.motor.exp_time = Motors(n_name).t;
+settings.motor.exp_thrust = Motors(n_name).T;
+settings.mp = Motors(n_name).mp;                                    % [kg]   Propellant Mass                                                
+settings.tb = Motors(n_name).t(end) ;                               % [s]    Burning time
 settings.mfr = settings.mp/settings.tb;                             % [kg/s] Mass Flow Rate
-settings.ms = 21;                                                   % [kg]   Total Mass
-settings.m0 = settings.ms + settings.mp;                            % [kg]   Structural Mass
+settings.ms = 21;                                                   % [kg]   Structural Mass
+settings.m0 = settings.ms + settings.mp;                            % [kg]   Total Mass
 settings.mnc = 0.400;                                               % [kg]   Nosecone Mass
 
-clear ('motors','name')
-
-
-%%%%%% HRE
-% settings.motor.exp_time = [0, 8.1];
-% settings.motor.exp_thrust = [400, 400];
-% settings.mp = 0.183*8.1;                                            % [kg]   Propellant Mass                                                
-% settings.mnc = 0.300;                                               % [kg]   Nosecone Mass
-% settings.tb = 8.1;                                                  % [s]    Burning time
-% settings.mfr = 0.183;                                               % [kg/s] Mass Flow Rate
-% settings.ms = 10;                                                   % [kg]   Total Mass
-% settings.m0 = settings.ms + settings.mp;                            % [kg]   Structural Mass
+clear ('Motors','name')
 
 %% GEOMETRY DETAILS
 % This parameters should be the same parameters set up in MISSILE DATCOM
@@ -78,7 +70,6 @@ clear ('motors','name')
 
 settings.C = 0.15;                                                  % [m]      Caliber (Fuselage Diameter)
 settings.S = pi*settings.C^2/4;                                     % [m^2]    Cross-sectional Surface
-settings.L = 3;                                                              % [m]      Rocket length
 
 %% MASS GEOMERTY DETAILS
 % x-axis: along the fuselage
@@ -147,13 +138,6 @@ settings.para(2).CD = 0.7;                                          % [/] Parach
 settings.para(2).CL = 0;                                            % [/] Parachute Lift Coefficient
 settings.para(2).z_cut = 0;                                         % [m] Final altitude of the parachute
 
-% % rogallo
-% settings.para(2).S = 7;                                           % [m^2]   Surface
-% settings.para(2).mass = 0.7;                                     % [kg]   Parachute Mass
-% settings.para(2).CD = 0.4;                                        % [/] Parachute Drag Coefficient
-% settings.para(2).CL = 0.9;                                        % [/] Parachute Lift Coefficient
-% settings.para(2).z_cut = 0;                                       % [m] Final altitude of the parachute
-
 %% INTEGRATION OPTIONS
 settings.ode.final_time =  2000;                                    % [s] Final integration time
 
@@ -165,13 +149,10 @@ settings.ode.final_time =  2000;                                    % [s] Final 
 % - stopped (it has to be created)
 % - InitialStep is the highest value tried by the solver
 
-settings.ode.optionsasc1 = odeset('Events',@event_apogee,'InitialStep',1);    %ODE options for ascend
-
-settings.ode.optionsasc2 = odeset('InitialStep',1);                           %ODE options for due to the opening delay of the parachute
-
-settings.ode.optionspara = odeset('Events',@event_para_cut);              %ODE options for the parachutes
-
-settings.ode.optionsdesc = odeset('Events',@event_landing);                   %ODE options for ballistic descent
+settings.ode.optionsasc1 = odeset('Events', @event_apogee, 'InitialStep', 1);       %ODE options for ascend
+settings.ode.optionsasc2 = odeset('InitialStep', 1);                                %ODE options for due to the opening delay of the parachute
+settings.ode.optionspara = odeset('Events', @event_para_cut);                       %ODE options for the parachutes
+settings.ode.optionsdesc = odeset('Events', @event_landing);                        %ODE options for ballistic descent
 
 
 %% WIND DETAILS
@@ -235,7 +216,7 @@ settings.stoch.N = 1;                               % Number of cases
 settings.stoch.prob.x_lim = 2e3;                    % Max ovest displacement [m]
 settings.stoch.prob.V_lim = 50;                     % Max drogue velocity [Pa]
 
-%%% Safe Ellipse
+%%% Safe Ellipse (roccaraso)
 settings.prob.SafeEllipse.a = 1100;
 settings.prob.SafeEllipse.b = 2800;
 settings.prob.SafeEllipse.x0  = 0;
