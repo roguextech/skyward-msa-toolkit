@@ -138,6 +138,10 @@ settings.para(1).CD = 0.75;                                         % [/] Parach
 settings.para(1).CL = 0;                                            % [/] Parachute Lift Coefficient
 settings.para(1).delay = 1;                                         % [s] drogue opening delay
 settings.para(1).z_cut = 300;                                       % [m] Final altitude of the parachute
+settings.para(1).ShockCord_L = 4;                                   % [m] shock cord length
+settings.para(1).ShockCord_k = 10880;                               % [N/m^2] shock cord elastic constant
+settings.para(1).ShockCord_c = 100;                                   % [Ns/m] shock cord damping coefficient
+settings.para(1).OverExp_t = 0.05;                                  % [s] over-expansion time
 
 % parachute 2
 settings.para(2).S = 10.5;                                          % [m^2]   Surface
@@ -145,10 +149,14 @@ settings.para(2).mass = 0.8;                                        % [kg]   Par
 settings.para(2).CD = 0.7;                                          % [/] Parachute Drag Coefficient
 settings.para(2).CL = 0;                                            % [/] Parachute Lift Coefficient
 settings.para(2).z_cut = 0;                                         % [m] Final altitude of the parachute
+settings.para(2).ShockCord_L = 6;                                   % [m] shock cord length
+settings.para(2).ShockCord_k = 10880;                               % [N/m^2] shock cord elastic constant
+settings.para(2).ShockCord_c = 100;                                   % [Ns/m] shock cord damping coefficient
+settings.para(2).OverExp_t = 1.5;                                   % [s] over-expansion time
 
 % % rogallo
 % settings.para(2).S = 7;                                           % [m^2]   Surface
-% settings.para(2).mass = 0.7;                                     % [kg]   Parachute Mass
+% settings.para(2).mass = 0.7;                                      % [kg]   Parachute Mass
 % settings.para(2).CD = 0.4;                                        % [/] Parachute Drag Coefficient
 % settings.para(2).CL = 0.9;                                        % [/] Parachute Lift Coefficient
 % settings.para(2).z_cut = 0;                                       % [m] Final altitude of the parachute
@@ -166,7 +174,7 @@ settings.ode.final_time =  2000;                                    % [s] Final 
 
 settings.ode.optionsasc1 = odeset('Events',@event_apogee,'InitialStep',1);    %ODE options for ascend
 
-settings.ode.optionsasc2 = odeset('InitialStep',1);                           %ODE options for due to the opening delay of the parachute
+% settings.ode.optionsasc2 = odeset('InitialStep',1);                           %ODE options for due to the opening delay of the parachute
 
 settings.ode.optionspara = odeset('Events',@event_para_cut);              %ODE options for the parachutes
 

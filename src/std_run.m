@@ -124,7 +124,7 @@ save('ascent_plot.mat', 'data_ascent');
 %% PARATCHUTES
 % Initial Condition are the last from ascent (need to rotate because
 % velocities are in body axes)
-Y0p = [Ya(end, 1:3) quatrotate(quatconj(Ya(end, 10:13)),Ya(end, 4:6))];
+Y0p = [Ya(end, 1:3) quatrotate(quatconj(Ya(end, 10:13)),Ya(end, 4:17)), Ya(end, 1:3) quatrotate(quatconj(Ya(end, 10:13)),Ya(end, 4:17))];
 data_para = cell(settings.Npara, 1);
 Yf = Ya(:, 1:6);
 Tf  = Ta;
@@ -133,7 +133,7 @@ t0p = Ta(end);
 for i = 1:settings.Npara
     para = i;
     [Tp, Yp] = ode113(@descent_parachute, [t0p, tf], Y0p, settings.ode.optionspara,...
-        settings, uw, vw, ww, para, uncert);
+        settings, t0p, uw, vw, ww, para, uncert);
 
     [data_para{para}] = RecallOdeFcn(@descent_parachute, Tp, Yp, settings, uw, vw, ww, para, uncert);
     data_para{para}.state.Y = Yp;
