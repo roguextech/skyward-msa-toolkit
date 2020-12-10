@@ -143,9 +143,11 @@ if (n_vers(3) > 0)                       % If the normal vector is downward dire
     n_vers = n_vect/norm(n_vect);
 end
 
-% position of the point from where the chord is deployed
-PosChord_vec = [0 0 (z_rocket - (setting.xcg(2)-settings.Lnc)]';        % position vector in NED frame
-PosChord_vec = quatrotate(Q_rocket,posChord_vec);                       % position in rocket frame  
+% position and velocity vectors of the point from where the chord is deployed
+posChord_vec = [x_rocket y_rocket (z_rocket - (setting.xcg(2)-settings.Lnc))]';           % position vector in NED frame
+velChord_vec = [u_rocket v_rocket w_rocket]' + cross([p_rocket q_rocket r_rocket]',...    % velocity vector in NED frame  
+    posCHord_vect-[x_rocket y_rocket z_rocket]');
+
 
 %% PARACHUTE CONSTANTS
 % CD and S will be computed later
@@ -272,13 +274,11 @@ L_para = 0.5*rho*V_norm_para^2*S_para*CL_para*n_vers';       % [N] Lift vector
 Fg_para = m_para*g*[0 0 1]';                                 % [N] Gravitational Force vector
 
 pos_para = [x_para y_para z_para];
-pos_rocket = [x_rocket y_rocket z_rocket];
 vel_para = [u_para v_para w_para];
-vel_rocket = [u_rocket v_rocket w_rocket]
 
-if norm(pos_para - pos_rocket) < settings.para(para).ShockCord_L
-    T_chord = (norm(pos_para-pos_rocket) - settings.para(para).ShockCord_L)*settings.para(1).ShockCord_k...
-        + norm(vel_para-vel_rocket)*settings.para(para).ShockCord_c;
+if norm(pos_para - posChord_vec) < settings.para(para).ShockCord_L
+    T_chord = (norm(pos_para-posChord_vec) - settings.para(para).ShockCord_L)*settings.para(1).ShockCord_k...
+        + norm(vel_para-velChord_vec)*settings.para(para).ShockCord_c;
 else
     T_chord = 0;
 end
