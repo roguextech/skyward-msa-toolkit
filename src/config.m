@@ -77,7 +77,9 @@ clear ('motors','name')
 
 settings.C = 0.15;                                                  % [m]      Caliber (Fuselage Diameter)
 settings.S = pi*settings.C^2/4;                                     % [m^2]    Cross-sectional Surface
-settings.L = 3;                                                              % [m]      Rocket length
+settings.L = 3;                                                     % [m]      Rocket length
+settings.Lnc = 0.3;                                                 % [m]      Nosecone length
+settings.xcg = [1.75, 1.62] - 0.4 + 0.28;                           % [m] CG position [full, empty]
 
 %% MASS GEOMERTY DETAILS
 % x-axis: along the fuselage

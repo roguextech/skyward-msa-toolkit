@@ -64,6 +64,12 @@ Ixx_rocket = Y(15);
 Iyy_rocket = Y(16);
 Izz_rocket = Y(17);
 
+Q_rocket = [ q0_rocket q1_rocket q2_rocket q3_rocket];
+Q_conj_rocket = [ q0_rocket -q1_rocket -q2_rocket -q3_rocket];
+normQ_rocket = norm(Q_rocket);
+
+Q_rocket = Q_rocket/normQ_rocket;
+
 % PARACHUTE STATE
 x_para = Y(18);
 y_para = Y(19);
@@ -136,6 +142,10 @@ if (n_vers(3) > 0)                       % If the normal vector is downward dire
     n_vect = cross(h_vers, t_vers);
     n_vers = n_vect/norm(n_vect);
 end
+
+% position of the point from where the chord is deployed
+PosChord_vec = [0 0 (z_rocket - (setting.xcg(2)-settings.Lnc)]';        % position vector in NED frame
+PosChord_vec = quatrotate(Q_rocket,posChord_vec);                       % position in rocket frame  
 
 %% PARACHUTE CONSTANTS
 % CD and S will be computed later
@@ -273,8 +283,11 @@ else
     T_chord = 0;
 end
 
-Ft_chord = T_chord * t_vers';                                % [N] chord tension vector
-F_para = -D_para + Ft_chord + L_para + Fg_para;              % [N] total forces vector
+dis_vec = pos_para - pos_rocket;
+dis_vers = dis_vec/norm(dis_vec);                            % relative position versor, pointed from parachute to rocket
+
+Ft_chord_para = T_chord * dis_vers';                              % [N] chord tension vector
+F_para = -D_para + Ft_chord_para + L_para + Fg_para;              % [N] total forces vector in NED frame
 
 
 %% ROCKET FORCES
@@ -287,6 +300,7 @@ Y = qdyn*S*CY;                  % [N] y-body component of the aerodynamics force
 Z = qdyn*S*CN;                  % [N] z-body component of the aerodynamics force
 Fg = quatrotate(Q,[0 0 m*g])';  % [N] force due to the gravity
 
-F = Fg - Ft_chord + [-X,+Y,-Z]';            % [N] total forces vector
+Ft_chord_rocket = quatrotate(Q, -Ft_chord_para);      % [N] Chord Tension in Rocket frame
+F = Fg + Ft_chord + [-X,+Y,-Z]';                      % [N] total forces vector in body frame
 
 
