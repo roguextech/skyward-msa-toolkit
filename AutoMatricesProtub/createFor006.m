@@ -78,7 +78,7 @@ switch shape
         Xle2 = Lcenter + Lnose - d - C2;
         
     case 'iso'
-        Xle2 = Lcenter + Lnose - d - diffC/2;
+        Xle2 = Lcenter + Lnose - d - C2 - diffC/2;
         
     case 'parall'
         Xle2 = Lcenter + Lnose - d;
