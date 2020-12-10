@@ -47,6 +47,7 @@ motors = [Motors.Cesaroni Motors.Aerotech];
 name = 'M2020';
 % name = 'M1890';
 % name = 'M1800';
+% name = 'M2000R';
 
 n_name = [motors.MotorName] == name;
 settings.motor.exp_time = motors(n_name).t;
