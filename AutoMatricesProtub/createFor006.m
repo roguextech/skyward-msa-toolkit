@@ -56,7 +56,7 @@ Nb = length(Beta);
 Nalt = length(Alt);
 
 %% protuberance data
-if isfield(datcom,'xprot') && datcom.hprot ~= 0 
+if isfield(datcom,'xprot') && datcom.hprot ~= 0
     protub_flag = 1;
     % constants
     xprot = datcom.xprot;
@@ -75,13 +75,25 @@ diffC = C1-C2;
 
 switch shape
     case 'rect'
-        Xle2 = Lcenter + Lnose - d - C2;
-        
+        if datcom.config == "AllRocket"
+            Xle2 = Lcenter + Lnose - d - C2;
+        elseif datcom.config == "CenterBodyOnly_descent"
+            Xle2 = 0;
+        end
+    
     case 'iso'
-        Xle2 = Lcenter + Lnose - d - diffC/2;
+        if datcom.config == "AllRocket"
+            Xle2 = Lcenter + Lnose - d - diffC/2 - C2;
+        elseif datcom.config == "CenterBodyOnly_descent"
+            Xle2 = diffC/2;
+        end
         
     case 'parall'
-        Xle2 = Lcenter + Lnose - d;
+        if datcom.config == "AllRocket"
+            Xle2 = Lcenter + Lnose - d;
+        elseif datcom.config == "CenterBodyOnly_descent"
+            Xle2 = - C2;
+        end
 end
 
 %%% Defining Fin Section
