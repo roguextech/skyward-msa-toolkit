@@ -59,10 +59,10 @@ q0_rocket = Y(10);
 q1_rocket = Y(11);
 q2_rocket = Y(12);
 q3_rocket = Y(13);
-m_rocket = Y(14);
-Ixx_rocket = Y(15);
-Iyy_rocket = Y(16);
-Izz_rocket = Y(17);
+% m_rocket = Y(14);
+Ixx = Y(15);
+Iyy = Y(16);
+Izz = Y(17);
 
 Q_rocket = [ q0_rocket q1_rocket q2_rocket q3_rocket];
 Q_conj_rocket = [ q0_rocket -q1_rocket -q2_rocket -q3_rocket];
@@ -85,9 +85,15 @@ q1_para = Y(28);
 q2_para = Y(29);
 q3_para = Y(30);
 m_para = Y(31);
-Ixx_para = Y(32);
-Iyy_para = Y(33);
-Izz_para = Y(34);
+% Ixx_para = Y(32);
+% Iyy_para = Y(33);
+% Izz_para = Y(34);
+
+Q_para = [ q0_para q1_para q2_para q3_para];
+Q_conj_para = [ q0_para -q1_para -q2_para -q3_para];
+normQ_para = norm(Q_para);
+
+Q_para = Q_para/normQ_para;
 
 %% ADDING WIND (supposed to be added in NED axes);
 
@@ -142,12 +148,6 @@ if (n_vers(3) > 0)                       % If the normal vector is downward dire
     n_vect = cross(h_vers, t_vers);
     n_vers = n_vect/norm(n_vect);
 end
-
-% position and velocity vectors of the point from where the chord is deployed
-posChord_vec = [x_rocket y_rocket (z_rocket - (setting.xcg(2)-settings.Lnc))]';           % position vector in NED frame
-velChord_vec = [u_rocket v_rocket w_rocket]' + cross([p_rocket q_rocket r_rocket]',...    % velocity vector in NED frame  
-    posCHord_vect-[x_rocket y_rocket z_rocket]');
-
 
 %% PARACHUTE CONSTANTS
 % CD and S will be computed later
@@ -258,6 +258,26 @@ CY = (CY0 + CYB*(beta-beta0));
 Cm = (Cm0 + Cma*(alpha-alpha0));
 Cn = (Cn0 + Cnb*(beta-beta0));
 
+%% RELATIVE POSITION AND VELOCITY VECTORS
+% position and velocity vectors of the point from where the chord is deployed
+posChord_vec = [(setting.xcg(2)-settings.Lnc) 0 0]';           % position vector in rocket frame
+posChord_vec = quatrotate(Q_conj_rocket,posChord_vec);         % position vector in NED frame
+
+velChord_vec = [u_rocket v_rocket w_rocket]' +...
+    cross([p_rocket q_rocket r_rocket]',posCHord_vect);        % velocity vector in NED frame
+
+% relative position and velocity vectors
+pos_para = [x_para y_para z_para]';                            % parachute position in NED frame
+relPos_vec = posChord_vec - pos_para;                          % relative position vector NED
+relPos_vers = relPos_vec/norm(relPos_vec);
+
+relVel_vec = quatrotate(Q_conj_rocket,[u_rocket v_rocket w_rocket]')...
+    - quatrotate(Q_conj_para,[u_para v_para w_para]');
+
+relVel_CHORD = relVel_vec * relPos_vers;
+
+
+
 %% PARACHUTE FORCES
 % first computed in the parachute-frame reference system
 if t < t0p + settings.para(para).OverExp_t
@@ -273,21 +293,15 @@ end
 L_para = 0.5*rho*V_norm_para^2*S_para*CL_para*n_vers';       % [N] Lift vector
 Fg_para = m_para*g*[0 0 1]';                                 % [N] Gravitational Force vector
 
-pos_para = [x_para y_para z_para];
-vel_para = [u_para v_para w_para];
-
-if norm(pos_para - posChord_vec) < settings.para(para).ShockCord_L
-    T_chord = (norm(pos_para-posChord_vec) - settings.para(para).ShockCord_L)*settings.para(1).ShockCord_k...
-        + norm(vel_para-velChord_vec)*settings.para(para).ShockCord_c;
+if norm(relPos_vec) > settings.para(para).ShockCord_L
+    T_chord = (norm(relPos_vec) - settings.para(para).ShockCord_L)*settings.para(1).ShockCord_k...
+        + relVel_CHORD * settings.para(para).ShockCord_c;
 else
     T_chord = 0;
 end
 
-dis_vec = pos_para - pos_rocket;
-dis_vers = dis_vec/norm(dis_vec);                            % relative position versor, pointed from parachute to rocket
-
-Ft_chord_para = T_chord * dis_vers';                              % [N] chord tension vector
-F_para = -D_para + Ft_chord_para + L_para + Fg_para;              % [N] total forces vector in NED frame
+Ft_chord_para = T_chord * relPos_vers;                              % [N] chord tension vector
+F_para = -D_para + Ft_chord_para + L_para + Fg_para;                % [N] total forces vector in NED frame
 
 
 %% ROCKET FORCES
@@ -295,12 +309,46 @@ F_para = -D_para + Ft_chord_para + L_para + Fg_para;              % [N] total fo
 qdyn = 0.5*rho*V_norm^2;        % [Pa] dynamics pressure
 qdynL_V = 0.5*rho*V_norm*S*C;   %
 
-X = qdyn*S*CA;                  % [N] x-body component of the aerodynamics force
-Y = qdyn*S*CY;                  % [N] y-body component of the aerodynamics force
-Z = qdyn*S*CN;                  % [N] z-body component of the aerodynamics force
-Fg = quatrotate(Q,[0 0 m*g])';  % [N] force due to the gravity
+X = qdyn*S*CA;                                % [N] x-body component of the aerodynamics force
+Y = qdyn*S*CY;                                % [N] y-body component of the aerodynamics force
+Z = qdyn*S*CN;                                % [N] z-body component of the aerodynamics force
+Fg_rocket = quatrotate(Q_rocket,[0 0 m_rocket*g])';  % [N] force due to the gravity
 
-Ft_chord_rocket = quatrotate(Q, -Ft_chord_para);      % [N] Chord Tension in Rocket frame
-F = Fg + Ft_chord + [-X,+Y,-Z]';                      % [N] total forces vector in body frame
+Ft_chord_rocket = quatrotate(Q_rocket, -Ft_chord_para);                    % [N] Chord Tension in Rocket frame
+F_rocket = Fg_rocket + Ft_chord_rocket + [-X,+Y,-Z]';                      % [N] total forces vector in body frame
 
+%% ROCKET STATE DERIVATIVES
+b = posChord_vec;
+% velocity
+du_rocket = F_rocket(1)/m_rocket-q_rocket*w_rocket+r_rocket*v_rocket;
+dv_rocket = F_rocket(2)/m_rocket-r_rocket*u_rocket+p_rocket*w_rocket;
+dw_rocket = F_rocket(3)/m_rocket-p_rocket*v_rocket+q_rocket*u_rocket;
 
+% Rotation
+Momentum = cross(b, Ft_chord_rocket);
+
+dp = (Iyy-Izz)/Ixx*q_rocket*r_rocket + Momentum(1) % + qdynL_V/Ixx*(V_norm*Cl+Clp*p*C/2);
+dq = (Izz-Ixx)/Iyy*p_rocket*r_rocket + Momentum(2) % + qdynL_V/Iyy*(V_norm*Cm + (Cmad+Cmq)*q*C/2);
+dr = (Ixx-Iyy)/Izz*p_rocket*q_rocket + Momentum(3) % + qdynL_V/Izz*(V_norm*Cn + (Cnr*r+Cnp*p)*C/2);
+
+% Quaternion
+OM = 1/2* [ 0 -p_rocket -q_rocket -r_rocket  ;
+            p_rocket  0  r_rocket -q_rocket  ;
+            q_rocket -r_rocket  0  p_rocket  ;
+            r_rocket  q_rocket -p_rocket  0 ];
+
+dQQ_rocket = OM*Q_rocket';
+
+%% PARACHUTE STATE DERIVATIVES
+% velocity
+du_para = F_para(1)/m_para-q_para*w_para+r_para*v_para;
+dv_para = F_para(2)/m_para-r_para*u_para+p_para*w_para;
+dw_para = F_para(3)/m_para-p_para*v_para+q_para*u_para;
+
+% Quaternion
+OM = 1/2* [ 0 -p_para -q_para -r_para  ;
+            p_para  0  r_para -q_para  ;
+            q_para -r_para  0  p_para  ;
+            r_para  q_para -p_para  0 ];
+
+dQQ_para = OM*Q_para';
