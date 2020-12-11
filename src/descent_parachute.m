@@ -80,20 +80,14 @@ w_para = Y(23);
 p_para = Y(24);
 q_para = Y(25);
 r_para = Y(26);
-q0_para = Y(27);
-q1_para = Y(28);
-q2_para = Y(29);
-q3_para = Y(30);
+% q0_para = Y(27);
+% q1_para = Y(28);
+% q2_para = Y(29);
+% q3_para = Y(30);
 m_para = Y(31);
 % Ixx_para = Y(32);
 % Iyy_para = Y(33);
 % Izz_para = Y(34);
-
-Q_para = [ q0_para q1_para q2_para q3_para];
-Q_conj_para = [ q0_para -q1_para -q2_para -q3_para];
-normQ_para = norm(Q_para);
-
-Q_para = Q_para/normQ_para;
 
 %% ADDING WIND (supposed to be added in NED axes);
 
@@ -132,14 +126,14 @@ V_norm_para = norm([ur_para vr_para wr_para]);
 % vector perpendicular to the relative velocity
 
 t_vect = [ur_para vr_para wr_para];                % Tangenzial vector
-h_vect = [-vr_para ur_para 0];                     % horizontal vector    
+h_vect = [vr_para -ur_para 0];                     % horizontal vector    
 
 if all(abs(h_vect) < 1e-8)
-    h_vect = [-vw uw 0];
+    h_vect = [vw -uw 0];
 end
 
 t_vers = t_vect/norm(t_vect);            % Tangenzial versor
-h_vers = -h_vect/norm(h_vect);           % horizontal versor
+h_vers = h_vect/norm(h_vect);            % horizontal versor
 
 n_vect = cross(t_vers, h_vers);          % Normal vector
 n_vers = n_vect/norm(n_vect);            % Normal versor
@@ -148,6 +142,24 @@ if (n_vers(3) > 0)                       % If the normal vector is downward dire
     n_vect = cross(h_vers, t_vers);
     n_vers = n_vect/norm(n_vect);
 end
+
+I = [1 0 0]';
+J = [0 1 0]';
+K = [0 0 1]';
+
+if h_vers(2) > 0
+    Azimut = acos(h_vers(1)) + pi/2;
+else
+    Azimut = wrapTo2Pi(2*pi - acos(h_vers(1)) + pi/2);
+end
+Elevation = pi/2 - acos(-t_vers(3));
+
+Q_para = angle2quat(Azimut, elevation, 0*pi/180, 'ZYX')';
+Q_conj_para = quatconj(Q_para);
+normQ_para = norm(Q_para);
+
+Q_para = Q_para/normQ_para;
+
 
 %% PARACHUTE CONSTANTS
 % CD and S will be computed later
@@ -344,11 +356,3 @@ dQQ_rocket = OM*Q_rocket';
 du_para = F_para(1)/m_para-q_para*w_para+r_para*v_para;
 dv_para = F_para(2)/m_para-r_para*u_para+p_para*w_para;
 dw_para = F_para(3)/m_para-p_para*v_para+q_para*u_para;
-
-% Quaternion
-OM = 1/2* [ 0 -p_para -q_para -r_para  ;
-            p_para  0  r_para -q_para  ;
-            q_para -r_para  0  p_para  ;
-            r_para  q_para -p_para  0 ];
-
-dQQ_para = OM*Q_para';
