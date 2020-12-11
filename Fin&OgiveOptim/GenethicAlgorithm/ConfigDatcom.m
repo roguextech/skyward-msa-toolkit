@@ -25,4 +25,4 @@ datcom.Npanel = 3;                                         % [m] number of fins
 datcom.Ler = 0.003;                                        % [deg] Leading edge radius
 datcom.d = 0;                                              % [m] rocket tip-fin distance
 datcom.zup_raw = 0.0015;                                   % [m] fin semi-thickness 
-datcom.Lmaxu_raw = 0.006;                                  % [m] Fraction of chord from leading edge to max thickness
+datcom.Lmaxu_raw = 0.0015;                                  % [m] Fraction of chord from leading edge to max thickness
