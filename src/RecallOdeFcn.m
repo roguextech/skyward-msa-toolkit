@@ -37,7 +37,7 @@ for i = 1:NT
     
     all_steps.accelerations.body_acc(i, 1:3) = single_step.accelerations.body_acc;
     
-    if not(isequal(fun_info.function, 'descent_parachute'))
+%     if not(isequal(fun_info.function, 'descent_parachute'))
         
         all_steps.interp.M(i) = single_step.interp.M;
         all_steps.interp.alpha(i) = single_step.interp.alpha;
@@ -63,5 +63,5 @@ for i = 1:NT
         if isfield(single_step.coeff, 'XCP')
             all_steps.coeff.XCP(i) = single_step.coeff.XCP;
         end
-    end
+%     end
 end

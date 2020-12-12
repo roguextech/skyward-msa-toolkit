@@ -168,10 +168,24 @@ end
 M_rocket = V_norm_rocket/a;
 M_value_rocket = M_rocket;
 
+%% DECIDING AERODYNAMIC CONFIGURATION
+N = quatrotate(Q_conj_rocket,[1 0 0]);
+
+if N(3) <= 0 % rocket pointing towards sky
+    descent_config = false;
+else
+    descent_config = true;
+end
+
 %% AERODYNAMICS ANGLES
 if not(ur_rocket < 1e-9 || V_norm_rocket < 1e-9)
-    alpha = atan(wr_rocket/ur_rocket);
-    beta = atan(vr_rocket/ur_rocket);             % beta = asin(vr/V_norm); is the classical notation, Datcom uses this one though. 
+%     if descent_config 
+%         alpha = atan(-wr_rocket/ur_rocket);
+%         beta = atan(vr_rocket/ur_rocket);
+%     else
+        alpha = atan(wr_rocket/ur_rocket);
+        beta = atan(vr_rocket/ur_rocket);             % beta = asin(vr/V_norm); is the classical notation, Datcom uses this one though.
+%     end
 else
     alpha = 0;
     beta = 0;
@@ -219,21 +233,40 @@ end
 
 c = 1; % descent with no aerobrakes
 
-[CA, angle0] = interp4_easy(givA,givM,givB,givH,CoeffsE.CA(:, :, :, :, c),alpha,M_rocket,beta,-z_rocket);
-CYB = interp4_easy(givA,givM,givB,givH,CoeffsE.CYB(:, :, :, :, c),alpha,M_rocket,beta,-z_rocket);
-CY0 = interp4_easy(givA,givM,givB,givH,CoeffsE.CY(:, :, :, :, c),alpha,M_rocket,beta,-z_rocket);
-CNA = interp4_easy(givA,givM,givB,givH,CoeffsE.CNA(:, :, :, :, c),alpha,M_rocket,beta,-z_rocket);
-CN0 = interp4_easy(givA,givM,givB,givH,CoeffsE.CN(:, :, :, :, c),alpha,M_rocket,beta,-z_rocket);
-Cl = interp4_easy(givA,givM,givB,givH,CoeffsE.CLL(:, :, :, :, c),alpha,M_rocket,beta,-z_rocket);
-Clp = interp4_easy(givA,givM,givB,givH,CoeffsE.CLLP(:, :, :, :, c),alpha,M_rocket,beta,-z_rocket);
-Cma = interp4_easy(givA,givM,givB,givH,CoeffsE.CMA(:, :, :, :, c),alpha,M_rocket,beta,-z_rocket);
-Cm0 = interp4_easy(givA,givM,givB,givH,CoeffsE.CM(:, :, :, :, c),alpha,M_rocket,beta,-z_rocket);
-Cmad = interp4_easy(givA,givM,givB,givH,CoeffsE.CMAD(:, :, :, :, c),alpha,M_rocket,beta,-z_rocket);
-Cmq = interp4_easy(givA,givM,givB,givH,CoeffsE.CMQ(:, :, :, :, c),alpha,M_rocket,beta,-z_rocket);
-Cnb = interp4_easy(givA,givM,givB,givH,CoeffsE.CLNB(:, :, :, :, c),alpha,M_rocket,beta,-z_rocket);
-Cn0 = interp4_easy(givA,givM,givB,givH,CoeffsE.CLN(:, :, :, :, c),alpha,M_rocket,beta,-z_rocket);
-Cnr = interp4_easy(givA,givM,givB,givH,CoeffsE.CLNR(:, :, :, :, c),alpha,M_rocket,beta,-z_rocket);
-Cnp = interp4_easy(givA,givM,givB,givH,CoeffsE.CLNP(:, :, :, :, c),alpha,M_rocket,beta,-z_rocket);
+% if descent_config
+%     [CA, angle0] = interp4_easy(givA,givM,givB,givH,CoeffsDesc.CA(:, :, :, :, c),alpha,M_rocket,beta,-z_rocket);
+%     CYB = interp4_easy(givA,givM,givB,givH,CoeffsDesc.CYB(:, :, :, :, c),alpha,M_rocket,beta,-z_rocket);
+%     CY0 = interp4_easy(givA,givM,givB,givH,CoeffsDesc.CY(:, :, :, :, c),alpha,M_rocket,beta,-z_rocket);
+%     CNA = interp4_easy(givA,givM,givB,givH,CoeffsDesc.CNA(:, :, :, :, c),alpha,M_rocket,beta,-z_rocket);
+%     CN0 = interp4_easy(givA,givM,givB,givH,CoeffsDesc.CN(:, :, :, :, c),alpha,M_rocket,beta,-z_rocket);
+%     Cl = interp4_easy(givA,givM,givB,givH,CoeffsDesc.CLL(:, :, :, :, c),alpha,M_rocket,beta,-z_rocket);
+%     Clp = interp4_easy(givA,givM,givB,givH,CoeffsDesc.CLLP(:, :, :, :, c),alpha,M_rocket,beta,-z_rocket);
+%     Cma = interp4_easy(givA,givM,givB,givH,CoeffsDesc.CMA(:, :, :, :, c),alpha,M_rocket,beta,-z_rocket);
+%     Cm0 = interp4_easy(givA,givM,givB,givH,CoeffsDesc.CM(:, :, :, :, c),alpha,M_rocket,beta,-z_rocket);
+%     Cmad = interp4_easy(givA,givM,givB,givH,CoeffsDesc.CMAD(:, :, :, :, c),alpha,M_rocket,beta,-z_rocket);
+%     Cmq = interp4_easy(givA,givM,givB,givH,CoeffsDesc.CMQ(:, :, :, :, c),alpha,M_rocket,beta,-z_rocket);
+%     Cnb = interp4_easy(givA,givM,givB,givH,CoeffsDesc.CLNB(:, :, :, :, c),alpha,M_rocket,beta,-z_rocket);
+%     Cn0 = interp4_easy(givA,givM,givB,givH,CoeffsDesc.CLN(:, :, :, :, c),alpha,M_rocket,beta,-z_rocket);
+%     Cnr = interp4_easy(givA,givM,givB,givH,CoeffsDesc.CLNR(:, :, :, :, c),alpha,M_rocket,beta,-z_rocket);
+%     Cnp = interp4_easy(givA,givM,givB,givH,CoeffsDesc.CLNP(:, :, :, :, c),alpha,M_rocket,beta,-z_rocket);
+% 
+% else
+    [CA, angle0] = interp4_easy(givA,givM,givB,givH,CoeffsE.CA(:, :, :, :, c),alpha,M_rocket,beta,-z_rocket);
+    CYB = interp4_easy(givA,givM,givB,givH,CoeffsE.CYB(:, :, :, :, c),alpha,M_rocket,beta,-z_rocket);
+    CY0 = interp4_easy(givA,givM,givB,givH,CoeffsE.CY(:, :, :, :, c),alpha,M_rocket,beta,-z_rocket);
+    CNA = interp4_easy(givA,givM,givB,givH,CoeffsE.CNA(:, :, :, :, c),alpha,M_rocket,beta,-z_rocket);
+    CN0 = interp4_easy(givA,givM,givB,givH,CoeffsE.CN(:, :, :, :, c),alpha,M_rocket,beta,-z_rocket);
+    Cl = interp4_easy(givA,givM,givB,givH,CoeffsE.CLL(:, :, :, :, c),alpha,M_rocket,beta,-z_rocket);
+    Clp = interp4_easy(givA,givM,givB,givH,CoeffsE.CLLP(:, :, :, :, c),alpha,M_rocket,beta,-z_rocket);
+    Cma = interp4_easy(givA,givM,givB,givH,CoeffsE.CMA(:, :, :, :, c),alpha,M_rocket,beta,-z_rocket);
+    Cm0 = interp4_easy(givA,givM,givB,givH,CoeffsE.CM(:, :, :, :, c),alpha,M_rocket,beta,-z_rocket);
+    Cmad = interp4_easy(givA,givM,givB,givH,CoeffsE.CMAD(:, :, :, :, c),alpha,M_rocket,beta,-z_rocket);
+    Cmq = interp4_easy(givA,givM,givB,givH,CoeffsE.CMQ(:, :, :, :, c),alpha,M_rocket,beta,-z_rocket);
+    Cnb = interp4_easy(givA,givM,givB,givH,CoeffsE.CLNB(:, :, :, :, c),alpha,M_rocket,beta,-z_rocket);
+    Cn0 = interp4_easy(givA,givM,givB,givH,CoeffsE.CLN(:, :, :, :, c),alpha,M_rocket,beta,-z_rocket);
+    Cnr = interp4_easy(givA,givM,givB,givH,CoeffsE.CLNR(:, :, :, :, c),alpha,M_rocket,beta,-z_rocket);
+    Cnp = interp4_easy(givA,givM,givB,givH,CoeffsE.CLNP(:, :, :, :, c),alpha,M_rocket,beta,-z_rocket);
+% end
 
 % compute CN,CY,Cm,Cn (linearized with respect to alpha and beta):
 alpha0 = angle0(1); beta0 = angle0(2);
@@ -317,7 +350,6 @@ Fg_rocket = quatrotate(Q_rocket,[0 0 m_rocket*g])';  % [N] force due to the grav
 Ft_chord_rocket = T_chord * relPos_vers;                    % [N] Chord Tension in Rocket frame
 F_rocket = Fg_rocket + Ft_chord_rocket' + [-X,+Y,-Z]';      % [N] total forces vector in body frame
 
-quatrotate(Q_conj_rocket,F_rocket')'
 %% ROCKET STATE DERIVATIVES
 b = [(settings.xcg(2)-settings.Lnc) 0 0];
 % velocity
@@ -362,17 +394,41 @@ dY(18) = dv_para;
 dY(19) = dw_para;
 dY=dY';
 
+%% SAVING THE QUANTITIES FOR THE PLOTS
+
 parout.integration.t = t;
+
+parout.interp.M = M_value_rocket;
+parout.interp.alpha = alpha_value;
+parout.interp.beta = beta_value;
 parout.interp.alt = -z_rocket;
-parout.wind.body_wind = wind;
+
 parout.wind.NED_wind = [uw, vw, ww];
+parout.wind.body_wind = wind;
+
+parout.velocities=Vels_rocket;
+
+parout.forces.AeroDyn_Forces = [X, Y, Z];
+parout.forces.T = T;
 
 parout.air.rho = rho;
 parout.air.P = P;
 
 parout.accelerations.body_acc = [du_rocket, dv_rocket, dw_rocket];
+parout.accelerations.ang_acc = [dp_rocket, dq_rocket, dr_rocket];
 
-parout.velocities = [u_rocket, v_rocket, w_rocket];
+parout.forces.T = T;
+parout.coeff.CA = CA;
+parout.coeff.CYB = CYB;
+parout.coeff.CNA = CNA;
+parout.coeff.Cl = Cl;
+parout.coeff.Clp = Clp;
+parout.coeff.Cma = Cma;
+parout.coeff.Cmad = Cmad;
+parout.coeff.Cmq = Cmq;
+parout.coeff.Cnb = Cnb;
+parout.coeff.Cnr = Cnr;
+parout.coeff.Cnp = Cnp;
 
 
 % function [dY, parout] = descent_parachute(t, Y, settings, uw, vw, ww, para, uncert, Hour, Day)

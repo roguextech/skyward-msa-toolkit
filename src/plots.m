@@ -80,7 +80,7 @@ if settings.stoch.N == 1
     xlabel('y, East [m]'), ylabel('x, North [m]'), zlabel('Altitude [m]')
     
     % randomly generation of colors:
-    Np = settings.Npara;
+    Np = 1;
     Colors = rand(3, Np);    
     
     % adding concentric circles
