@@ -169,4 +169,4 @@ if settings.plots
     run('plots.m')
 end
 
-clearvars -except T data_ascent data_para data_bal flag LP
+clearvars -except T data_ascent data_para data_bal flag LP Yp
