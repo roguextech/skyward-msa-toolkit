@@ -5,7 +5,7 @@ DESCENT_PARACHUTE - ode function of the 6DOF Rigid Rocket Model
 
 INPUTS:      
             - t, integration time;
-            - Y(1:17), rocket state vector, [ x y z | u v w | p q r | q0 q1 q2 q3 | m | Ixx Iyy Izz ]:
+            - Y(1:13), rocket state vector, [ x y z | u v w | p q r | q0 q1 q2 q3 ]:
 
                                 * (x y z), NED{north, east, down} horizontal frame; 
                                 * (u v w), body frame velocities;
@@ -14,7 +14,7 @@ INPUTS:
                                 * (Ixx Iyy Izz), Inertias;
                                 * (q0 q1 q2 q3), attitude unit quaternion.
 
-            - Y(18:34), parachute sate vector, [ x y z | u v w ]:
+            - Y(14:19), parachute sate vector, [ x y z | u v w ]:
 
                                 * (x y z), NED{north, east, down} horizontal frame; 
                                 * (u v w), body frame velocities.
@@ -124,7 +124,7 @@ V_norm_para = norm([ur_para vr_para wr_para]);
 % The parachutes are approximated as rectangular surfaces with the normal
 % vector perpendicular to the relative velocity
 
-t_vect = -[ur_para vr_para wr_para];                % Tangenzial vector
+t_vect = -[ur_para vr_para wr_para];               % Tangenzial vector
 h_vect = [vr_para -ur_para 0];                     % horizontal vector    
 
 if all(abs(h_vect) < 1e-8)
@@ -173,7 +173,7 @@ N = quatrotate(Q_conj_rocket,[1 0 0]);
 
 if N(3) <= 0 % rocket pointing towards sky
     descent_config = false;
-else
+else % CAMBIAAAAA
     descent_config = true;
 end
 
@@ -296,7 +296,7 @@ vel_Poi = vel_rocket + cross([p_rocket q_rocket r_rocket],[(settings.xcg(2)-sett
 
 % NED Relative position vector between parachute and that point. Pointed
 % towards parachute
-relPos_vec = pos_para - (pos_rocket+quatrotate(Q_conj_rocket,[(settings.xcg(2)-settings.Lnc) 0 0]));
+relPos_vec = pos_para - pos_Poi;
 relPos_vec = quatrotate(Q_rocket,relPos_vec);
 relPos_vers = relPos_vec/norm(relPos_vec);
 
@@ -410,6 +410,7 @@ parout.velocities=Vels_rocket;
 
 parout.forces.AeroDyn_Forces = [X, Y, Z];
 parout.forces.T = T;
+parout.forces.T_chord = Ft_chord_rocket;
 
 parout.air.rho = rho;
 parout.air.P = P;
