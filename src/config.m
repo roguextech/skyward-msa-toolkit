@@ -23,6 +23,9 @@ settings.lon0 = -8.138368;                                                      
 % settings.lat0 = 41.810093;                                                          % Launchpad latitude
 % settings.lon0 = 14.052546;                                                          % Launchpad longitude
 
+
+% 39.201778, -8.138368   pont the sor  coordinates 
+% 109 pont the sor z0
 settings.satellite3D = false;
 
 settings.terrain = false;       % ATTENTION: it works only at Roccaraso
@@ -189,12 +192,12 @@ settings.wind.input_uncertainty = [1, 1];
 
 % Wind is generated randomly from the minimum to the maximum parameters which defines the wind.
 % Setting the same values for min and max will fix the parameters of the wind.
-settings.wind.MagMin = 10;                           % [m/s] Minimum Magnitude
-settings.wind.MagMax = 10;                          % [m/s] Maximum Magnitude
+settings.wind.MagMin = 6;                           % [m/s] Minimum Magnitude
+settings.wind.MagMax = 6;                          % [m/s] Maximum Magnitude
 settings.wind.ElMin = 0*pi/180;                     % [rad] Minimum Elevation, user input in degrees (ex. 0)
 settings.wind.ElMax = 0*pi/180;                     % [rad] Maximum Elevation, user input in degrees (ex. 0) (Max == 90 Deg)
-settings.wind.AzMin = (360)*pi/180;                   % [rad] Minimum Azimuth, user input in degrees (ex. 90)
-settings.wind.AzMax = (360)*pi/180;                   % [rad] Maximum Azimuth, user input in degrees (ex. 90)
+settings.wind.AzMin = (180)*pi/180;                   % [rad] Minimum Azimuth, user input in degrees (ex. 90)
+settings.wind.AzMax = (180)*pi/180;                   % [rad] Maximum Azimuth, user input in degrees (ex. 90)
 
 % NOTE: wind azimuth angle indications (wind directed towards):
 % 0 deg (use 360 instead of 0)  -> North
@@ -228,7 +231,7 @@ settings.plots = true;
 
 %% LANDING POINTS
 % satellite maps of the landing zone 
-settings.landing_map = true;
+settings.landing_map = false;
 
 % delta limit on the coordinates 
 settings.lim_lat = 0.04; 
