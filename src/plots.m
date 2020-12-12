@@ -80,7 +80,7 @@ if settings.stoch.N == 1
     xlabel('y, East [m]'), ylabel('x, North [m]'), zlabel('Altitude [m]')
     
     % randomly generation of colors:
-    Np = 1;
+    Np = settings.Npara;                 
     Colors = rand(3, Np);    
     
     % adding concentric circles
@@ -148,7 +148,7 @@ if settings.stoch.N == 1
     
     % Rotate velocities 
     if not(settings.ballistic)
-        Vhframe = [quatrotate(quatconj(Ya(:, 10:13)), Ya(:, 4:6)); Yf(Na + 1:end, 4:6)];
+        Vhframe = [quatrotate(quatconj(Ya(:, 10:13)), Ya(:, 4:6)); quatrotate(quatconj(Yf(Na + 1:end, 10:13)),Yf(Na + 1:end, 4:6))];
     else
         Vhframe = [quatrotate(quatconj(Ya(:, 10:13)), Ya(:, 4:6)); quatrotate(quatconj(Yf(Na + 1:end, 10:13)),Yf(Na + 1:end, 4:6))];
     end 
@@ -261,6 +261,59 @@ if settings.stoch.N == 1
     
     delete('ascent_plot.mat')
     
+    if settings.plots_para
+        %% Parachute chord tension
+         figure('Name', 'Parachute chord tension - Descent Phase', 'NumberTitle', 'off')
+
+         h = zeros(Np, 1);
+         for i = 1:Np
+            hold on
+            h(i) = plot(data_para{i}.integration.t, data_para{i}.forces.T_chord); grid on;
+            xlabel('Time [s]'); ylabel('Chord tension [N]'); title('Chord tension');
+         end
+         legend(h(:), strcat('chord tension parachute ',  " " , string(1)), strcat('chord tension parachute ',  " " , string(2)), 'Location', 'southeast');
+         
+         %%  Aero Forces
+         figure('Name', 'Forces - Descent Phase', 'NumberTitle', 'off')
+         
+         for i = 1:Np
+            hold on
+            subplot(3,1,1)
+            plot(data_para{i}.integration.t, data_para{i}.forces.AeroDyn_Forces(:,1), 'b'); grid on;
+            xlabel('Time [s]'); ylabel('X-body force [N]')
+         end
+         
+         for i = 1:Np
+            hold on
+            subplot(3,1,2)
+            plot(data_para{i}.integration.t, data_para{i}.forces.AeroDyn_Forces(:,2), 'b'); grid on;
+            xlabel('Time [s]'); ylabel('Y-body force [N]')
+         end
+         
+         for i = 1:Np
+            hold on
+            subplot(3,1,3)
+            plot(data_para{i}.integration.t, data_para{i}.forces.AeroDyn_Forces(:,3), 'b'); grid on;
+            xlabel('Time [s]'); ylabel('Z-body force [N]')
+         end
+         
+         %%% Aerodynamics Angles
+         figure('Name','Aerodynamics Angles - descent Phase','NumberTitle','off');
+         for i = 1:Np
+            hold on
+            subplot(2,1,1)
+            plot(data_para{i}.integration.t, data_para{i}.interp.alpha*180/pi, 'b'), grid on;
+            xlabel('Time [s]'); ylabel('alpha [deg]')
+         end
+
+         for i = 1:Np
+            hold on
+            subplot(2,1,2)
+            plot(data_para{i}.integration.t, data_para{i}.interp.beta*180/pi, 'b'), grid on;
+            xlabel('Time [s]'); ylabel('beta [deg]')
+         end
+         
+    end
 else   %%%% STOCHASTIC PLOTS (only if N>1)
     
     %% LANDING POINTS 2D

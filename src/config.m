@@ -139,6 +139,8 @@ clear('s');
 settings.control = '0%';                                            % aerobrakes 0% 50% or 100% opened
 
 %% PARACHUTES DETAILS
+settings.Npara = 2;
+
 % parachute 1
 settings.para(1).S = 1.55;                                          % [m^2]   Surface
 settings.para(1).mass = 0.4;                                        % [kg]   Parachute Mass
@@ -259,6 +261,7 @@ settings.prob.SafeEllipse.alpha = 10;
 
 %% PLOT DETAILS
 settings.plots = true;
+settings.plots_para = true;                         % plots values of parachute descent 
 
 %% LANDING POINTS
 % satellite maps of the landing zone 

@@ -410,7 +410,7 @@ parout.velocities=Vels_rocket;
 
 parout.forces.AeroDyn_Forces = [X, Y, Z];
 parout.forces.T = T;
-parout.forces.T_chord = Ft_chord_rocket;
+parout.forces.T_chord = T_chord;
 
 parout.air.rho = rho;
 parout.air.P = P;

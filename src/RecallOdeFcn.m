@@ -37,7 +37,7 @@ for i = 1:NT
     
     all_steps.accelerations.body_acc(i, 1:3) = single_step.accelerations.body_acc;
     
-%     if not(isequal(fun_info.function, 'descent_parachute'))
+    if not(isequal(fun_info.function, 'descent_parachute'))
         
         all_steps.interp.M(i) = single_step.interp.M;
         all_steps.interp.alpha(i) = single_step.interp.alpha;
@@ -63,5 +63,31 @@ for i = 1:NT
         if isfield(single_step.coeff, 'XCP')
             all_steps.coeff.XCP(i) = single_step.coeff.XCP;
         end
-%     end
+    else
+         all_steps.interp.M(i) = single_step.interp.M;
+        all_steps.interp.alpha(i) = single_step.interp.alpha;
+        all_steps.interp.beta(i) = single_step.interp.beta;
+        
+        all_steps.forces.AeroDyn_Forces(i, 1:3) = single_step.forces.AeroDyn_Forces;
+        all_steps.forces.T(i) = single_step.forces.T;
+        all_steps.forces.T_chord(i) = single_step.forces.T_chord;
+        
+        all_steps.accelerations.ang_acc(i, 1:3) = single_step.accelerations.ang_acc;
+        
+        all_steps.coeff.CA(i) = single_step.coeff.CA;
+        all_steps.coeff.CYB(i) = single_step.coeff.CYB;
+        all_steps.coeff.CNA(i) = single_step.coeff.CNA;
+        all_steps.coeff.Cl(i) = single_step.coeff.Cl;
+        all_steps.coeff.Clp(i) = single_step.coeff.Clp;
+        all_steps.coeff.Cma(i) = single_step.coeff.Cma;
+        all_steps.coeff.Cmad(i) = single_step.coeff.Cmad;
+        all_steps.coeff.Cmq(i) = single_step.coeff.Cmq;
+        all_steps.coeff.Cnb(i) = single_step.coeff.Cnb;
+        all_steps.coeff.Cnr(i) = single_step.coeff.Cnr;
+        all_steps.coeff.Cnp(i) = single_step.coeff.Cnp;
+        
+        if isfield(single_step.coeff, 'XCP')
+            all_steps.coeff.XCP(i) = single_step.coeff.XCP;
+        end
+    end
 end
