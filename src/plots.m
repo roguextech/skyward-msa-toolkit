@@ -58,18 +58,51 @@ if settings.stoch.N == 1
     xlabel('Time [s]'); ylabel('Drag Coeff CD [/]')
     
     %%% Angles(body)
-    figure('Name', 'Eulerian Angles - ascent Phase', 'NumberTitle', 'off');
-    subplot(3,1,1)
-    plot(data_ascent.integration.t, data_ascent.state.Y(:, 19)*180/pi)
-    grid on, xlabel('time [s]'), ylabel('pitch angle [deg]');
-    
-    subplot(3,1,2)
-    plot(data_ascent.integration.t, data_ascent.state.Y(:, 20)*180/pi)
-    grid on, xlabel('time [s]'), ylabel('yaw angle [deg]');
-    
-    subplot(3,1,3)
-    plot(data_ascent.integration.t, data_ascent.state.Y(:, 18)*180/pi)
-    grid on, xlabel('time [s]'), ylabel('roll angle [deg]')
+    if settings.ballistic
+        figure('Name', 'Eulerian Angles - ascent phase', 'NumberTitle', 'off');
+        subplot(3,1,1)
+        plot(data_ascent.integration.t, data_ascent.state.Y(:, 19)*180/pi)
+        grid on, xlabel('time [s]'), ylabel('pitch angle [deg]');
+
+        subplot(3,1,2)
+        plot(data_ascent.integration.t, data_ascent.state.Y(:, 20)*180/pi)
+        grid on, xlabel('time [s]'), ylabel('yaw angle [deg]');
+
+        subplot(3,1,3)
+        plot(data_ascent.integration.t, data_ascent.state.Y(:, 18)*180/pi)
+        grid on, xlabel('time [s]'), ylabel('roll angle [deg]')
+    else
+        figure('Name', 'Eulerian Angles - aLL flight', 'NumberTitle', 'off');
+        subplot(3,1,1)
+        plot(data_ascent.integration.t, data_ascent.state.Y(:, 19)*180/pi+...
+                settings.OMEGAmin*180/pi);
+        hold on;
+        for i = 1:settings.Npara
+            [a b c] = quat2angle(data_para{i}.state.Y(:,10:13),'YXZ');
+            plot(data_para{i}.state.T,a*180/pi);
+
+        end
+        grid on, xlabel('time [s]'), ylabel('pitch angle [deg]');
+
+        subplot(3,1,2)
+        plot(data_ascent.integration.t, data_ascent.state.Y(:, 20)*180/pi+...
+            settings.PHImin*180/pi);
+        hold on;
+        for i = 1:settings.Npara
+            [a b c] = quat2angle(data_para{i}.state.Y(:,10:13),'YXZ');
+            plot(data_para{i}.state.T,c*180/pi);
+        end
+        grid on, xlabel('time [s]'), ylabel('yaw angle [deg]');
+
+        subplot(3,1,3)
+        plot(data_ascent.integration.t, data_ascent.state.Y(:, 18)*180/pi);
+        hold on;
+        for i = 1:settings.Npara
+            [a b c] = quat2angle(data_para{i}.state.Y(:,10:13),'YXZ');
+            plot(data_para{i}.state.T,b*180/pi);
+        end
+        grid on, xlabel('time [s]'), ylabel('roll angle [deg]')
+    end
     
     %% 3D TRAJECTORY
     
@@ -142,6 +175,8 @@ if settings.stoch.N == 1
         camheading(g, 'auto');
         campitch(g, -25);
     end
+    
+    %% IMPORTANT FEATURES DURING FLIGHT
     
     %% HORIZONTAL-FRAME VELOCITIES(subplotted)
     figure('Name','Horizontal Frame Velocities - All Flight','NumberTitle','off');

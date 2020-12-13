@@ -292,7 +292,7 @@ posRelXcg_Poi = quatrotate(Q_conj_rocket,[(settings.xcg(2)-settings.Lnc) 0 0]);
 pos_Poi = pos_rocket + posRelXcg_Poi;
 
 % Body velocity vector of that point
-vel_Poi = vel_rocket + cross([p_rocket q_rocket r_rocket],[(settings.xcg(2)-settings.Lnc) 0 0]);
+vel_Poi = vel_rocket + cross(quatrotate(quatconj(Q_conj_rocket),[p_rocket q_rocket r_rocket]),[(settings.xcg(2)-settings.Lnc) 0 0]);
 
 % NED Relative position vector between parachute and that point. Pointed
 % towards parachute
@@ -360,9 +360,9 @@ dw_rocket = F_rocket(3)/m_rocket-p_rocket*v_rocket+q_rocket*u_rocket;
 % Rotation
 Momentum = cross(b, Ft_chord_rocket);
 
-dp_rocket = (Iyy-Izz)/Ixx*q_rocket*r_rocket + Momentum(1) + qdynL_V/Ixx*(V_norm_rocket*Cl+Clp*p_rocket*C_rocket/2);
-dq_rocket = (Izz-Ixx)/Iyy*p_rocket*r_rocket + Momentum(2) + qdynL_V/Iyy*(V_norm_rocket*Cm + (Cmad+Cmq)*q_rocket*C_rocket/2);
-dr_rocket = (Ixx-Iyy)/Izz*p_rocket*q_rocket + Momentum(3) + qdynL_V/Izz*(V_norm_rocket*Cn + (Cnr*r_rocket+Cnp*p_rocket)*C_rocket/2);
+dp_rocket = (Iyy-Izz)/Ixx*q_rocket*r_rocket + Momentum(1)/Ixx + qdynL_V/Ixx*(V_norm_rocket*Cl+Clp*p_rocket*C_rocket/2);
+dq_rocket = (Izz-Ixx)/Iyy*p_rocket*r_rocket + Momentum(2)/Iyy + qdynL_V/Iyy*(V_norm_rocket*Cm + (Cmad+Cmq)*q_rocket*C_rocket/2);
+dr_rocket = (Ixx-Iyy)/Izz*p_rocket*q_rocket + Momentum(3)/Izz + qdynL_V/Izz*(V_norm_rocket*Cn + (Cnr*r_rocket+Cnp*p_rocket)*C_rocket/2);
 
 % Quaternion
 OM = 1/2* [ 0 -p_rocket -q_rocket -r_rocket  ;
@@ -392,6 +392,7 @@ dY(14:16) = Vels_para;
 dY(17) = du_para;
 dY(18) = dv_para;
 dY(19) = dw_para;
+dY(20:22) = [p_rocket q_rocket r_rocket];
 dY=dY';
 
 %% SAVING THE QUANTITIES FOR THE PLOTS

@@ -125,9 +125,9 @@ save('ascent_plot.mat', 'data_ascent');
 % Initial Condition are the last from ascent (need to rotate because
 % velocities are in body axes)
 posPara0 = quatrotate(quatconj(Ya(end,10:13)),[(settings.xcg(2)-settings.Lnc) 0 0]) + Ya(end,1:3); % (NED) position of the point from where the parachute will be deployed
-velPara0 = Ya(end,4:6) + cross(Ya(end,7:9),[(settings.xcg(2)-settings.Lnc) 0 0]);                  % (Body) velocity of the point from where the parachute will be deployed
+velPara0 = Ya(end,4:6) + cross(quatrotate(quatconj(Ya(end,10:13)),Ya(end,7:9)),[(settings.xcg(2)-settings.Lnc) 0 0]);                  % (Body) velocity of the point from where the parachute will be deployed
 
-Y0p = [Ya(end,1:13) posPara0 velPara0];           % Initializing starting state vector
+Y0p = [Ya(end,1:13) posPara0 velPara0 Ya(end,18:20)];           % Initializing starting state vector
 
 data_para = cell(settings.Npara, 1);
 Yf = Ya(:, 1:13);

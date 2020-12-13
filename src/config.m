@@ -30,8 +30,8 @@ end
 % launchpad directions
 % for a single run the maximum and the minimum value of the following
 % angles must be the same.
-settings.OMEGAmin = 84*pi/180;        %[rad] Minimum Elevation Angle, user input in degrees (ex. 80)
-settings.OMEGAmax = 84*pi/180;        %[rad] Maximum Elevation Angle, user input in degrees (ex. 80)
+settings.OMEGAmin = 89*pi/180;        %[rad] Minimum Elevation Angle, user input in degrees (ex. 80)
+settings.OMEGAmax = 89*pi/180;        %[rad] Maximum Elevation Angle, user input in degrees (ex. 80)
 settings.PHImin = 0*pi/180;           %[rad] Minimum Azimuth Angle from North Direction, user input in degrees (ex. 90)
 settings.PHImax = 0*pi/180;           %[rad] Maximum Azimuth Angle from North Direction, user input in degrees (ex. 90)
 settings.upwind = false;              % If true, phi is selected according to wind direction (constant wind model only)
@@ -146,10 +146,10 @@ settings.para(1).S = 1.55;                                          % [m^2]   Su
 settings.para(1).mass = 0.4;                                        % [kg]   Parachute Mass
 settings.para(1).CD = 0.1;                                         % [/] Parachute Drag Coefficient
 settings.para(1).CL = 0;                                            % [/] Parachute Lift Coefficient
-settings.para(1).delay = 1;                                         % [s] drogue opening delay
+settings.para(1).delay = 0;                                         % [s] drogue opening delay
 settings.para(1).z_cut = 300;                                       % [m] Final altitude of the parachute
 settings.para(1).ShockCord_L = 4;                                   % [m] shock cord length
-settings.para(1).ShockCord_k = 10880;                               % [N/m^2] shock cord elastic constant
+settings.para(1).ShockCord_k = 5000;                               % [N/m^2] shock cord elastic constant
 settings.para(1).ShockCord_c = 600;                                 % [Ns/m] shock cord damping coefficient
 settings.para(1).OverExp_t = 0.05;                                  % [s] over-expansion time
 
@@ -160,7 +160,7 @@ settings.para(2).CD = 0.2;                                          % [/] Parach
 settings.para(2).CL = 0;                                            % [/] Parachute Lift Coefficient
 settings.para(2).z_cut = 0;                                         % [m] Final altitude of the parachute
 settings.para(2).ShockCord_L = 6;                                   % [m] shock cord length
-settings.para(2).ShockCord_k = 10880;                               % [N/m^2] shock cord elastic constant
+settings.para(2).ShockCord_k = 5000;                               % [N/m^2] shock cord elastic constant
 settings.para(2).ShockCord_c = 600;                                   % [Ns/m] shock cord damping coefficient
 settings.para(2).OverExp_t = 1.5;                                   % [s] over-expansion time
 
@@ -225,8 +225,8 @@ settings.wind.input_uncertainty = [1, 1];
 
 % Wind is generated randomly from the minimum to the maximum parameters which defines the wind.
 % Setting the same values for min and max will fix the parameters of the wind.
-settings.wind.MagMin = 2;                           % [m/s] Minimum Magnitude
-settings.wind.MagMax = 2;                          % [m/s] Maximum Magnitude
+settings.wind.MagMin = 4;                           % [m/s] Minimum Magnitude
+settings.wind.MagMax = 4;                          % [m/s] Maximum Magnitude
 settings.wind.ElMin = 0*pi/180;                     % [rad] Minimum Elevation, user input in degrees (ex. 0)
 settings.wind.ElMax = 0*pi/180;                     % [rad] Maximum Elevation, user input in degrees (ex. 0) (Max == 90 Deg)
 settings.wind.AzMin = (90)*pi/180;                   % [rad] Minimum Azimuth, user input in degrees (ex. 90)
