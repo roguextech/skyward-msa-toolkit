@@ -46,7 +46,7 @@ Release date: 14/12/2020
 % ROCKET STATE
 x_rocket = Y(1);
 y_rocket = Y(2);
-z_rocket = Y(3);
+z_rocket = Y(3)
 u_rocket = Y(4);
 v_rocket = Y(5);
 w_rocket = Y(6);
@@ -180,8 +180,7 @@ posRelXcg_Poi = quatrotate(Q_conj_rocket,[(settings.xcg(2)-settings.Lnc) 0 0]);
 pos_Poi = pos_rocket + posRelXcg_Poi;
 
 % (BODY) velocity vector of that point
-vel_Poi = vel_rocket + cross(quatrotate(quatconj(Q_conj_rocket),...
-    [p_rocket q_rocket r_rocket]),[(settings.xcg(2)-settings.Lnc) 0 0]);
+vel_Poi = vel_rocket + cross(quatrotate(Q_rocket,[p_rocket q_rocket r_rocket]),[(settings.xcg(2)-settings.Lnc) 0 0]);
 
 % Relative position vector between parachute and that point.
 relPos_vecNED = pos_para - pos_Poi;                                           % (NED) relative position vector pointed towards parachute
@@ -206,7 +205,7 @@ relVel_chord = relVel_vecNED * relPos_versNED';
 %% CHORD TENSION (ELASTIC-DAMPING MODEL)
 if norm(relPos_vecNED) > settings.para(para).ShockCord_L                      % [N] Chord tension (elastic-damping model)
     T_chord = (norm(relPos_vecNED) - settings.para(para).ShockCord_L)*...
-        settings.para(1).ShockCord_k - relVel_chord *...
+        settings.para(para).ShockCord_k - relVel_chord *...
         settings.para(para).ShockCord_c;
 else
     T_chord = 0;

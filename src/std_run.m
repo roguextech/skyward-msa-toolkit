@@ -125,7 +125,7 @@ save('ascent_plot.mat', 'data_ascent');
 % Initial Condition are the last from ascent (need to rotate because
 % velocities are in body axes)
 posPara0 = quatrotate(quatconj(Ya(end,10:13)),[(settings.xcg(2)-settings.Lnc) 0 0]) + Ya(end,1:3); % (NED) position of the point from where the parachute will be deployed
-velPara0 = quatrotate(quatconj(Ya(end,10:13)),Ya(end,4:6));% + cross(Ya(end,7:9),quatrotate(quatconj(Ya(end,10:13)),[(settings.xcg(2)-settings.Lnc) 0 0]));                  % (Body) velocity of the point from where the parachute will be deployed
+velPara0 = quatrotate(quatconj(Ya(end,10:13)),Ya(end,4:6)) + cross(Ya(end,7:9),quatrotate(quatconj(Ya(end,10:13)),[(settings.xcg(2)-settings.Lnc) 0 0]));% + cross(Ya(end,7:9),quatrotate(quatconj(Ya(end,10:13)),[(settings.xcg(2)-settings.Lnc) 0 0]));                  % (Body) velocity of the point from where the parachute will be deployed
 Y0p = [Ya(end,1:13) posPara0 velPara0 Ya(end,18:20)];           % Initializing starting state vector
 
 data_para = cell(settings.Npara, 1);
@@ -135,8 +135,13 @@ t0p = Ta(end);
 
 for i = 1:settings.Npara
     para = i;
-    [Tp, Yp] = ode113(@descent_parachute, [t0p, tf], Y0p, settings.ode.optionspara,...
+    if i == 1
+    [Tp, Yp] = ode15s(@descent_parachute, [t0p, tf], Y0p, settings.ode.optionspara,...
         settings, uw, vw, ww, para, t0p, uncert);
+    else
+        [Tp, Yp] = ode45(@descent_parachute, [t0p, tf], Y0p, settings.ode.optionspara,...
+        settings, uw, vw, ww, para, t0p, uncert);
+    end
     
     % total state
     Yf = [Yf; Yp(:,1:13)];
@@ -147,7 +152,7 @@ for i = 1:settings.Npara
     t0p = Tp(end);
     
     posPara0 = quatrotate(quatconj(Yp(end,10:13)),[(settings.xcg(2)-settings.Lnc) 0 0]) + Yp(end,1:3);
-    velPara0 = Yp(end,4:6) + cross(quatrotate(quatconj(Yp(end,10:13)),Yp(end,7:9)),[(settings.xcg(2)-settings.Lnc) 0 0]);
+    velPara0 = Yp(end,4:6) + cross(Yp(end,7:9),quatrotate(quatconj(Ya(end,10:13)),[(settings.xcg(2)-settings.Lnc) 0 0]));
     
     Y0p(14:19) = [posPara0 velPara0];
     
