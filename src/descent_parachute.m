@@ -122,10 +122,8 @@ h_vect = [vr_para -ur_para 0];                                                % 
 
 if all(abs(h_vect) < 1e-8)
     if all([uw vw 0] == 0) % to prevent NaN
-        h_vect = [0 0 0];
         t_vers = t_vect/norm(t_vect);                                         % Tangenzial versor
         h_vers = [0 0 0];                                                     % horizontal versor
-        n_vect = [0 0 0];                                                     % Normal vector
         n_vers = [0 0 0];                                                     % Normal versor
     else
         h_vect = [vw -uw 0];
@@ -152,10 +150,6 @@ CL_para = settings.para(para).CL;                                             % 
 
 %% ROCKET CONSTANTS
 % Everything related to empty condition (descent-fase)
-S_rocket = settings.S;                                                        % [m^2] cross surface
-C_rocket = settings.C;                                                        % [m]   caliber
-CoeffsE = settings.CoeffsE;                                                   % [/] Empty Rocket Coefficients
-CoeffsDesc = settings.CoeffsDesc;                                             % [/]
 g = 9.80655;                                                                  % [N/kg] module of gravitational field at zero
 T = 0;                                                                        % No Thrust
 
@@ -198,7 +192,6 @@ relPos_versBODY = relPos_vecBODY/norm(relPos_vecBODY);                        % 
 if all(abs(relPos_vecNED) < 1e-8) || all(abs(relPos_vecBODY) < 1e-8)          % to prevent NaN
     relPos_vecNED = [0 0 0];
     relPos_versNED = [0 0 0];
-    relPos_vecBODY = [0 0 0];
     relPos_versBODY= [0 0 0];
 end
 
