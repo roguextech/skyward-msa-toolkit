@@ -261,7 +261,6 @@ settings.prob.SafeEllipse.alpha = 10;
 
 %% PLOT DETAILS
 settings.plots = true;
-settings.plots_para = true;                         % plots values of parachute descent 
 
 %% LANDING POINTS
 % satellite maps of the landing zone 

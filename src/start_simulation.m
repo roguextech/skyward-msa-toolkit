@@ -97,6 +97,17 @@ if settings.stoch.N == 1
     iexit = iexit(end);
 
     [lat, lon, ~] = ned2geodetic(x, y, 0, settings.lat0, settings.lon0, 0, wgs84Ellipsoid);
+    
+    if not(settings.ballistic)
+        load('descent_para_plot.mat');
+        for i = 1:settings.Npara
+            zd{i} = -data_para{i}.state.Y(:, 3);
+            Vd = data_para{i}.velocities(:, 1:3);
+            Ad = data_para{i}.accelerations.body_acc;
+            abs_Vd{i} = vecnorm(Vd');
+            abs_Ad{i} = vecnorm(Ad');
+        end
+    end
    
     % DATA RECORD (display)
     disp(' ')

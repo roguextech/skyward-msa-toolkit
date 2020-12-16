@@ -74,13 +74,14 @@ if settings.stoch.N == 1
     else
         figure('Name', 'Eulerian Angles - aLL flight', 'NumberTitle', 'off');
         subplot(3,1,1)
-        plot(data_ascent.integration.t, data_ascent.state.Y(:, 19)*180/pi+...
+        h(1) = plot(data_ascent.integration.t, data_ascent.state.Y(:, 19)*180/pi+...
                 settings.OMEGAmin*180/pi);
         hold on;
         for i = 1:settings.Npara
-            plot(data_para{i}.state.T,data_para{i}.state.Y(:,21)*180/pi + settings.OMEGAmin*180/pi);
+            h(i+1) = plot(data_para{i}.state.T,data_para{i}.state.Y(:,21)*180/pi + settings.OMEGAmin*180/pi);
         end
         grid on, xlabel('time [s]'), ylabel('pitch angle [deg]');
+        legend(h(:), {'Ascent', 'Parachute 1', 'Parachute 2'}, 'Location', 'southeast');
 
         subplot(3,1,2)
         plot(data_ascent.integration.t, data_ascent.state.Y(:, 20)*180/pi+...
@@ -221,23 +222,55 @@ if settings.stoch.N == 1
     end
     
     %% ALTITUDE,MACH,VELOCITY,ACCELERATION(subplotted)
-    figure('Name','Altitude, Mach, Velocity-Abs, Acceleration-Abs - ascent Phase','NumberTitle','off');
+    figure('Name','Altitude, Mach, Velocity-Abs, Acceleration-Abs - Ascent Phase','NumberTitle','off');
     subplot(2,3,1:3)
-    plot(Ta, za), grid on, xlabel('time [s]'), ylabel('altitude [m]');
+    h(1) = plot(Ta, za), grid on, xlabel('time [s]'), ylabel('altitude [m]');
+    if not(settings.ballistic)
+        for i = 1: Np
+            hold on
+            h(i+1) = plot(data_para{i}.integration.t, zd{i});
+            grid on;
+        end
+    end
+    if not(settings.ballistic)
+        legend(h(:), {'Ascent', 'Parachute 1', 'Parachute 2'}, 'Location', 'southeast');
+    end
     
     subplot(2,3,4)
     plot(data_ascent.integration.t(1:end-1), data_ascent.interp.M(1:end-1)), grid on;
     xlabel('Time [s]'); ylabel('Mach M [/]')
     
+    if not(settings.ballistic)
+        for i = 1: Np
+            hold on
+            plot(data_para{i}.integration.t, data_para{i}.interp.M);
+            grid on
+        end
+    end
     
     subplot(2,3,5)
     plot(Ta, abs_V), grid on;
     xlabel('time [s]'), ylabel('|V| [m/s]');
     
+    if not(settings.ballistic)
+        for i = 1: Np
+            hold on
+            plot(data_para{i}.integration.t, abs_Vd{i});
+            grid on;
+        end
+    end
     
     subplot(2,3,6)
     plot(Ta, abs_A/9.80665), grid on;
     xlabel('time [s]'), ylabel('|A| [g]');
+    
+    if not(settings.ballistic)
+        for i = 1: Np
+            hold on
+            plot(data_para{i}.integration.t, abs_Ad{i}/9.80665);
+            grid on;
+        end
+    end
     
     
     %% TRAJECTORY PROJECTIONS(subplotted)
@@ -292,7 +325,7 @@ if settings.stoch.N == 1
     
     delete('ascent_plot.mat')
     
-    if settings.plots_para
+    if not(settings.ballistic)
         %% Parachute chord tension
          figure('Name', 'Parachute chord tension - Descent Phase', 'NumberTitle', 'off')
 
