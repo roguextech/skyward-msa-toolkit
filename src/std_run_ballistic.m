@@ -57,7 +57,7 @@ X0 = [0 0 0]';
 V0 = [0 0 0]';
 W0 = [0 0 0]';
 theta0 = [0 0 0]';
-Y0a = [X0; V0; W0; Q0; settings.m0; settings.Ixxf; settings.Iyyf; settings.Izzf; theta0];
+Y0a = [X0; V0; W0; Q0; settings.Ixxf; settings.Iyyf; settings.Izzf; theta0];
 
 %% WIND GENERATION
 

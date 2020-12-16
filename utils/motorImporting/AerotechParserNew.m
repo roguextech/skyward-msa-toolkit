@@ -1,7 +1,7 @@
 clear
 close all
 clc
-str = extractFileText("Aerotech_7-5-18.rse");
+str = extractFileText("motorData/Aerotech_7-5-18.rse");
 blocks = regexp(str,'(<engine mfg)*(</engine>)','split');
 
 motors = struct();
@@ -12,9 +12,11 @@ for k = 1:NBlocks
     nt = length(engData);
     motors(k).t = zeros(1,nt);
     motors(k).T = zeros(1,nt);
+    motors(k).m = zeros(1,nt);
     for it = 1:nt
         motors(k).t(it) = str2double(extractBetween(engData(it),'t="','"'));
         motors(k).T(it) = str2double(extractBetween(engData(it),'f="','"'));
+        motors(k).m(it) = str2double(extractBetween(engData(it),'m="','"'))*1e-3;
     end
     motors(k).mp = str2double(extractBetween(blocks(k),'propWt="','"'));
     motors(k).mp = motors(k).mp.*1e-3; % convert to Kg

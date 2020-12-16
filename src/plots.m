@@ -60,15 +60,15 @@ if settings.stoch.N == 1
     %%% Angles(body)
     figure('Name', 'Eulerian Angles - ascent Phase', 'NumberTitle', 'off');
     subplot(3,1,1)
-    plot(data_ascent.integration.t, data_ascent.state.Y(:, 19)*180/pi)
+    plot(data_ascent.integration.t, data_ascent.state.Y(:, 18)*180/pi)
     grid on, xlabel('time [s]'), ylabel('pitch angle [deg]');
     
-    subplot(3,1,2)
-    plot(data_ascent.integration.t, data_ascent.state.Y(:, 20)*180/pi)
+    subplot(3,1,2)  
+    plot(data_ascent.integration.t, data_ascent.state.Y(:, 19)*180/pi)
     grid on, xlabel('time [s]'), ylabel('yaw angle [deg]');
     
     subplot(3,1,3)
-    plot(data_ascent.integration.t, data_ascent.state.Y(:, 18)*180/pi)
+    plot(data_ascent.integration.t, data_ascent.state.Y(:, 17)*180/pi)
     grid on, xlabel('time [s]'), ylabel('roll angle [deg]')
     
     %% 3D TRAJECTORY
@@ -81,7 +81,7 @@ if settings.stoch.N == 1
     
     % randomly generation of colors:
     Np = settings.Npara;
-    Colors = rand(3, Np);    
+    Colors = rand(3, Np);
     
     % adding concentric circles
     if not(settings.terrain)
@@ -94,9 +94,9 @@ if settings.stoch.N == 1
             z_plot = zeros(length(theta_plot), 1);
             plot3(y_plot, x_plot, z_plot, '--r')
         end
-       
+        
     else
-    
+        
         % adding surf terrain map
         X_t = -6000:30:6000;
         Y_t = -6000:30:6000;
@@ -146,13 +146,13 @@ if settings.stoch.N == 1
     %% HORIZONTAL-FRAME VELOCITIES(subplotted)
     figure('Name','Horizontal Frame Velocities - All Flight','NumberTitle','off');
     
-    % Rotate velocities 
+    % Rotate velocities
     if not(settings.ballistic)
         Vhframe = [quatrotate(quatconj(Ya(:, 10:13)), Ya(:, 4:6)); Yf(Na + 1:end, 4:6)];
     else
         Vhframe = [quatrotate(quatconj(Ya(:, 10:13)), Ya(:, 4:6)); quatrotate(quatconj(Yf(Na + 1:end, 10:13)),Yf(Na + 1:end, 4:6))];
-    end 
-        
+    end
+    
     % x axis
     subplot(3,1,1);
     plot(Tf, Vhframe(:, 1)), hold on, grid on, xlabel('Time[s]'), ylabel('Velocity-x [m/s]');
@@ -227,8 +227,8 @@ if settings.stoch.N == 1
     h(Np+2) = plot(Yf(end,2), Yf(end,1), 'rx','markersize',7);
     
     if not(settings.ballistic)
-            legend(h(:), {'Apogee', strcat('parachute ',  " " , string(2:Np), " ", 'opening'), 'Launch point',...
-        'Landing point'}, 'Location', 'southeast');
+        legend(h(:), {'Apogee', strcat('parachute ',  " " , string(2:Np), " ", 'opening'), 'Launch point',...
+            'Landing point'}, 'Location', 'southeast');
     else
         legend(h(:), {'Apogee','Launch point', 'Landing point'}, 'Location', 'southeast');
     end
@@ -280,9 +280,9 @@ else   %%%% STOCHASTIC PLOTS (only if N>1)
     xlabel('m')
     ylabel('m')
     end
-    if settings.ballistic 
+    if settings.ballistic
         title('Landing Points in ballistic');
-    else   
+    else
         title('Landing Points with 2nd drouge');
     end
     

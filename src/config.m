@@ -17,15 +17,15 @@ settings.lrampa = 4.9;                                                          
 settings.lat0 = 39.201778;                                                          % Launchpad latitude
 settings.lon0 = -8.138368;                                                          % Launchpad longitude
 
+% Gravity costant at launch latitude and altitude:
+settings.g0 = gravitywgs84(settings.z0,settings.lat0);
+
 % launchpad roccaraso
-% settings.z0 = 109;                                                                  %[m] Launchpad Altitude
+% settings.z0 = 1416;                                                                 %[m] Launchpad Altitude
 % settings.lrampa = 4.9;                                                              %[m] LaunchPad route (distance from ground of the first hook)
 % settings.lat0 = 41.810093;                                                          % Launchpad latitude
 % settings.lon0 = 14.052546;                                                          % Launchpad longitude
 
-
-% 39.201778, -8.138368   pont the sor  coordinates 
-% 109 pont the sor z0
 settings.satellite3D = false;
 
 settings.terrain = false;       % ATTENTION: it works only at Roccaraso
@@ -36,12 +36,12 @@ end
 % launchpad directions
 % for a single run the maximum and the minimum value of the following
 % angles must be the same.
-settings.OMEGAmin = 84*pi/180;        %[rad] Minimum Elevation Angle, user input in degrees (ex. 80)
-settings.OMEGAmax = 84*pi/180;        %[rad] Maximum Elevation Angle, user input in degrees (ex. 80)
-settings.PHImin = 0*pi/180;         %[rad] Minimum Azimuth Angle from North Direction, user input in degrees (ex. 90)
-settings.PHImax = 0*pi/180;         %[rad] Maximum Azimuth Angle from North Direction, user input in degrees (ex. 90)
-settings.upwind = false;              % If true, phi is selected according to wind direction (constant wind model only)
-settings.PHIsigma = 0*pi/180;         % Stocasthic simulation only
+settings.OMEGAmin = 84*pi/180; % [rad] Minimum Elevation Angle, user input in degrees (ex. 80)
+settings.OMEGAmax = 84*pi/180; % [rad] Maximum Elevation Angle, user input in degrees (ex. 80)
+settings.PHImin = 0*pi/180;    % [rad] Minimum Azimuth Angle from North Direction, user input in degrees (ex. 90)
+settings.PHImax = 0*pi/180;    % [rad] Maximum Azimuth Angle from North Direction, user input in degrees (ex. 90)
+settings.upwind = false;       % If true, phi is selected according to wind direction (constant wind model only)
+settings.PHIsigma = 0*pi/180;  % Stocasthic simulation only
 
 %% ENGINE DETAILS
 % load motors data 
@@ -58,12 +58,13 @@ name = 'M2020';
 n_name = [Motors.MotorName] == name;
 settings.motor.exp_time = Motors(n_name).t;
 settings.motor.exp_thrust = Motors(n_name).T;
-settings.mp = Motors(n_name).mp;                                    % [kg]   Propellant Mass                                                
-settings.tb = Motors(n_name).t(end) ;                               % [s]    Burning time
-settings.mfr = settings.mp/settings.tb;                             % [kg/s] Mass Flow Rate
-settings.ms = 21;                                                   % [kg]   Structural Mass
-settings.m0 = settings.ms + settings.mp;                            % [kg]   Total Mass
-settings.mnc = 0.400;                                               % [kg]   Nosecone Mass
+settings.motor.exp_m = Motors(n_name).m;
+settings.mp = Motors(n_name).mp;         % [kg]   Propellant Mass                                                
+settings.tb = Motors(n_name).t(end) ;    % [s]    Burning time
+mm = Motors(n_name).mm;                  % [kg]   Total Mass of the Motor 
+settings.ms = 18.5 + mm - settings.mp;   % [kg]   Structural Mass
+settings.m0 = settings.ms + settings.mp; % [kg]   Total Mass
+settings.mnc = 0.400;                    % [kg]   Nosecone Mass
 
 clear ('Motors','name')
 
@@ -71,8 +72,8 @@ clear ('Motors','name')
 % This parameters should be the same parameters set up in MISSILE DATCOM
 % simulation.
 
-settings.C = 0.15;                                                  % [m]      Caliber (Fuselage Diameter)
-settings.S = pi*settings.C^2/4;                                     % [m^2]    Cross-sectional Surface
+settings.C = 0.15;                 % [m]      Caliber (Fuselage Diameter)
+settings.S = pi*settings.C^2/4;    % [m^2]    Cross-sectional Surface
 
 %% MASS GEOMERTY DETAILS
 % x-axis: along the fuselage
@@ -123,23 +124,23 @@ settings.Altitudes = s.State.Altitudes';
 settings.Machs = s.State.Machs';
 clear('s');
 
-settings.control = '0%';                                            % aerobrakes 0% 50% or 100% opened
+settings.control = '0%';      % aerobrakes 0% 50% or 100% opened
 
 %% PARACHUTES DETAILS
 % parachute 1
-settings.para(1).S = 1.55;                                          % [m^2]   Surface
-settings.para(1).mass = 0.4;                                        % [kg]   Parachute Mass
-settings.para(1).CD = 0.75;                                         % [/] Parachute Drag Coefficient
-settings.para(1).CL = 0;                                            % [/] Parachute Lift Coefficient
-settings.para(1).delay = 1;                                         % [s] drogue opening delay
-settings.para(1).z_cut = 300;                                       % [m] Final altitude of the parachute
+settings.para(1).S = 1.55;    % [m^2]   Surface
+settings.para(1).mass = 0.4;  % [kg]   Parachute Mass
+settings.para(1).CD = 0.75;   % [/] Parachute Drag Coefficient
+settings.para(1).CL = 0;      % [/] Parachute Lift Coefficient
+settings.para(1).delay = 1;   % [s] drogue opening delay
+settings.para(1).z_cut = 300; % [m] Final altitude of the parachute
 
 % parachute 2
-settings.para(2).S = 10.5;                                          % [m^2]   Surface
-settings.para(2).mass = 0.8;                                        % [kg]   Parachute Mass
-settings.para(2).CD = 0.7;                                          % [/] Parachute Drag Coefficient
-settings.para(2).CL = 0;                                            % [/] Parachute Lift Coefficient
-settings.para(2).z_cut = 0;                                         % [m] Final altitude of the parachute
+settings.para(2).S = 10.5;    % [m^2]   Surface
+settings.para(2).mass = 0.8;  % [kg]   Parachute Mass
+settings.para(2).CD = 0.7;    % [/] Parachute Drag Coefficient
+settings.para(2).CL = 0;      % [/] Parachute Lift Coefficient
+settings.para(2).z_cut = 0;   % [m] Final altitude of the parachute
 
 %% INTEGRATION OPTIONS
 settings.ode.final_time =  2000;                                    % [s] Final integration time
@@ -176,10 +177,10 @@ settings.wind.ww = 0;                               % [m/s] Vertical wind speed
 settings.wind.input = false;
 % Wind is generated for every altitude interpolating with the coefficient defined below
 
-settings.wind.input_ground = 7; %wind magnitude at the ground [m/s]
-settings.wind.input_alt = [0 100 600 750 900 1500 2500]; %altitude vector [m]
-settings.wind.input_mult = [0 0 10 15 20 30 30]; %percentage of increasing magnitude at each altitude
-settings.wind.input_azimut = [30 30 30 30 30 30 30]; %wind azimut angle at each altitude (toward wind incoming direction) [deg]
+settings.wind.input_ground = 7;                          % wind magnitude at the ground [m/s]
+settings.wind.input_alt = [0 100 600 750 900 1500 2500]; % altitude vector [m]
+settings.wind.input_mult = [0 0 10 15 20 30 30];         % percentage of increasing magnitude at each altitude
+settings.wind.input_azimut = [30 30 30 30 30 30 30];     % wind azimut angle at each altitude (toward wind incoming direction) [deg]
 
 
 settings.wind.input_uncertainty = [1, 1];
@@ -192,12 +193,12 @@ settings.wind.input_uncertainty = [1, 1];
 
 % Wind is generated randomly from the minimum to the maximum parameters which defines the wind.
 % Setting the same values for min and max will fix the parameters of the wind.
-settings.wind.MagMin = 6;                           % [m/s] Minimum Magnitude
-settings.wind.MagMax = 6;                          % [m/s] Maximum Magnitude
-settings.wind.ElMin = 0*pi/180;                     % [rad] Minimum Elevation, user input in degrees (ex. 0)
-settings.wind.ElMax = 0*pi/180;                     % [rad] Maximum Elevation, user input in degrees (ex. 0) (Max == 90 Deg)
-settings.wind.AzMin = (180)*pi/180;                   % [rad] Minimum Azimuth, user input in degrees (ex. 90)
-settings.wind.AzMax = (180)*pi/180;                   % [rad] Maximum Azimuth, user input in degrees (ex. 90)
+settings.wind.MagMin = 6;           % [m/s] Minimum Magnitude
+settings.wind.MagMax = 6;           % [m/s] Maximum Magnitude
+settings.wind.ElMin = 0*pi/180;     % [rad] Minimum Elevation, user input in degrees (ex. 0)
+settings.wind.ElMax = 0*pi/180;     % [rad] Maximum Elevation, user input in degrees (ex. 0) (Max == 90 Deg)
+settings.wind.AzMin = (180)*pi/180; % [rad] Minimum Azimuth, user input in degrees (ex. 90)
+settings.wind.AzMax = (180)*pi/180; % [rad] Maximum Azimuth, user input in degrees (ex. 90)
 
 % NOTE: wind azimuth angle indications (wind directed towards):
 % 0 deg (use 360 instead of 0)  -> North
