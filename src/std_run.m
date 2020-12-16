@@ -124,22 +124,26 @@ save('ascent_plot.mat', 'data_ascent');
 %% PARATCHUTES
 % Initial Condition are the last from ascent (need to rotate because
 % velocities are in body axes)
-posPara0 = quatrotate(quatconj(Ya(end,10:13)),[(settings.xcg(2)-settings.Lnc) 0 0]) + Ya(end,1:3); % (NED) position of the point from where the parachute will be deployed
-velPara0 = quatrotate(quatconj(Ya(end,10:13)),Ya(end,4:6)) + cross(Ya(end,7:9),quatrotate(quatconj(Ya(end,10:13)),[(settings.xcg(2)-settings.Lnc) 0 0]));% + cross(Ya(end,7:9),quatrotate(quatconj(Ya(end,10:13)),[(settings.xcg(2)-settings.Lnc) 0 0]));                  % (Body) velocity of the point from where the parachute will be deployed
-Y0p = [Ya(end,1:13) posPara0 velPara0 Ya(end,18:20)];           % Initializing starting state vector
+posPara0 = quatrotate(quatconj(Ya(end,10:13)),...
+    [(settings.xcg(2)-settings.Lnc) 0 0]) + Ya(end,1:3);                      % (NED) position of the point from where the parachute will be deployed
+velPara0 = quatrotate(quatconj(Ya(end,10:13)),Ya(end,4:6))...
+    + cross(Ya(end,7:9),quatrotate(quatconj(Ya(end,10:13)),...
+    [(settings.xcg(2)-settings.Lnc) 0 0]));                                   % (Body) velocity of the point from where the parachute will be deployed
+Y0p = [Ya(end,1:13) posPara0 velPara0 Ya(end,18:20)];                         % Initializing starting state vector
 
 data_para = cell(settings.Npara, 1);
 Yf = Ya(:, 1:13);
 Tf  = Ta;
-t0p = Ta(end);
+t0p = zeros(1,settings.Npara);
+t0p(1) = Ta(end);
 
 for i = 1:settings.Npara
     para = i;
     if i == 1
-    [Tp, Yp] = ode15s(@descent_parachute, [t0p, tf], Y0p, settings.ode.optionspara,...
+        [Tp, Yp] = ode15s(@descent_parachute, [t0p(para), tf], Y0p, settings.ode.optionspara,...
         settings, uw, vw, ww, para, t0p, uncert);
     else
-        [Tp, Yp] = ode45(@descent_parachute, [t0p, tf], Y0p, settings.ode.optionspara,...
+        [Tp, Yp] = ode113(@descent_parachute, [t0p(para), tf], Y0p, settings.ode.optionspara,...
         settings, uw, vw, ww, para, t0p, uncert);
     end
     
@@ -149,10 +153,12 @@ for i = 1:settings.Npara
     
     % updating ODE starting conditions
     Y0p = Yp(end, :);
-    t0p = Tp(end);
+    if i ~= settings.Npara
+        t0p(i+1) = Tp(end);
+    end
     
     posPara0 = quatrotate(quatconj(Yp(end,10:13)),[(settings.xcg(2)-settings.Lnc) 0 0]) + Yp(end,1:3);
-    velPara0 = Yp(end,4:6) + cross(Yp(end,7:9),quatrotate(quatconj(Ya(end,10:13)),[(settings.xcg(2)-settings.Lnc) 0 0]));
+    velPara0 = Yp(end,17:19);
     
     Y0p(14:19) = [posPara0 velPara0];
     
