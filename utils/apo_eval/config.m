@@ -1,13 +1,13 @@
 %% LAUNCH SETUP
 
 % launchpad
-settings.z0 = 0;                   %[m] Launchpad Altitude
+settings.z0 = 109;                   %[m] Launchpad Altitude
 settings.lrampa = 3;               %[m] LaunchPad route (launchpad length-distance from ground of the first hook)
 
 % launchpad directions
 % for a single run the maximum and the minimum value of the following
 % angles must be the same.
-settings.OMEGA = 85*pi/180;        %[rad] Minimum Elevation Angle, user input in degrees (ex. 80)
+settings.OMEGA = 84*pi/180;        %[rad] Minimum Elevation Angle, user input in degrees (ex. 80)
 settings.PHI = 0*pi/180;           %[rad] Maximum Azimuth Angle from North Direction, user input in degrees (ex. 90)
 
 %% ENGINE DETAILS
@@ -19,7 +19,7 @@ Motors = load(filename);
 motors = [Motors.Cesaroni Motors.Aerotech];
 
 % save in settings the acceptable motors 
-settings.Itot_range = [8000 9000];
+settings.Itot_range = [8400 9900];
 j=1;
 for i=1:size(motors,2)
     
@@ -38,7 +38,7 @@ clear('motors' , 'i' , 'j')
 
 settings.C = 0.150;                          % [m]      Caliber (Fuselage Diameter)
 settings.S = pi*(settings.C/2)^2;            % [m^2]    Cross-sectional Surface
-settings.L = 3;                              % [m]      Rocket length
+settings.L = 2.68;                              % [m]      Rocket length
 
 %% MASS GEOMERTY DETAILS
 % x-axis: along the fuselage
@@ -120,8 +120,8 @@ settings.ode.optionsdesc = odeset('AbsTol',1E-3,'RelTol',1E-12,...
 
 % Wind is generated randomly from the minimum to the maximum parameters which defines the wind.
 % Setting the same values for min and max will fix the parameters of the wind.
-settings.wind.MagMin = 4;                   % [m/s] Minimum Magnitude
-settings.wind.MagMax = 4;                   % [m/s] Maximum Magnitude
+settings.wind.MagMin = 9;                   % [m/s] Minimum Magnitude
+settings.wind.MagMax = 9;                   % [m/s] Maximum Magnitude
 settings.wind.ElMin = 0*pi/180;             % [rad] Minimum Elevation, user input in degrees (ex. 0)
 settings.wind.ElMax = 0*pi/180;             % [rad] Maximum Elevation, user input in degrees (ex. 0) (Max == 90 Deg)
 settings.wind.AzMin = (180)*pi/180;         % [rad] Minimum Azimuth, user input in degrees (ex. 90)
