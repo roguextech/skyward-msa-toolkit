@@ -12,7 +12,7 @@ addpath(path);
 run config.m
 
 % data of the analyis 
-ms = (18.5:1:20.5) - 4; % structural mass without case+propellant
+ms = (18.5:1:21.5); % structural mass without case+propellant
 n_mass = length(ms);
 n_motors = size(settings.motors,2);
 

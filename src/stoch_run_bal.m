@@ -120,7 +120,7 @@ parfor i = 1:settings.stoch.N
 
     % Attitude
     Q0 = angle2quat(PHI, OMEGA, 0*pi/180, 'ZYX')';
-    Y0a = [X0; V0; W0; Q0; settings.m0; settings.Ixxf; settings.Iyyf; settings.Izzf; theta0];
+    Y0a = [X0; V0; W0; Q0; settings.Ixxf; settings.Iyyf; settings.Izzf; theta0];
     [Ta,Ya] = ode113(@ascent, [0, tf], Y0a, settings.ode.optionsasc1, settings, uw, vw, ww, uncert, Hour, Day, OMEGA);
     [data_ascent{i}] = RecallOdeFcn(@ascent, Ta, Ya, settings, uw, vw, ww, uncert, Hour, Day, OMEGA);
     data_ascent{i}.state.Y = Ya;

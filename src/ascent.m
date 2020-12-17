@@ -1,13 +1,13 @@
 function [dY, parout] = ascent(t, Y, settings, uw, vw, ww, uncert, Hour, Day, OMEGA)
-%{ 
+%{
 
 ASCENT - ode function of the 6DOF Rigid Rocket Model
 
-INPUTS:      
+INPUTS:
             - t, integration time;
             - Y, state vector, [ x y z | u v w | p q r | q0 q1 q2 q3 | m | Ixx Iyy Izz | thetax thetay thetaz]:
 
-                                * (x y z), NED{north, east, down} horizontal frame; 
+                                * (x y z), NED{north, east, down} horizontal frame;
                                 * (u v w), body frame velocities;
                                 * (p q r), body frame angular rates;
                                 * m , total mass;
@@ -25,7 +25,7 @@ INPUTS:
             - Day, day of the month of the needed simulation;
             - OMEGA, launchpad azimuth angle;
 
-OUTPUTS:    
+OUTPUTS:
             - dY, state derivatives;
             - parout, interesting fligth quantities structure (aerodyn coefficients, forces and so on..).
 
@@ -66,10 +66,9 @@ q0 = Y(10);
 q1 = Y(11);
 q2 = Y(12);
 q3 = Y(13);
-m = Y(14);
-Ixx = Y(15);
-Iyy = Y(16);
-Izz = Y(17);
+Ixx = Y(14);
+Iyy = Y(15);
+Izz = Y(16);
 
 %% QUATERION ATTITUDE
 Q = [q0 q1 q2 q3];
@@ -83,7 +82,7 @@ end
 
 %% ADDING WIND (supposed to be added in NED axes);
 if settings.wind.model
-   
+    
     if settings.stoch.N > 1
         [uw,vw,ww] = wind_matlab_generator(settings,z,t,Hour,Day);
     else
@@ -91,8 +90,8 @@ if settings.wind.model
     end
     
 elseif settings.wind.input
-
-    [uw,vw,ww] = wind_input_generator(settings,z,uncert);    
+    
+    [uw,vw,ww] = wind_input_generator(settings,z,uncert);
 end
 
 wind = quatrotate(Q, [uw vw ww]);
@@ -117,13 +116,11 @@ M = V_norm/a;
 M_value = M;
 
 %% CONSTANTS
-S = settings.S;              % [m^2] cross surface
-C = settings.C;              % [m]   caliber
-CoeffsE = settings.CoeffsE;  % Empty Rocket Coefficients
-CoeffsF = settings.CoeffsF;  % Full Rocket Coefficients
-g = 9.80655;                 % [N/kg] module of gravitational field at zero
-tb = settings.tb;            % [s]     Burning Time
-mfr = settings.mfr;          % [kg/s]  Mass Flow Rate
+S = settings.S;                         % [m^2]   cross surface
+C = settings.C;                         % [m]     caliber
+g = settings.g0/(1 + (-z*1e-3/6371))^2; % [N/kg]  module of gravitational field 
+tb = settings.tb;                       % [s]     Burning Time
+
 
 if settings.stoch.N == 1
     OMEGA = settings.OMEGA;      % [rad] Elevation Angle in the launch pad
@@ -144,14 +141,14 @@ Izze = settings.Izze;        % [kg*m^2] Inertia to z-axis
 dI = 1/tb*([Ixxf Iyyf Izzf]'-[Ixxe Iyye Izze]');
 
 if t<tb
-    mdot = -mfr;
+    m = settings.ms + interp1(settings.motor.exp_time, settings.motor.exp_m, t);
     Ixxdot = -dI(1);
     Iyydot = -dI(2);
     Izzdot = -dI(3);
     T = interp1(settings.motor.exp_time, settings.motor.exp_thrust, t);
     
-else             % for t >= tb the fligth condition is the empty one(no interpolation needed)
-    mdot = 0;
+else     % for t >= tb the fligth condition is the empty one(no interpolation needed)
+    m = settings.ms;
     Ixxdot = 0;
     Iyydot = 0;
     Izzdot = 0;
@@ -161,7 +158,7 @@ end
 %% AERODYNAMICS ANGLES
 if not(ur < 1e-9 || V_norm < 1e-9)
     alpha = atan(wr/ur);
-    beta = atan(vr/ur);                         % beta = asin(vr/V_norm); is the classical notation, Datcom uses this one though. 
+    beta = atan(vr/ur);                         % beta = asin(vr/V_norm); is the classical notation, Datcom uses this one though.
     alpha_tot = atan(sqrt(wr^2 + vr^2)/ur);     % datcom 97' definition
 else
     alpha = 0;
@@ -171,75 +168,6 @@ end
 
 alpha_value = alpha;
 beta_value = beta;
-
-
-%% DATCOM COEFFICIENTS
-A_datcom = settings.Alphas*pi/180;
-B_datcom = settings.Betas*pi/180;
-H_datcom = settings.Altitudes;
-M_datcom = settings.Machs;
-
-%% INTERPOLATION AT THE BOUNDARIES
-if M > M_datcom(end)
-    
-    M = M_datcom(end);
-    
-end
-
-if M < M_datcom(1)
-    
-    M = M_datcom(1);
-    
-end
-
-if alpha > A_datcom(end)
-    
-    alpha = A_datcom(end);
-    
-elseif alpha < A_datcom(1)
-    
-    alpha = A_datcom(1);
-    
-end
-
-if beta > B_datcom(end)
-    
-    beta = B_datcom(end);
-    
-elseif beta < B_datcom(1)
-    
-    beta = B_datcom(1);
-end
-
-if absoluteAltitude > H_datcom(end)
-    
-    absoluteAltitude = H_datcom(end);
-    
-elseif absoluteAltitude < H_datcom(1)
-    
-    absoluteAltitude = H_datcom(1);
-    
-end
-
-%% CHOSING THE FULL CONDITION VALUE
-% interpolation of the coefficients with the value in the nearest condition of the Coeffs matrix
-
-[CAf, angle0] = interp4_easy(A_datcom, M_datcom, B_datcom, H_datcom, CoeffsF.CA, alpha, M, beta, absoluteAltitude);
-CYBf = interp4_easy(A_datcom, M_datcom, B_datcom, H_datcom, CoeffsF.CYB, alpha, M, beta, absoluteAltitude);
-CY0f = interp4_easy(A_datcom, M_datcom, B_datcom, H_datcom, CoeffsF.CY, alpha, M, beta, absoluteAltitude);
-CNAf = interp4_easy(A_datcom, M_datcom, B_datcom, H_datcom, CoeffsF.CNA, alpha, M, beta, absoluteAltitude);
-CN0f = interp4_easy(A_datcom, M_datcom, B_datcom, H_datcom, CoeffsF.CN, alpha, M, beta, absoluteAltitude);
-Clf = interp4_easy(A_datcom, M_datcom, B_datcom, H_datcom, CoeffsF.CLL, alpha, M, beta, absoluteAltitude);
-Clpf = interp4_easy(A_datcom, M_datcom, B_datcom, H_datcom, CoeffsF.CLLP, alpha, M, beta, absoluteAltitude);
-Cmaf = interp4_easy(A_datcom, M_datcom, B_datcom, H_datcom, CoeffsF.CMA, alpha, M, beta, absoluteAltitude);
-Cm0f = interp4_easy(A_datcom, M_datcom, B_datcom, H_datcom, CoeffsF.CM, alpha, M, beta, absoluteAltitude);
-Cmadf = interp4_easy(A_datcom, M_datcom, B_datcom, H_datcom, CoeffsF.CMAD, alpha, M, beta, absoluteAltitude);
-Cmqf = interp4_easy(A_datcom, M_datcom, B_datcom, H_datcom, CoeffsF.CMQ, alpha, M, beta, absoluteAltitude);
-Cnbf = interp4_easy(A_datcom, M_datcom, B_datcom, H_datcom, CoeffsF.CLNB, alpha, M, beta, absoluteAltitude);
-Cn0f = interp4_easy(A_datcom, M_datcom, B_datcom, H_datcom, CoeffsF.CLN, alpha, M, beta, absoluteAltitude);
-Cnrf = interp4_easy(A_datcom, M_datcom, B_datcom, H_datcom, CoeffsF.CLNR, alpha, M, beta, absoluteAltitude);
-Cnpf = interp4_easy(A_datcom, M_datcom, B_datcom, H_datcom, CoeffsF.CLNP, alpha, M, beta, absoluteAltitude);
-XCPf = interp4_easy(A_datcom, M_datcom, B_datcom, H_datcom, CoeffsF.X_C_P, alpha_tot, M, 0, absoluteAltitude);
 
 %% CHOSING THE EMPTY CONDITION VALUE
 % interpolation of the coefficients with the value in the nearest condition of the Coeffs matrix
@@ -260,62 +188,17 @@ else
     c = 1;
 end
 
-CAe = interp4_easy(A_datcom, M_datcom, B_datcom, H_datcom, CoeffsE.CA(:, :, :, :, c), alpha, M, beta, absoluteAltitude);
-CYBe = interp4_easy(A_datcom, M_datcom, B_datcom, H_datcom, CoeffsE.CYB(:, :, :, :, c), alpha, M, beta, absoluteAltitude);
-CY0e = interp4_easy(A_datcom, M_datcom, B_datcom, H_datcom, CoeffsE.CY(:, :, :, :, c), alpha, M, beta, absoluteAltitude);
-CNAe = interp4_easy(A_datcom, M_datcom, B_datcom, H_datcom, CoeffsE.CNA(:, :, :, :, c), alpha, M, beta, absoluteAltitude);
-CN0e = interp4_easy(A_datcom, M_datcom, B_datcom, H_datcom, CoeffsE.CN(:, :, :, :, c), alpha, M, beta, absoluteAltitude);
-Cle = interp4_easy(A_datcom, M_datcom, B_datcom, H_datcom, CoeffsE.CLL(:, :, :, :, c), alpha, M, beta, absoluteAltitude);
-Clpe = interp4_easy(A_datcom, M_datcom, B_datcom, H_datcom, CoeffsE.CLLP(:, :, :, :, c), alpha, M, beta, absoluteAltitude);
-Cmae = interp4_easy(A_datcom, M_datcom, B_datcom, H_datcom, CoeffsE.CMA(:, :, :, :, c), alpha, M, beta, absoluteAltitude);
-Cm0e = interp4_easy(A_datcom, M_datcom, B_datcom, H_datcom, CoeffsE.CM(:, :, :, :, c), alpha, M, beta, absoluteAltitude);
-Cmade = interp4_easy(A_datcom, M_datcom, B_datcom, H_datcom, CoeffsE.CMAD(:, :, :, :, c), alpha, M, beta, absoluteAltitude);
-Cmqe = interp4_easy(A_datcom, M_datcom, B_datcom, H_datcom, CoeffsE.CMQ(:, :, :, :, c), alpha, M, beta, absoluteAltitude);
-Cnbe = interp4_easy(A_datcom, M_datcom, B_datcom, H_datcom, CoeffsE.CLNB(:, :, :, :, c), alpha, M, beta, absoluteAltitude);
-Cn0e = interp4_easy(A_datcom, M_datcom, B_datcom, H_datcom, CoeffsE.CLN(:, :, :, :, c), alpha, M, beta, absoluteAltitude);
-Cnre = interp4_easy(A_datcom, M_datcom, B_datcom, H_datcom, CoeffsE.CLNR(:, :, :, :, c), alpha, M, beta, absoluteAltitude);
-Cnpe = interp4_easy(A_datcom, M_datcom, B_datcom, H_datcom, CoeffsE.CLNP(:, :, :, :, c), alpha, M, beta, absoluteAltitude);
-XCPe = interp4_easy(A_datcom, M_datcom, B_datcom, H_datcom, CoeffsE.X_C_P(:, :, :, :, c), alpha_tot, M, 0, absoluteAltitude);
+%% INTERPOLATE AERODYNAMIC COEFFICIENTS:
+[coeffsValues, angle0] = interpCoeffs(t,alpha,M,beta,absoluteAltitude,...
+    c,alpha_tot,settings);
 
-%% LINEAR INTERPOLATION BETWEEN THE TWO CONDITIONS
-% Computing the value of the aerodynamics coefficients at a certain time
-% Needed only for t<tb because for t>=tb the condition is the empty one
-
-if t < tb
-    CA = t/tb*(CAe-CAf)+CAf;
-    CYB = t/tb*(CYBe-CYBf)+CYBf;
-    CY0 = t/tb*(CY0e-CY0f)+CY0f;
-    CNA = t/tb*(CNAe-CNAf)+CNAf;
-    CN0 = t/tb*(CN0e-CN0f)+CN0f;
-    Cl = t/tb*(Cle-Clf)+Clf;
-    Clp = t/tb*(Clpe-Clpf)+Clpf;
-    Cma = t/tb*(Cmae-Cmaf)+Cmaf;
-    Cm0 = t/tb*(Cm0e-Cm0f)+Cm0f;
-    Cmad = t/tb*(Cmade-Cmadf)+Cmadf;
-    Cmq = t/tb*(Cmqe-Cmqf)+Cmqf;
-    Cnb = t/tb*(Cnbe-Cnbf)+Cnbf;
-    Cn0 = t/tb*(Cn0e-Cn0f)+Cn0f;
-    Cnr = t/tb*(Cnre-Cnrf)+Cnrf;
-    Cnp = t/tb*(Cnpe-Cnpf)+Cnpf;
-    XCP_value = t/tb*(XCPe-XCPf)+XCPf;
-else
-    CA = CAe;
-    CYB = CYBe;
-    CY0 = CY0e;
-    CNA = CNAe;
-    CN0 = CN0e;
-    Cl = Cle;
-    Clp = Clpe;
-    Cma = Cmae;
-    Cm0 = Cm0e;
-    Cmad =Cmade;
-    Cmq = Cmqe;
-    Cnb = Cnbe;
-    Cn0 = Cn0e;
-    Cnr = Cnre;
-    Cnp = Cnpe;
-    XCP_value = XCPe;
-end
+% Retrieve Coefficients
+CA = coeffsValues(1); CYB = coeffsValues(2); CY0 = coeffsValues(3);
+CNA = coeffsValues(4); CN0 = coeffsValues(5); Cl = coeffsValues(6);
+Clp = coeffsValues(7); Cma = coeffsValues(8); Cm0 = coeffsValues(9);
+Cmad = coeffsValues(10); Cmq = coeffsValues(11); Cnb = coeffsValues(12);
+Cn0 = coeffsValues(13); Cnr = coeffsValues(14); Cnp = coeffsValues(15);
+XCP_value = coeffsValues(16);
 
 % compute CN,CY,Cm,Cn (linearized with respect to alpha and beta):
 alpha0 = angle0(1); beta0 = angle0(2);
@@ -325,7 +208,8 @@ CY = (CY0 + CYB*(beta-beta0));
 Cm = (Cm0 + Cma*(alpha-alpha0));
 Cn = (Cn0 + Cnb*(beta-beta0));
 
-if -z < settings.lrampa*sin(OMEGA)      % No torque on the Launch
+%%
+if -z < settings.lrampa*sin(OMEGA)      % No torque on the launchpad
     
     Fg = m*g*sin(OMEGA);                % [N] force due to the gravity
     X = 0.5*rho*V_norm^2*S*CA;
@@ -350,23 +234,22 @@ if -z < settings.lrampa*sin(OMEGA)      % No torque on the Launch
     end
     
 else
-    
     %% FORCES
     % first computed in the body-frame reference system
-    qdyn = 0.5*rho*V_norm^2;        %[Pa] dynamics pressure
-    qdynL_V = 0.5*rho*V_norm*S*C; 
+    qdyn = 0.5*rho*V_norm^2;       % [Pa] dynamics pressure
+    qdynL_V = 0.5*rho*V_norm*S*C;
     
     if c == 1
-        X = qdyn*S*CA;              %[N] x-body component of the aerodynamics force
+        X = qdyn*S*CA;             % [N] x-body component of the aerodynamics force
     else
-        X = qdyn*S*CA;              %[N] x-body component of the aerodynamics force
+        X = qdyn*S*CA;             % [N] x-body component of the aerodynamics force
     end
-        
-    Y = qdyn*S*CY;            %[N] y-body component of the aerodynamics force
-    Z = qdyn*S*CN;           %[N] z-body component of the aerodynamics force
-    Fg = quatrotate(Q,[0 0 m*g])';                     %[N] force due to the gravity in body frame
     
-    F = Fg +[-X+T,+Y,-Z]';          %[N] total forces vector
+    Y = qdyn*S*CY;                 % [N] y-body component of the aerodynamics force
+    Z = qdyn*S*CN;                 % [N] z-body component of the aerodynamics force
+    Fg = quatrotate(Q,[0 0 m*g])'; % [N] force due to the gravity in body frame
+    
+    F = Fg +[-X+T,+Y,-Z]';         % [N] total forces vector
     
     %% STATE DERIVATIVES
     % velocity
@@ -382,11 +265,11 @@ else
         -Izzdot*r/Izz;
     
 end
-% Quaternion
+% Quaternions
 OM = 1/2* [ 0 -p -q -r  ;
-            p  0  r -q  ;
-            q -r  0  p  ;
-            r  q -p  0 ];
+    p  0  r -q  ;
+    q -r  0  p  ;
+    r  q -p  0 ];
 
 dQQ = OM*Q';
 
@@ -399,11 +282,10 @@ dY(7) = dp;
 dY(8) = dq;
 dY(9) = dr;
 dY(10:13) = dQQ;
-dY(14) = mdot;
-dY(15) = Ixxdot;
-dY(16) = Iyydot;
-dY(17) = Izzdot;
-dY(18:20) = [p q r];
+dY(14) = Ixxdot;
+dY(15) = Iyydot;
+dY(16) = Izzdot;
+dY(17:19) = [p q r];
 dY = dY';
 
 %% SAVING THE QUANTITIES FOR THE PLOTS

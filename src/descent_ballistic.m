@@ -100,10 +100,9 @@ V_norm = norm([ur vr wr]);
 
 %% CONSTANTS
 % Everything related to empty condition (descent-fase)
-S = settings.S;              % [m^2] cross surface
-C = settings.C;              % [m]   caliber
-CoeffsE = settings.CoeffsE;  % [/] Empty Rocket Coefficients
-g = 9.80655;                 % [N/kg] module of gravitational field at zero
+S = settings.S;                         % [m^2] cross surface
+C = settings.C;                         % [m]   caliber
+g = settings.g0/(1 + (-z*1e-3/6371))^2; % [N/kg] module of gravitational field
 T = 0;
     
 %% ATMOSPHERE DATA
@@ -128,74 +127,23 @@ end
 alpha_value = alpha;
 beta_value = beta;
 
-%% DATCOM COEFFICIENTS
-A_datcom = settings.Alphas*pi/180;
-B_datcom = settings.Betas*pi/180;
-H_datcom = settings.Altitudes;
-M_datcom = settings.Machs;
 
-%% INTERPOLATION AT THE BOUNDARIES
-if M > M_datcom(end)
-    
-    M = M_datcom(end);
-    
-end
-
-if M < M_datcom(1)
-    
-    M = M_datcom(1);
-    
-end
-
-if alpha > A_datcom(end)
-    
-    alpha = A_datcom(end);
-    
-elseif alpha < A_datcom(1)
-    
-    alpha = A_datcom(1);
-    
-end
-
-if beta > B_datcom(end)
-    
-    beta = B_datcom(end);
-    
-elseif beta < B_datcom(1)
-    
-    beta = B_datcom(1);
-end
-
-if absoluteAltitude > H_datcom(end)
-    
-    absoluteAltitude = H_datcom(end);
-    
-elseif absoluteAltitude < H_datcom(1)
-    
-    absoluteAltitude = H_datcom(1);
-    
-end
 
 %% CHOSING THE CONDITION VALUE
 % interpolation of the coefficients with the value in the nearest condition of the Coeffs matrix
 
 c = 1; % descent with no aerobrakes
 
-[CA, angle0] = interp4_easy(A_datcom, M_datcom, B_datcom, H_datcom, CoeffsE.CA(:, :, :, :, c), alpha, M, beta, absoluteAltitude);
-CYB = interp4_easy(A_datcom, M_datcom, B_datcom, H_datcom, CoeffsE.CYB(:, :, :, :, c), alpha, M, beta, absoluteAltitude);
-CY0 = interp4_easy(A_datcom, M_datcom, B_datcom, H_datcom, CoeffsE.CY(:, :, :, :, c), alpha, M, beta, absoluteAltitude);
-CNA = interp4_easy(A_datcom, M_datcom, B_datcom, H_datcom, CoeffsE.CNA(:, :, :, :, c), alpha, M, beta, absoluteAltitude);
-CN0 = interp4_easy(A_datcom, M_datcom, B_datcom, H_datcom, CoeffsE.CN(:, :, :, :, c), alpha, M, beta, absoluteAltitude);
-Cl = interp4_easy(A_datcom, M_datcom, B_datcom, H_datcom, CoeffsE.CLL(:, :, :, :, c), alpha, M, beta, absoluteAltitude);
-Clp = interp4_easy(A_datcom, M_datcom, B_datcom, H_datcom, CoeffsE.CLLP(:, :, :, :, c), alpha, M, beta, absoluteAltitude);
-Cma = interp4_easy(A_datcom, M_datcom, B_datcom, H_datcom, CoeffsE.CMA(:, :, :, :, c), alpha, M, beta, absoluteAltitude);
-Cm0 = interp4_easy(A_datcom, M_datcom, B_datcom, H_datcom, CoeffsE.CM(:, :, :, :, c), alpha, M, beta, absoluteAltitude);
-Cmad = interp4_easy(A_datcom, M_datcom, B_datcom, H_datcom, CoeffsE.CMAD(:, :, :, :, c), alpha, M, beta, absoluteAltitude);
-Cmq = interp4_easy(A_datcom, M_datcom, B_datcom, H_datcom, CoeffsE.CMQ(:, :, :, :, c), alpha, M, beta, absoluteAltitude);
-Cnb = interp4_easy(A_datcom, M_datcom, B_datcom, H_datcom, CoeffsE.CLNB(:, :, :, :, c), alpha, M, beta, absoluteAltitude);
-Cn0 = interp4_easy(A_datcom, M_datcom, B_datcom, H_datcom, CoeffsE.CLN(:, :, :, :, c), alpha, M, beta, absoluteAltitude);
-Cnr = interp4_easy(A_datcom, M_datcom, B_datcom, H_datcom, CoeffsE.CLNR(:, :, :, :, c), alpha, M, beta, absoluteAltitude);
-Cnp = interp4_easy(A_datcom, M_datcom, B_datcom, H_datcom, CoeffsE.CLNP(:, :, :, :, c), alpha, M, beta, absoluteAltitude);
+%% INTERPOLATE AERODYNAMIC COEFFICIENTS:
+[coeffsValues, angle0] = interpCoeffs(t,alpha,M,beta,absoluteAltitude,...
+                                        c,0,settings);
+
+% Retrieve Coefficients 
+CA = coeffsValues(1); CYB = coeffsValues(2); CY0 = coeffsValues(3);
+CNA = coeffsValues(4); CN0 = coeffsValues(5); Cl = coeffsValues(6);
+Clp = coeffsValues(7); Cma = coeffsValues(8); Cm0 = coeffsValues(9);
+Cmad = coeffsValues(10); Cmq = coeffsValues(11); Cnb = coeffsValues(12);
+Cn0 = coeffsValues(13); Cnr = coeffsValues(14); Cnp = coeffsValues(15);
 
 % compute CN,CY,Cm,Cn (linearized with respect to alpha and beta):
 alpha0 = angle0(1); beta0 = angle0(2);
