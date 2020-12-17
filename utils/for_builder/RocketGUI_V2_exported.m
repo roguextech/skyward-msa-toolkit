@@ -2,62 +2,65 @@ classdef RocketGUI_V2_exported < matlab.apps.AppBase
 
     % Properties that correspond to app components
     properties (Access = public)
-        UIFigure                    matlab.ui.Figure
-        HeaderLabel                 matlab.ui.control.Label
-        TabGroup                    matlab.ui.container.TabGroup
-        GeometryTab                 matlab.ui.container.Tab
-        GeneralparametersPanel      matlab.ui.container.Panel
-        NumberoffinsEditFieldLabel  matlab.ui.control.Label
-        NumberoffinsEditField       matlab.ui.control.NumericEditField
-        XCGEditFieldLabel           matlab.ui.control.Label
-        XCGEditField                matlab.ui.control.NumericEditField
-        ZCGEditFieldLabel           matlab.ui.control.Label
-        ZCGEditField                matlab.ui.control.NumericEditField
-        NoseshapeDropDownLabel      matlab.ui.control.Label
-        NoseshapeDropDown           matlab.ui.control.DropDown
-        NosePowerEditFieldLabel     matlab.ui.control.Label
-        PowerEditField              matlab.ui.control.NumericEditField
-        DiameterEditFieldLabel      matlab.ui.control.Label
-        DiameterEditField           matlab.ui.control.NumericEditField
-        RocketLengthEditFieldLabel  matlab.ui.control.Label
-        RocketLengthEditField       matlab.ui.control.NumericEditField
-        NoseLengthEditFieldLabel    matlab.ui.control.Label
-        NoseLengthEditField         matlab.ui.control.NumericEditField
-        FinsPanel                   matlab.ui.container.Panel
-        ShapeDropDownLabel          matlab.ui.control.Label
-        FinShapeDropDown            matlab.ui.control.DropDown
-        RootChordEditFieldLabel     matlab.ui.control.Label
-        MaxChordEditField           matlab.ui.control.NumericEditField
-        TipChordEditFieldLabel      matlab.ui.control.Label
-        MinChordEditField           matlab.ui.control.NumericEditField
-        XLE1EditFieldLabel          matlab.ui.control.Label
-        XLE1EditField               matlab.ui.control.NumericEditField
-        XLE2EditFieldLabel          matlab.ui.control.Label
-        XLE2EditField               matlab.ui.control.NumericEditField
-        HeightEditFieldLabel        matlab.ui.control.Label
-        FinHeightEditField          matlab.ui.control.NumericEditField
-        ThicknessEditFieldLabel     matlab.ui.control.Label
-        FinThicknessEditField       matlab.ui.control.NumericEditField
-        LMaxEditFieldLabel          matlab.ui.control.Label
-        LMaxEditField               matlab.ui.control.NumericEditField
-        FlightconditionsTab         matlab.ui.container.Tab
-        AddAlphaButton              matlab.ui.control.Button
-        UITableAlpha                matlab.ui.control.Table
-        UITableBeta                 matlab.ui.control.Table
-        UITableMach                 matlab.ui.control.Table
-        UITableAlt                  matlab.ui.control.Table
-        AddBetaButton               matlab.ui.control.Button
-        AddMachButton               matlab.ui.control.Button
-        AddAltitudeButton           matlab.ui.control.Button
-        RemoveAlphaButton           matlab.ui.control.Button
-        RemoveBetaButton            matlab.ui.control.Button
-        RemoveMachButton            matlab.ui.control.Button
-        RemoveAltitudeButton        matlab.ui.control.Button
-        PrintDATCOMtextButton       matlab.ui.control.Button
-        SaveDATCOMfileButton        matlab.ui.control.Button
-        Panel                       matlab.ui.container.Panel
-        RocketUIAxes                matlab.ui.control.UIAxes
-        FinsUIAxes                  matlab.ui.control.UIAxes
+        UIFigure                       matlab.ui.Figure
+        HeaderLabel                    matlab.ui.control.Label
+        TabGroup                       matlab.ui.container.TabGroup
+        GeometryTab                    matlab.ui.container.Tab
+        GeneralparametersPanel         matlab.ui.container.Panel
+        NumberoffinsEditFieldLabel     matlab.ui.control.Label
+        NumberoffinsEditField          matlab.ui.control.NumericEditField
+        XCGFullEditFieldLabel          matlab.ui.control.Label
+        XCGFullEditField               matlab.ui.control.NumericEditField
+        ZCGEditFieldLabel              matlab.ui.control.Label
+        ZCGEditField                   matlab.ui.control.NumericEditField
+        NoseshapeDropDownLabel         matlab.ui.control.Label
+        NoseshapeDropDown              matlab.ui.control.DropDown
+        NosePowerEditFieldLabel        matlab.ui.control.Label
+        PowerEditField                 matlab.ui.control.NumericEditField
+        DiameterEditFieldLabel         matlab.ui.control.Label
+        DiameterEditField              matlab.ui.control.NumericEditField
+        RocketLengthEditFieldLabel     matlab.ui.control.Label
+        RocketLengthEditField          matlab.ui.control.NumericEditField
+        NoseLengthEditFieldLabel       matlab.ui.control.Label
+        NoseLengthEditField            matlab.ui.control.NumericEditField
+        XCGEmptyEditFieldLabel         matlab.ui.control.Label
+        XCGEmptyEditField              matlab.ui.control.NumericEditField
+        FinsPanel                      matlab.ui.container.Panel
+        ShapeDropDownLabel             matlab.ui.control.Label
+        FinShapeDropDown               matlab.ui.control.DropDown
+        RootChordEditFieldLabel        matlab.ui.control.Label
+        MaxChordEditField              matlab.ui.control.NumericEditField
+        TipChordEditFieldLabel         matlab.ui.control.Label
+        MinChordEditField              matlab.ui.control.NumericEditField
+        XLE1EditFieldLabel             matlab.ui.control.Label
+        XLE1EditField                  matlab.ui.control.NumericEditField
+        XLE2EditFieldLabel             matlab.ui.control.Label
+        XLE2EditField                  matlab.ui.control.NumericEditField
+        HeightEditFieldLabel           matlab.ui.control.Label
+        FinHeightEditField             matlab.ui.control.NumericEditField
+        ThicknessEditFieldLabel        matlab.ui.control.Label
+        FinThicknessEditField          matlab.ui.control.NumericEditField
+        LMaxEditFieldLabel             matlab.ui.control.Label
+        LMaxEditField                  matlab.ui.control.NumericEditField
+        FlightconditionsTab            matlab.ui.container.Tab
+        AddAlphaButton                 matlab.ui.control.Button
+        UITableAlpha                   matlab.ui.control.Table
+        UITableBeta                    matlab.ui.control.Table
+        UITableMach                    matlab.ui.control.Table
+        UITableAlt                     matlab.ui.control.Table
+        AddBetaButton                  matlab.ui.control.Button
+        AddMachButton                  matlab.ui.control.Button
+        AddAltitudeButton              matlab.ui.control.Button
+        RemoveAlphaButton              matlab.ui.control.Button
+        RemoveBetaButton               matlab.ui.control.Button
+        RemoveMachButton               matlab.ui.control.Button
+        RemoveAltitudeButton           matlab.ui.control.Button
+        LocalaltitudemEditFieldLabel   matlab.ui.control.Label
+        ZLocEditField                  matlab.ui.control.NumericEditField
+        ExecDATCOMParseMatricesButton  matlab.ui.control.Button
+        Panel                          matlab.ui.container.Panel
+        RocketUIAxes                   matlab.ui.control.UIAxes
+        FinsUIAxes                     matlab.ui.control.UIAxes
     end
 
     
@@ -73,7 +76,8 @@ classdef RocketGUI_V2_exported < matlab.apps.AppBase
         BottomDist 
         FinShape
         XLe
-        XCG
+        XCGE
+        XCGF
         ZCG
         NShape 
         NPower
@@ -124,13 +128,16 @@ classdef RocketGUI_V2_exported < matlab.apps.AppBase
             plot(app.RocketUIAxes,xb,-yb,'-b');
             plot(app.RocketUIAxes,xf,yf,'-b');
             plot(app.RocketUIAxes,xf,-yf,'-b');
-            h2 = plot(app.RocketUIAxes,app.XCG,app.ZCG,'or');
-            plot(app.RocketUIAxes,app.XCG,app.ZCG,'+r');
+            h2 = plot(app.RocketUIAxes,app.XCGF,app.ZCG,'or');
+            plot(app.RocketUIAxes,app.XCGF,app.ZCG,'+r');
+            h3 = plot(app.RocketUIAxes,app.XCGE,app.ZCG,'ok');
+            plot(app.RocketUIAxes,app.XCGE,app.ZCG,'+k');
+            
             app.RocketUIAxes.YLim = [-app.D*2-3 app.D*2+3];
             app.RocketUIAxes.XLim = [-5 (5+app.RocketLength)];
             xlabel(app.RocketUIAxes, 'X [cm]')
             ylabel(app.RocketUIAxes, 'Z [cm]')
-            legend([h1,h2],'Rocket','CG');
+            legend([h1,h2,h3],'Rocket','CG Full','CG Empty');
             axis(app.RocketUIAxes,'equal');
             grid(app.RocketUIAxes,'on');
             title(app.RocketUIAxes,'Rocket Geometry')
@@ -161,6 +168,159 @@ classdef RocketGUI_V2_exported < matlab.apps.AppBase
             hold(app.FinsUIAxes,'off');
         end
         
+        
+        function Geometry = createGeometryStrcut(app,xcgtype)
+            Geometry.Chord1 = app.FinMaxChord;
+            Geometry.Chord2 = app.FinMinChord;
+            Geometry.Height = app.FinHeight;
+            Geometry.shape = datcom.shape;
+            Geometry.D = app.D;
+            Geometry.Lnose = app.NoseLength;
+            Geometry.Lcenter = app.RocketLength-app.NoseLength;
+            Geometry.Npanel = app.NFins;
+            Geometry.OgType = app.NShape;
+            if strcp(xcgtype,'full')
+                Geometry.xcg = app.XCGF;
+            else
+                Geometry.xcg = app.XCGE;
+            end
+        end
+        
+        function str = createFor005(app,xcgtype)
+            % Print DATCOM output
+
+            %%%% FLIGHT CONDITIONS
+            Nalpha = length(app.UITableAlpha.Data);
+            Nbeta = length(app.UITableBeta.Data);
+            Nmach = length(app.UITableMach.Data);
+            Nalt = length(app.UITableAlt.Data);
+            Alpha = app.UITableAlpha.Data;
+            Beta = app.UITableBeta.Data;
+            Mach = app.UITableMach.Data;
+            Alt = app.UITableAlt.Data + app.ZLocEditField.Value;
+            
+            str = sprintf('$FLTCON\n');
+            %%%% Beta
+            str = sprintf('%s  BETA = ',str);
+            str = sprintf('%s%.2f,\n', str,Beta(1));
+            %%%% Alt
+            str = sprintf('%s  ALT = ',str);
+            str = sprintf('%s%d', str,Nmach);
+            str = sprintf('%s*',str);
+            str = sprintf('%s%d.,\n',str, Alt(1));
+            %%%% Nmach
+            str = sprintf('%s  NMACH = ',str);
+            str = sprintf('%s%d., \n',str, Nmach);
+            %%%% Mach
+            str=sprintf('%s  MACH = ',str);
+            if Nmach>11
+                for M = 1:11
+                    str = sprintf('%s%.2f',str,Mach(M));
+                    str= sprintf('%s,',str);
+                end
+                str=sprintf('%s\n  MACH(12) = %.2f,',str,Mach(12));
+                for M = 13:Nmach
+                    str=sprintf('%s%.2f',str,Mach(M));
+                    str=sprintf('%s,',str);
+                end
+            else
+                for M = 1:Nmach
+                    str = sprintf('%s%.2f',str,Mach(M));
+                    str= sprintf('%s,',str);
+                end
+            end
+            str=sprintf('%s\n',str);
+            %%% Nalpha
+            str = sprintf('%s  NALPHA = ',str);
+            str = sprintf('%s%d., \n',str, Nalpha);
+            %%% Alpha
+            str = sprintf('%s  ALPHA = ',str);
+            for a = 1:min(Nalpha,9)
+                str=sprintf('%s%.1f,', str,Alpha(a));
+            end
+            if Nalpha >=10
+                str=sprintf('%s \n  ALPHA(10) = ',str);
+                for a =     10:Nalpha
+                    str=sprintf('%s%.1f,', str,Alpha(a));
+                end 
+            end
+            str=sprintf('%s$\n',str);
+            
+            %%%%%% GEOMETRY
+            str = sprintf("%s$REFQ\n",str);
+            if strcmp(xcgtype,'full')
+                str = sprintf('%s  XCG=%4.3f,\n',str,app.XCGF/100);
+            elseif strcmp(xcgtype,'empty')
+                str = sprintf('%s  XCG=%4.3f,\n',str,app.XCGE/100);
+            end
+            str = sprintf('%s  SREF=%6.5f,\n',str,pi*(app.D/100)^2/4);
+            str = sprintf('%s  LREF=%4.3f,\n',str,app.D/100);
+            str = sprintf('%s  LATREF=%4.3f,$\n',str,app.D/100);
+            str = sprintf('%s$AXIBOD\n',str);
+            str = sprintf('%s  TNOSE=%s,\n',str,app.NShape);
+            if strcmp(app.NShape,'POWER')
+                str = sprintf('%s POWER=%4.3f,\n',str,app.NPower);
+            end
+            str = sprintf('%s  LNOSE=%4.3f,\n',str,app.NoseLength/100);
+            str = sprintf('%s  DNOSE=%4.3f,\n',str,app.D/100);
+            str = sprintf('%s  LCENTR=%4.3f,\n',str,(app.RocketLength-app.NoseLength)/100);
+            str = sprintf('%s  DCENTR=%4.3f,\n',str,app.D/100);
+            str = sprintf('%s  DEXIT=0.,\n',str);
+            str = sprintf('%s  BASE=.FALSE.,$\n',str);
+
+            str = sprintf('%s$FINSET1\n',str);
+            if app.NFins == 4 || app.NFins == 3
+                str = sprintf('%s  NPANEL=%d.0,\n',str,app.NFins);
+                angles = (0:1:app.NFins-1).*360/app.NFins;
+                strphi = sprintf('PHIF=');
+                for k=1:app.NFins
+                    strphi = sprintf('%s%d.0,',strphi,angles(k));
+                end 
+                strphi=strcat(strphi,'\n');
+            else
+                % Do nothing
+            end
+            str = sprintf('%s  %s',str,strphi);
+            str = sprintf('%s  XLE=%4.3f,%4.3f,\n',str,app.XLe(1)/100,app.XLe(2)/100);
+            str = sprintf('%s  LER=2*0.003,\n',str);
+%             str = sprintf('%s STA=0.0,\n',str);
+            str = sprintf('%s  SSPAN=%4.3f,%4.3f,\n',str,app.D/2/100,(app.D/2+app.FinHeight)/100);
+            str = sprintf('%s  CHORD=%4.3f,%4.3f,\n',str,app.FinMaxChord/100,app.FinMinChord/100);
+            str = sprintf('%s  SECTYP=HEX,\n',str);
+            str = sprintf('%s  ZUPPER=%4.4f,%4.4f,\n',str,app.FinT/2/app.FinMaxChord,app.FinT/2/app.FinMinChord);
+            str = sprintf('%s  LMAXU=%4.4f,%4.4f,\n',str,app.LmaxMaxChord/app.FinMaxChord,...
+                app.LmaxMinChord/app.FinMinChord);
+            str = sprintf('%s  LFLATU=%.4f,%.4f,$\n',str,app.LflatMaxChord/app.FinMaxChord,...
+                app.LflatMinChord/app.FinMinChord);
+            
+            %%%%%%%%%%%% Options
+            str=sprintf('%sDERIV RAD\n',str);
+            str=sprintf('%sDIM M\n',str);
+            str=sprintf('%sDAMP \n',str);
+            str=sprintf('%sSAVE \n',str);
+            str=sprintf('%sNEXT CASE \n',str);
+            
+            %%%%%%%%%%%% Cases
+            for A = 1:Nalt
+                for B = 1:Nbeta
+                    if A == 1 && B == 1
+                    else
+                        str=sprintf('%s $FLTCON \n',str);
+                        str=sprintf('%s  BETA = ',str);
+                        str=sprintf('%s%.1f, \n', str,Beta(B));
+                        str=sprintf('%s  ALT = ',str);
+                        str=sprintf('%s%d', str, Nmach);
+                        str=sprintf('%s*',str);
+                        str=sprintf('%s%d.,$ \n',str, Alt(A));
+                        str=sprintf('%sDERIV RAD\n',str);
+                        str=sprintf('%sDIM M\n',str);
+                        str=sprintf('%sDAMP\n',str);
+                        str=sprintf('%sSAVE\n',str);
+                        str=sprintf('%sNEXT CASE\n',str);
+                    end
+                end
+            end
+        end
     end
     
 
@@ -169,26 +329,28 @@ classdef RocketGUI_V2_exported < matlab.apps.AppBase
 
         % Code that executes after component creation
         function startupFcn(app)
-            app.D = 9;
-            app.NFins = 4;
-            app.RocketLength = 202;
-            app.NoseLength = 30;
+            app.D = 15;
+            app.NFins = 3;
+            app.RocketLength = 268;
+            app.NoseLength = 28;
             app.BodyLength = app.RocketLength - app.NoseLength;
-            app.FinMaxChord = 16;
-            app.FinMinChord = 8;
-            app.FinHeight = 7;
+            app.FinMaxChord = 26;
+            app.FinMinChord = 13;
+            app.FinHeight = 15;
             app.BottomDist = 0.0;
-            app.XLe = app.RocketLength - app.BottomDist - [app.FinMaxChord ; ...
-                app.FinMaxChord-(app.FinMaxChord-app.FinMinChord)/2];
-            app.XCG = 117;
+%             app.XLe = app.RocketLength - app.BottomDist - [app.FinMaxChord ; ...
+%                 app.FinMaxChord-(app.FinMaxChord-app.FinMinChord)/2];
+            app.XLe = [app.RocketLength-app.FinMaxChord app.RocketLength];
+            app.XCGF = 163;
+            app.XCGE = 150;
             app.ZCG = 0;
             app.NShape = 'KARMAN';
             app.NPower = 0.5;
             
             % Fin cross section
             app.FinShape = 'TRAPEZOID';
-            app.FinT = 0.6;
-            app.LDiagSection = 0.3; % Horizontal length of diagonal part of the section
+            app.FinT = 0.3;
+            app.LDiagSection = 0.15; % Horizontal length of diagonal part of the section
             app.LmaxMaxChord = app.LDiagSection;
             app.LmaxMinChord = app.LDiagSection;
             app.LflatMinChord = app.FinMinChord-2*app.LDiagSection;
@@ -199,7 +361,8 @@ classdef RocketGUI_V2_exported < matlab.apps.AppBase
             app.DiameterEditField.Value = app.D;
             app.NumberoffinsEditField.Value = app.NFins;
             app.NoseLengthEditField.Value = app.NoseLength;
-            app.XCGEditField.Value = app.XCG;
+            app.XCGFullEditField.Value = app.XCGF;
+            app.XCGEmptyEditField.Value = app.XCGE;
             app.ZCGEditField.Value = app.ZCG;
             app.PowerEditField.Value = app.NPower;
             app.NoseshapeDropDown.Value = app.NShape;
@@ -215,10 +378,16 @@ classdef RocketGUI_V2_exported < matlab.apps.AppBase
             updatePlot(app);
             
              % Initialise UITableAlpha
-            app.UITableAlpha.Data = [-10 -5 -2 -1 -0.5 0.5 1 2 5 10]';
-            app.UITableBeta.Data = [-1 -0.5 0.5 1]';
-            app.UITableMach.Data = [0.1 0.2 0.3 0.4 0.5 0.6 0.7 0.8 ]';
-            app.UITableAlt.Data = [0 300 600 900 1200 1500 2000 2500 3000 3500]';
+            app.UITableAlpha.Data = [-25 -15 -10 -7.5 -5.0 -2 -1 -0.5 -0.1 ...
+                0.1 0.5 1 2 5 7.5 10 15 25]';
+            app.UITableBeta.Data = [-0.5 -0.1 0.1 0.5]';
+            app.UITableMach.Data = [0.05 0.10 0.15 0.20 0.25 0.30 0.35 ...
+                0.40 0.45 0.50 0.55 0.60 0.65 0.70 0.75 0.80 0.85 0.90 ...
+                0.95 1.00]';
+            app.UITableAlt.Data = [0 150 300 600 900 1200 1500 2000 2500 3000 3500]';
+            
+            % Local altitude 
+            app.ZLocEditField.Value = 109;
             
             app.PowerEditField.Enable = false;
         end
@@ -261,8 +430,9 @@ classdef RocketGUI_V2_exported < matlab.apps.AppBase
         % FinHeightEditField, FinThicknessEditField, LMaxEditField, 
         % MaxChordEditField, MinChordEditField, 
         % NoseLengthEditField, NumberoffinsEditField, 
-        % PowerEditField, RocketLengthEditField, XCGEditField, 
-        % XLE1EditField, XLE2EditField, ZCGEditField
+        % PowerEditField, RocketLengthEditField, XCGEmptyEditField, 
+        % XCGFullEditField, XLE1EditField, XLE2EditField, 
+        % ZCGEditField
         function TextBoxEdit(app, event)
             src = event.Source;
             value = src.Value;
@@ -344,12 +514,19 @@ classdef RocketGUI_V2_exported < matlab.apps.AppBase
                     end
                 case 'FinHeight'
                     app.FinHeight = value;
-                case 'XCG'
+                case 'XCGF'
                     if value > app.RocketLength || value < 0
                         msgbox('Invalid value of XCG. Cannot be > than rocket length or < 0','Warning');
-                        src.Value = app.XCG;
+                        src.Value = app.XCGF;
                     else
-                        app.XCG = value;
+                        app.XCGF = value;
+                    end
+                case 'XCGE'
+                    if value > app.RocketLength || value < 0
+                        msgbox('Invalid value of XCG. Cannot be > than rocket length or < 0','Warning');
+                        src.Value = app.XCGE;
+                    else
+                        app.XCGE = value;
                     end
                 case 'ZCG'
                     if abs(value) >= app.D/2
@@ -496,145 +673,56 @@ classdef RocketGUI_V2_exported < matlab.apps.AppBase
             app.UITableAlt.Data = sortedValues;
         end
 
-        % Button pushed function: PrintDATCOMtextButton, 
-        % SaveDATCOMfileButton
+        % Button pushed function: ExecDATCOMParseMatricesButton
         function PrintDATCOMtextButtonPushed(app, event)
-            % Print DATCOM output
-            
-            %%%% FLIGHT CONDITIONS
-            Nalpha = length(app.UITableAlpha.Data);
-            Nbeta = length(app.UITableBeta.Data);
-            Nmach = length(app.UITableMach.Data);
-            Nalt = length(app.UITableAlt.Data);
-            Alpha = app.UITableAlpha.Data;
-            Beta = app.UITableBeta.Data;
-            Mach = app.UITableMach.Data;
-            Alt = app.UITableAlt.Data;
-            
-            str = sprintf('$FLTCON\n');
-            %%%% Beta
-            str = sprintf('%s  BETA = ',str);
-            str = sprintf('%s%.2f,\n', str,Beta(1));
-            %%%% Alt
-            str = sprintf('%s ALT = ',str);
-            str = sprintf('%s%d', str,Nmach);
-            str = sprintf('%s*',str);
-            str = sprintf('%s%d.,\n',str, Alt(1));
-            %%%% Nmach
-            str = sprintf('%s  NMACH = ',str);
-            str = sprintf('%s%d., \n',str, Nmach);
-            %%%% Mach
-            str=sprintf('%s  MACH = ',str);
-            if Nmach>11
-                for M = 1:11
-                    str=sprintf('%s%.2f,',str,Mach(M));
-                end
-                str=sprintf(' \n %s MACH(12) = ',str);
-                for M = 12:Nmach
-                    str=sprintf('%s%.2f',str,Mach(M));
-                    str=sprintf('%s,',str);
-                end
-            else
-                for M = 1:Nmach
-                    str = sprintf('%s%.2f',str,Mach(M));
-                    str= sprintf('%s,',str);
-                end
-            end
-            str=sprintf('%s\n',str);
-            %%% Nalpha
-            str = sprintf('%s  NALPHA = ',str);
-            str = sprintf('%s%d., \n',str, Nalpha);
-            %%% Alpha
-            str = sprintf('%s  ALPHA = ',str);
-            for a = 1:min(Nalpha,9)
-                str=sprintf('%s%.1f,', str,Alpha(a));
-            end
-            if Nalpha >=10
-                str=sprintf('%s \n  ALPHA(10) = ',str);
-                for a =     10:Nalpha
-                    str=sprintf('%s%.1f,', str,Alpha(a));
-                end 
-            end
-            str=sprintf('%s$\n',str);
-            
-            %%%%%% GEOMETRY
-            str = sprintf("%s$REFQ\n",str);
-            str = sprintf('%s XCG=%4.3f,\n',str,app.XCG/100);
-            str = sprintf('%s SREF=%6.4f,\n',str,pi*(app.D/100)^2/4);
-            str = sprintf('%s LREF=%4.3f,\n',str,app.D/100);
-            str = sprintf('%s LATREF=%4.2f,$\n',str,app.D/100);
-            str = sprintf('%s$AXIBOD\n',str);
-            str = sprintf('%s TNOSE=%s,\n',str,app.NShape);
-            if strcmp(app.NShape,'POWER')
-                str = sprintf('%s POWER=%4.3f,\n',str,app.NPower);
-            end
-            str = sprintf('%s LNOSE=%4.2f,\n',str,app.NoseLength/100);
-            str = sprintf('%s DNOSE=%4.2f,\n',str,app.D/100);
-            str = sprintf('%s LCENTR=%4.2f,\n',str,(app.RocketLength-app.NoseLength)/100);
-            str = sprintf('%s DCENTR=%4.2f,\n',str,app.D/100);
-            str = sprintf('%s DEXIT=%4.2f,\n',str,app.D/100);
-            str = sprintf('%s BASE=.FALSE.,$\n',str);
-            str = sprintf('%s$FINSET1\n',str);
-            if app.NFins == 4 || app.NFins == 3
-                str = sprintf('%s NPANEL=%d.0,\n',str,app.NFins);
-                angles = (0:1:app.NFins-1).*360/app.NFins;
-                strphi = sprintf('%s PHIF=');
-                for k=1:app.NFins
-                    strphi = sprintf('%s%d.0,',strphi,angles(k));
-                end 
-                strphi=strcat('PHIF=',strphi,'\n');
-            else
-                % Do nothing
-            end
-            str = sprintf('%s %s',str,strphi);
-            str = sprintf('%s XLE=%4.3f,%4.3f,\n',str,app.XLe(1)/100,app.XLe(2)/100);
-            str = sprintf('%s LER=2*0.0025,\n',str);
-            str = sprintf('%s STA=0.0,\n',str);
-            str = sprintf('%s SSPAN=%4.3f,%4.3f,\n',str,app.D/2/100,(app.D/2+app.FinHeight)/100);
-            str = sprintf('%s CHORD=%4.3f,%4.3f,\n',str,app.FinMaxChord/100,app.FinMinChord/100);
-            str = sprintf('%s SECTYP=HEX,\n',str);
-            str = sprintf('%s ZUPPER=%4.4f,%4.4f,\n',str,app.FinT/2/app.FinMaxChord,app.FinT/2/app.FinMinChord);
-            str = sprintf('%s LMAXU=%4.4f,%4.4f,\n',str,app.LmaxMaxChord/app.FinMaxChord,...
-                app.LmaxMinChord/app.FinMinChord);
-            str = sprintf('%s LFLATU=%.4f,%.4f,$\n',str,app.LflatMaxChord/app.FinMaxChord,...
-                app.LflatMinChord/app.FinMinChord);
-            
-            %%%%%%%%%%%% Options
-            str=sprintf('%sDERIV RAD\n',str);
-            str=sprintf('%sDIM M\n',str);
-            str=sprintf('%sDAMP \n',str);
-            str=sprintf('%sSAVE \n',str);
-            str=sprintf('%sNEXT CASE \n',str);
-            
-            %%%%%%%%%%%% Cases
-            for A = 1:Nalt
-                for B = 1:Nbeta
-                    if A == 1 && B == 1
-                    else
-                        str=sprintf('%s $FLTCON \n',str);
-                        str=sprintf('%s  BETA = ',str);
-                        str=sprintf('%s%.1f, \n', str,Beta(B));
-                        str=sprintf('%s  ALT = ',str);
-                        str=sprintf('%s%d', str, Nmach);
-                        str=sprintf('%s*',str);
-                        str=sprintf('%s%d.,$ \n',str, Alt(A));
-                        str=sprintf('%sDERIV RAD\n',str);
-                        str=sprintf('%sDIM M\n',str);
-                        str=sprintf('%sDAMP\n',str);
-                        str=sprintf('%sSAVE\n',str);
-                        str=sprintf('%sNEXT CASE\n',str);
-                    end
-                end
-            end
-            
-            buttonPressed = event.Source.Tag;
-            if strcmp(buttonPressed,'printfor005') 
-                fprintf(str);
-            elseif strcmp(buttonPressed,'save2for005')
+
+            str = createFor005(app,'full');
+                 
+            % Check if DATCOM file exists
+            if isfile('datcom.exe') || isfile('..\..\AutoMatricesProtub\datcom.exe')
+                %%% FULL CONFIGURATION
+                str = createFor005(app,'full');
                 fid = fopen('for005.dat','w');
                 fprintf(fid,str);
                 fclose(fid);
+    
+                % Run DATCOM and create for006
+                if ismac
+                    [~,~] = system('./datcom for005.dat' );
+                else
+                    [~,~] = system('datcom.exe for005.dat' );
+                end
+                value = 0;
+                while value == 0
+                    value = exist('for006.dat','file');
+                    pause(0.01);
+                end
+                [CoeffsF, State] = datcomParser5('full');
+                
+                %%% EMPTY CONFIGURATION
+                str = createFor005(app,'empty');
+                fid = fopen('for005.dat','w');
+                fprintf(fid,str);
+                fclose(fid);
+    
+                % Run DATCOM and create for006
+                if ismac
+                    [~,~] = system('./datcom for005.dat' );
+                else
+                    [~,~] = system('datcom.exe for005.dat' );
+                end
+                value = 0;
+                while value == 0
+                    value = exist('for006.dat','file');
+                    pause(0.01);
+                end
+                [CoeffsF, State] = datcomParser5('empty');
+    
+            else
+                % File does not exist.
+                error('datcom.exe does not exists. Copy it in the current folder')
             end
+                
         end
 
         % Cell selection callback: UITableAlpha
@@ -669,6 +757,11 @@ classdef RocketGUI_V2_exported < matlab.apps.AppBase
             indices = event.Indices;
             app.selectedAlt=indices(1);
         end
+
+        % Callback function
+        function ZLocEditFieldValueChanged(app, event)
+
+        end
     end
 
     % Component initialization
@@ -693,7 +786,7 @@ classdef RocketGUI_V2_exported < matlab.apps.AppBase
             % Create TabGroup
             app.TabGroup = uitabgroup(app.UIFigure);
             app.TabGroup.SelectionChangedFcn = createCallbackFcn(app, @TabGroupSelectionChanged, true);
-            app.TabGroup.Position = [507 147 516 500];
+            app.TabGroup.Position = [507 77 516 570];
 
             % Create GeometryTab
             app.GeometryTab = uitab(app.TabGroup);
@@ -702,12 +795,12 @@ classdef RocketGUI_V2_exported < matlab.apps.AppBase
             % Create GeneralparametersPanel
             app.GeneralparametersPanel = uipanel(app.GeometryTab);
             app.GeneralparametersPanel.Title = 'General parameters';
-            app.GeneralparametersPanel.Position = [19 301 413 155];
+            app.GeneralparametersPanel.Position = [19 337 413 189];
 
             % Create NumberoffinsEditFieldLabel
             app.NumberoffinsEditFieldLabel = uilabel(app.GeneralparametersPanel);
             app.NumberoffinsEditFieldLabel.HorizontalAlignment = 'right';
-            app.NumberoffinsEditFieldLabel.Position = [3 14 84 22];
+            app.NumberoffinsEditFieldLabel.Position = [213 108 84 22];
             app.NumberoffinsEditFieldLabel.Text = 'Number of fins';
 
             % Create NumberoffinsEditField
@@ -715,52 +808,53 @@ classdef RocketGUI_V2_exported < matlab.apps.AppBase
             app.NumberoffinsEditField.Limits = [0 Inf];
             app.NumberoffinsEditField.ValueChangedFcn = createCallbackFcn(app, @TextBoxEdit, true);
             app.NumberoffinsEditField.Tag = 'NFins';
-            app.NumberoffinsEditField.Position = [90 14 100 22];
+            app.NumberoffinsEditField.Position = [300 108 100 22];
             app.NumberoffinsEditField.Value = 4;
 
-            % Create XCGEditFieldLabel
-            app.XCGEditFieldLabel = uilabel(app.GeneralparametersPanel);
-            app.XCGEditFieldLabel.HorizontalAlignment = 'right';
-            app.XCGEditFieldLabel.Position = [262 105 32 22];
-            app.XCGEditFieldLabel.Text = 'XCG';
+            % Create XCGFullEditFieldLabel
+            app.XCGFullEditFieldLabel = uilabel(app.GeneralparametersPanel);
+            app.XCGFullEditFieldLabel.Tag = 'XCGF';
+            app.XCGFullEditFieldLabel.HorizontalAlignment = 'right';
+            app.XCGFullEditFieldLabel.Position = [31 46 54 22];
+            app.XCGFullEditFieldLabel.Text = 'XCG Full';
 
-            % Create XCGEditField
-            app.XCGEditField = uieditfield(app.GeneralparametersPanel, 'numeric');
-            app.XCGEditField.Limits = [0 Inf];
-            app.XCGEditField.ValueChangedFcn = createCallbackFcn(app, @TextBoxEdit, true);
-            app.XCGEditField.Tag = 'XCG';
-            app.XCGEditField.Position = [300 105 100 22];
-            app.XCGEditField.Value = 117;
+            % Create XCGFullEditField
+            app.XCGFullEditField = uieditfield(app.GeneralparametersPanel, 'numeric');
+            app.XCGFullEditField.Limits = [0 Inf];
+            app.XCGFullEditField.ValueChangedFcn = createCallbackFcn(app, @TextBoxEdit, true);
+            app.XCGFullEditField.Tag = 'XCG';
+            app.XCGFullEditField.Position = [91 46 100 22];
+            app.XCGFullEditField.Value = 117;
 
             % Create ZCGEditFieldLabel
             app.ZCGEditFieldLabel = uilabel(app.GeneralparametersPanel);
             app.ZCGEditFieldLabel.HorizontalAlignment = 'right';
-            app.ZCGEditFieldLabel.Position = [263 74 31 22];
+            app.ZCGEditFieldLabel.Position = [50 14 31 22];
             app.ZCGEditFieldLabel.Text = 'ZCG';
 
             % Create ZCGEditField
             app.ZCGEditField = uieditfield(app.GeneralparametersPanel, 'numeric');
             app.ZCGEditField.ValueChangedFcn = createCallbackFcn(app, @TextBoxEdit, true);
             app.ZCGEditField.Tag = 'ZCG';
-            app.ZCGEditField.Position = [300 74 100 22];
+            app.ZCGEditField.Position = [91 14 100 22];
 
             % Create NoseshapeDropDownLabel
             app.NoseshapeDropDownLabel = uilabel(app.GeneralparametersPanel);
             app.NoseshapeDropDownLabel.HorizontalAlignment = 'right';
-            app.NoseshapeDropDownLabel.Position = [18 45 70 22];
+            app.NoseshapeDropDownLabel.Position = [5 77 70 22];
             app.NoseshapeDropDownLabel.Text = 'Nose shape';
 
             % Create NoseshapeDropDown
             app.NoseshapeDropDown = uidropdown(app.GeneralparametersPanel);
             app.NoseshapeDropDown.Items = {'KARMAN', 'POWER', 'OGIVE', 'CONICAL'};
             app.NoseshapeDropDown.ValueChangedFcn = createCallbackFcn(app, @NoseshapeDropDownValueChanged, true);
-            app.NoseshapeDropDown.Position = [92 45 100 22];
+            app.NoseshapeDropDown.Position = [92 77 100 22];
             app.NoseshapeDropDown.Value = 'KARMAN';
 
             % Create NosePowerEditFieldLabel
             app.NosePowerEditFieldLabel = uilabel(app.GeneralparametersPanel);
             app.NosePowerEditFieldLabel.HorizontalAlignment = 'right';
-            app.NosePowerEditFieldLabel.Position = [223 45 71 22];
+            app.NosePowerEditFieldLabel.Position = [224 77 71 22];
             app.NosePowerEditFieldLabel.Text = 'Nose Power';
 
             % Create PowerEditField
@@ -768,13 +862,13 @@ classdef RocketGUI_V2_exported < matlab.apps.AppBase
             app.PowerEditField.Limits = [0 Inf];
             app.PowerEditField.ValueChangedFcn = createCallbackFcn(app, @TextBoxEdit, true);
             app.PowerEditField.Tag = 'NosePower';
-            app.PowerEditField.Position = [300 45 100 22];
+            app.PowerEditField.Position = [301 77 100 22];
             app.PowerEditField.Value = 0.5;
 
             % Create DiameterEditFieldLabel
             app.DiameterEditFieldLabel = uilabel(app.GeneralparametersPanel);
             app.DiameterEditFieldLabel.HorizontalAlignment = 'right';
-            app.DiameterEditFieldLabel.Position = [240 14 54 22];
+            app.DiameterEditFieldLabel.Position = [240 139 54 22];
             app.DiameterEditFieldLabel.Text = 'Diameter';
 
             % Create DiameterEditField
@@ -782,13 +876,13 @@ classdef RocketGUI_V2_exported < matlab.apps.AppBase
             app.DiameterEditField.Limits = [0 Inf];
             app.DiameterEditField.ValueChangedFcn = createCallbackFcn(app, @TextBoxEdit, true);
             app.DiameterEditField.Tag = 'Diameter';
-            app.DiameterEditField.Position = [300 14 100 22];
+            app.DiameterEditField.Position = [300 139 100 22];
             app.DiameterEditField.Value = 9;
 
             % Create RocketLengthEditFieldLabel
             app.RocketLengthEditFieldLabel = uilabel(app.GeneralparametersPanel);
             app.RocketLengthEditFieldLabel.HorizontalAlignment = 'right';
-            app.RocketLengthEditFieldLabel.Position = [5 105 83 22];
+            app.RocketLengthEditFieldLabel.Position = [4 139 83 22];
             app.RocketLengthEditFieldLabel.Text = 'Rocket Length';
 
             % Create RocketLengthEditField
@@ -796,12 +890,12 @@ classdef RocketGUI_V2_exported < matlab.apps.AppBase
             app.RocketLengthEditField.Limits = [0 Inf];
             app.RocketLengthEditField.ValueChangedFcn = createCallbackFcn(app, @TextBoxEdit, true);
             app.RocketLengthEditField.Tag = 'RocketLength';
-            app.RocketLengthEditField.Position = [92 105 100 22];
+            app.RocketLengthEditField.Position = [91 139 100 22];
 
             % Create NoseLengthEditFieldLabel
             app.NoseLengthEditFieldLabel = uilabel(app.GeneralparametersPanel);
             app.NoseLengthEditFieldLabel.HorizontalAlignment = 'right';
-            app.NoseLengthEditFieldLabel.Position = [14 74 74 22];
+            app.NoseLengthEditFieldLabel.Position = [15 108 74 22];
             app.NoseLengthEditFieldLabel.Text = 'Nose Length';
 
             % Create NoseLengthEditField
@@ -809,12 +903,26 @@ classdef RocketGUI_V2_exported < matlab.apps.AppBase
             app.NoseLengthEditField.Limits = [0 Inf];
             app.NoseLengthEditField.ValueChangedFcn = createCallbackFcn(app, @TextBoxEdit, true);
             app.NoseLengthEditField.Tag = 'NoseLength';
-            app.NoseLengthEditField.Position = [92 74 100 22];
+            app.NoseLengthEditField.Position = [93 108 100 22];
+
+            % Create XCGEmptyEditFieldLabel
+            app.XCGEmptyEditFieldLabel = uilabel(app.GeneralparametersPanel);
+            app.XCGEmptyEditFieldLabel.HorizontalAlignment = 'right';
+            app.XCGEmptyEditFieldLabel.Position = [225 46 69 22];
+            app.XCGEmptyEditFieldLabel.Text = 'XCG Empty';
+
+            % Create XCGEmptyEditField
+            app.XCGEmptyEditField = uieditfield(app.GeneralparametersPanel, 'numeric');
+            app.XCGEmptyEditField.Limits = [0 Inf];
+            app.XCGEmptyEditField.ValueChangedFcn = createCallbackFcn(app, @TextBoxEdit, true);
+            app.XCGEmptyEditField.Tag = 'XCGE';
+            app.XCGEmptyEditField.Position = [300 46 100 22];
+            app.XCGEmptyEditField.Value = 127;
 
             % Create FinsPanel
             app.FinsPanel = uipanel(app.GeometryTab);
             app.FinsPanel.Title = 'Fins';
-            app.FinsPanel.Position = [22 39 413 246];
+            app.FinsPanel.Position = [20 47 413 246];
 
             % Create ShapeDropDownLabel
             app.ShapeDropDownLabel = uilabel(app.FinsPanel);
@@ -934,7 +1042,7 @@ classdef RocketGUI_V2_exported < matlab.apps.AppBase
             % Create AddAlphaButton
             app.AddAlphaButton = uibutton(app.FlightconditionsTab, 'push');
             app.AddAlphaButton.ButtonPushedFcn = createCallbackFcn(app, @AddFLTCOND, true);
-            app.AddAlphaButton.Position = [33 55 100 22];
+            app.AddAlphaButton.Position = [33 125 100 22];
             app.AddAlphaButton.Text = 'Add Alpha';
 
             % Create UITableAlpha
@@ -945,7 +1053,7 @@ classdef RocketGUI_V2_exported < matlab.apps.AppBase
             app.UITableAlpha.RowStriping = 'off';
             app.UITableAlpha.CellEditCallback = createCallbackFcn(app, @UITableAlphaCellEdit, true);
             app.UITableAlpha.CellSelectionCallback = createCallbackFcn(app, @UITableAlphaCellSelection, true);
-            app.UITableAlpha.Position = [33 87 100 369];
+            app.UITableAlpha.Position = [33 157 100 369];
 
             % Create UITableBeta
             app.UITableBeta = uitable(app.FlightconditionsTab);
@@ -955,7 +1063,7 @@ classdef RocketGUI_V2_exported < matlab.apps.AppBase
             app.UITableBeta.RowStriping = 'off';
             app.UITableBeta.CellEditCallback = createCallbackFcn(app, @UITableBetaCellEdit, true);
             app.UITableBeta.CellSelectionCallback = createCallbackFcn(app, @UITableBetaCellSelection, true);
-            app.UITableBeta.Position = [155 87 98 369];
+            app.UITableBeta.Position = [155 157 98 369];
 
             % Create UITableMach
             app.UITableMach = uitable(app.FlightconditionsTab);
@@ -965,7 +1073,7 @@ classdef RocketGUI_V2_exported < matlab.apps.AppBase
             app.UITableMach.RowStriping = 'off';
             app.UITableMach.CellEditCallback = createCallbackFcn(app, @UITableMachCellEdit, true);
             app.UITableMach.CellSelectionCallback = createCallbackFcn(app, @UITableMachCellSelection, true);
-            app.UITableMach.Position = [270 87 100 369];
+            app.UITableMach.Position = [270 157 100 369];
 
             % Create UITableAlt
             app.UITableAlt = uitable(app.FlightconditionsTab);
@@ -975,65 +1083,68 @@ classdef RocketGUI_V2_exported < matlab.apps.AppBase
             app.UITableAlt.RowStriping = 'off';
             app.UITableAlt.CellEditCallback = createCallbackFcn(app, @UITableAltCellEdit, true);
             app.UITableAlt.CellSelectionCallback = createCallbackFcn(app, @UITableAltCellSelection, true);
-            app.UITableAlt.Position = [393 87 100 369];
+            app.UITableAlt.Position = [393 157 100 369];
 
             % Create AddBetaButton
             app.AddBetaButton = uibutton(app.FlightconditionsTab, 'push');
             app.AddBetaButton.ButtonPushedFcn = createCallbackFcn(app, @AddFLTCOND, true);
-            app.AddBetaButton.Position = [153 55 100 22];
+            app.AddBetaButton.Position = [153 125 100 22];
             app.AddBetaButton.Text = 'Add Beta';
 
             % Create AddMachButton
             app.AddMachButton = uibutton(app.FlightconditionsTab, 'push');
             app.AddMachButton.ButtonPushedFcn = createCallbackFcn(app, @AddFLTCOND, true);
-            app.AddMachButton.Position = [270 55 100 22];
+            app.AddMachButton.Position = [270 125 100 22];
             app.AddMachButton.Text = 'Add Mach';
 
             % Create AddAltitudeButton
             app.AddAltitudeButton = uibutton(app.FlightconditionsTab, 'push');
             app.AddAltitudeButton.ButtonPushedFcn = createCallbackFcn(app, @AddFLTCOND, true);
-            app.AddAltitudeButton.Position = [393 55 100 22];
+            app.AddAltitudeButton.Position = [393 125 100 22];
             app.AddAltitudeButton.Text = 'Add Altitude';
 
             % Create RemoveAlphaButton
             app.RemoveAlphaButton = uibutton(app.FlightconditionsTab, 'push');
             app.RemoveAlphaButton.ButtonPushedFcn = createCallbackFcn(app, @RemoveFLTCOND, true);
-            app.RemoveAlphaButton.Position = [34 18 100 22];
+            app.RemoveAlphaButton.Position = [34 88 100 22];
             app.RemoveAlphaButton.Text = 'Remove Alpha';
 
             % Create RemoveBetaButton
             app.RemoveBetaButton = uibutton(app.FlightconditionsTab, 'push');
             app.RemoveBetaButton.ButtonPushedFcn = createCallbackFcn(app, @RemoveFLTCOND, true);
-            app.RemoveBetaButton.Position = [153 18 100 22];
+            app.RemoveBetaButton.Position = [153 88 100 22];
             app.RemoveBetaButton.Text = 'Remove Beta';
 
             % Create RemoveMachButton
             app.RemoveMachButton = uibutton(app.FlightconditionsTab, 'push');
             app.RemoveMachButton.ButtonPushedFcn = createCallbackFcn(app, @RemoveFLTCOND, true);
-            app.RemoveMachButton.Position = [270 18 100 22];
+            app.RemoveMachButton.Position = [270 88 100 22];
             app.RemoveMachButton.Text = 'Remove Mach';
 
             % Create RemoveAltitudeButton
             app.RemoveAltitudeButton = uibutton(app.FlightconditionsTab, 'push');
             app.RemoveAltitudeButton.ButtonPushedFcn = createCallbackFcn(app, @RemoveFLTCOND, true);
-            app.RemoveAltitudeButton.Position = [391 18 104 22];
+            app.RemoveAltitudeButton.Position = [391 88 104 22];
             app.RemoveAltitudeButton.Text = 'Remove Altitude';
 
-            % Create PrintDATCOMtextButton
-            app.PrintDATCOMtextButton = uibutton(app.UIFigure, 'push');
-            app.PrintDATCOMtextButton.ButtonPushedFcn = createCallbackFcn(app, @PrintDATCOMtextButtonPushed, true);
-            app.PrintDATCOMtextButton.Tag = 'printfor005';
-            app.PrintDATCOMtextButton.FontWeight = 'bold';
-            app.PrintDATCOMtextButton.Position = [777 95 153 22];
-            app.PrintDATCOMtextButton.Text = 'Print DATCOM text';
+            % Create LocalaltitudemEditFieldLabel
+            app.LocalaltitudemEditFieldLabel = uilabel(app.FlightconditionsTab);
+            app.LocalaltitudemEditFieldLabel.HorizontalAlignment = 'right';
+            app.LocalaltitudemEditFieldLabel.Position = [37 34 96 22];
+            app.LocalaltitudemEditFieldLabel.Text = 'Local altitude [m]';
 
-            % Create SaveDATCOMfileButton
-            app.SaveDATCOMfileButton = uibutton(app.UIFigure, 'push');
-            app.SaveDATCOMfileButton.ButtonPushedFcn = createCallbackFcn(app, @PrintDATCOMtextButtonPushed, true);
-            app.SaveDATCOMfileButton.Tag = 'save2for005';
-            app.SaveDATCOMfileButton.FontWeight = 'bold';
-            app.SaveDATCOMfileButton.Position = [613 95 152 22];
-            app.SaveDATCOMfileButton.Text = 'Save DATCOM file';
+            % Create ZLocEditField
+            app.ZLocEditField = uieditfield(app.FlightconditionsTab, 'numeric');
+            app.ZLocEditField.Limits = [0 Inf];
+            app.ZLocEditField.Position = [148 34 100 22];
+
+            % Create ExecDATCOMParseMatricesButton
+            app.ExecDATCOMParseMatricesButton = uibutton(app.UIFigure, 'push');
+            app.ExecDATCOMParseMatricesButton.ButtonPushedFcn = createCallbackFcn(app, @PrintDATCOMtextButtonPushed, true);
+            app.ExecDATCOMParseMatricesButton.Tag = 'save2for005';
+            app.ExecDATCOMParseMatricesButton.FontWeight = 'bold';
+            app.ExecDATCOMParseMatricesButton.Position = [638 42 200 22];
+            app.ExecDATCOMParseMatricesButton.Text = 'Exec DATCOM & Parse Matrices';
 
             % Create Panel
             app.Panel = uipanel(app.UIFigure);
