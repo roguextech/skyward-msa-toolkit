@@ -46,7 +46,7 @@ Release date: 14/12/2020
 % ROCKET STATE
 x_rocket = Y(1);
 y_rocket = Y(2);
-z_rocket = Y(3);
+z_rocket = Y(3)
 u_rocket = Y(4);
 v_rocket = Y(5);
 w_rocket = Y(6);
@@ -214,27 +214,13 @@ end
 %% PARACHUTE FORCES
 % computed in the NED-frame reference system
 S_para = settings.para(para).S;                                               % [m^2]   Surface
-if para ~= 1
-    if t < t0p(para) + settings.para(para).OverExp_t                              % Linear interpolation for the over-expansion phase
-        SCD_para = (settings.para(para).S*settings.para(para).CD)/...
-            (settings.para(para).OverExp_t) * (t-t0p(para));
-        D_para = 0.5*rho*V_norm_para^2*SCD_para*t_vers';                          % [N] Drag vector
-    else
-        CD_para = settings.para(para).CD;                                         % [/] Parachute Drag Coefficient
-        D_para = 0.5*rho*V_norm_para^2*S_para*CD_para*t_vers';                    % [N] Drag vector
-    end
-    if norm(D_para) <= norm(0.5*rho*V_norm_para^2*settings.para(para-1).S*settings.para(para-1).CD*t_vers')
-        D_para = 0.5*rho*V_norm_para^2*settings.para(para-1).S*settings.para(para-1).CD*t_vers';
-    end
+if t < t0p + settings.para(para).OverExp_t                                    % Linear interpolation for the over-expansion phase
+    SCD_para = (settings.para(para).S*settings.para(para).CD)/...
+        (settings.para(para).OverExp_t) * (t-t0p);
+    D_para = 0.5*rho*V_norm_para^2*SCD_para*t_vers';                          % [N] Drag vector
 else
-    if t < t0p(para) + settings.para(para).OverExp_t                              % Linear interpolation for the over-expansion phase
-        SCD_para = (settings.para(para).S*settings.para(para).CD)/...
-            (settings.para(para).OverExp_t) * (t-t0p(para));
-        D_para = 0.5*rho*V_norm_para^2*SCD_para*t_vers';                          % [N] Drag vector
-    else
-        CD_para = settings.para(para).CD;                                         % [/] Parachute Drag Coefficient
-        D_para = 0.5*rho*V_norm_para^2*S_para*CD_para*t_vers';                    % [N] Drag vector
-    end
+    CD_para = settings.para(para).CD;                                         % [/] Parachute Drag Coefficient
+    D_para = 0.5*rho*V_norm_para^2*S_para*CD_para*t_vers';                    % [N] Drag vector
 end
 
 L_para = 0.5*rho*V_norm_para^2*S_para*CL_para*n_vers';                        % [N] Lift vector

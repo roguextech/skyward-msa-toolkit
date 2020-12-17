@@ -224,7 +224,7 @@ if settings.stoch.N == 1
     %% ALTITUDE,MACH,VELOCITY,ACCELERATION(subplotted)
     figure('Name','Altitude, Mach, Velocity-Abs, Acceleration-Abs - Ascent Phase','NumberTitle','off');
     subplot(2,3,1:3)
-    h(1) = plot(Ta, za); grid on, xlabel('time [s]'), ylabel('altitude [m]');
+    h(1) = plot(Ta, za), grid on, xlabel('time [s]'), ylabel('altitude [m]');
     if not(settings.ballistic)
         for i = 1: Np
             hold on
