@@ -71,6 +71,8 @@ for i = 1:NT
         all_steps.forces.T(i) = single_step.forces.T;
         all_steps.forces.T_chord(i) = single_step.forces.T_chord;
         
+        all_steps.SCD(i) = single_step.SCD;
+        
         all_steps.accelerations.ang_acc(i, 1:3) = single_step.accelerations.ang_acc;
     end
 end

@@ -142,26 +142,33 @@ settings.control = '0%';                                            % aerobrakes
 settings.Npara = 2;
 
 % parachute 1
-settings.para(1).S = 0.4;                                          % [m^2]   Surface
-settings.para(1).mass = 0.4;                                        % [kg]   Parachute Mass
-settings.para(1).CD = 0.75;                                         % [/] Parachute Drag Coefficient
+settings.para(1).S = 0.5;                                          % [m^2]   Surface
+settings.para(1).mass = 6;                                        % [kg]   Parachute Mass
+settings.para(1).CD = 0.7;                                         % [/] Parachute Drag Coefficient
+settings.para(1).CX = 1.4;
 settings.para(1).CL = 0;                                            % [/] Parachute Lift Coefficient
+settings.para(1).m = 1;
+settings.para(1).nf = 12;
 settings.para(1).delay = 0;                                         % [s] drogue opening delay
 settings.para(1).z_cut = 300;                                       % [m] Final altitude of the parachute
-settings.para(1).ShockCord_L = 4       - 0.5;                       % [m] shock cord length
-settings.para(1).ShockCord_k = 1500;                                % [N/m^2] shock cord elastic constant
-settings.para(1).ShockCord_c = 60;                                  % [Ns/m] shock cord damping coefficient
+settings.para(1).ShockCord_L = 4       ;                       % [m] shock cord length
+settings.para(1).ShockCord_k = 1000;                                % [N/m^2] shock cord elastic constant
+settings.para(1).ShockCord_c = 0;                                  % [Ns/m] shock cord damping coefficient
 settings.para(1).OverExp_t = 0.3;                                   % [s] over-expansion time
+settings.para(1).Vexit = 5;
 
 % parachute 2
 settings.para(2).S = 10.5;                                          % [m^2]   Surface
-settings.para(2).mass = 0.8;                                        % [kg]   Parachute Mass
-settings.para(2).CD = 0.7;                                          % [/] Parachute Drag Coefficient
+settings.para(2).mass = 2;                                        % [kg]   Parachute Mass
+settings.para(2).CD = 0.6;                                          % [/] Parachute Drag Coefficient
+settings.para(2).CX = 1.2;
 settings.para(2).CL = 0;                                            % [/] Parachute Lift Coefficient
+settings.para(2).m = 1;
+settings.para(2).nf = 8.7;
 settings.para(2).z_cut = 0;                                         % [m] Final altitude of the parachute
-settings.para(2).ShockCord_L = 6       - 0.5;                       % [m] shock cord length
-settings.para(2).ShockCord_k = 1500;                                % [N/m^2] shock cord elastic constant
-settings.para(2).ShockCord_c = 60;                                  % [Ns/m] shock cord damping coefficient
+settings.para(2).ShockCord_L = 6       ;                       % [m] shock cord length
+settings.para(2).ShockCord_k = 2000;                                % [N/m^2] shock cord elastic constant
+settings.para(2).ShockCord_c = 0;                                  % [Ns/m] shock cord damping coefficient
 settings.para(2).OverExp_t = 1.5;                                   % [s] over-expansion time
 
 % % rogallo
@@ -210,9 +217,9 @@ settings.wind.input = false;
 % Wind is generated for every altitude interpolating with the coefficient defined below
 
 settings.wind.input_ground = 7; %wind magnitude at the ground [m/s]
-settings.wind.input_alt = [0 100 600 750 900 1500 2500]; %altitude vector [m]
-settings.wind.input_mult = [0 0 10 15 20 30 30]; %percentage of increasing magnitude at each altitude
-settings.wind.input_azimut = [30 30 30 30 30 30 30]; %wind azimut angle at each altitude (toward wind incoming direction) [deg]
+settings.wind.input_alt = [0 100 600 750 900 1500 2500 3500]; %altitude vector [m]
+settings.wind.input_mult = [0 0 10 15 20 30 30 30]; %percentage of increasing magnitude at each altitude
+settings.wind.input_azimut = [30 30 30 30 30 30 30 30]; %wind azimut angle at each altitude (toward wind incoming direction) [deg]
 
 
 settings.wind.input_uncertainty = [1, 1];
@@ -225,12 +232,12 @@ settings.wind.input_uncertainty = [1, 1];
 
 % Wind is generated randomly from the minimum to the maximum parameters which defines the wind.
 % Setting the same values for min and max will fix the parameters of the wind.
-settings.wind.MagMin = 3;                           % [m/s] Minimum Magnitude
-settings.wind.MagMax = 3;                          % [m/s] Maximum Magnitude
+settings.wind.MagMin = 5;                           % [m/s] Minimum Magnitude
+settings.wind.MagMax = 5;                          % [m/s] Maximum Magnitude
 settings.wind.ElMin = 0*pi/180;                     % [rad] Minimum Elevation, user input in degrees (ex. 0)
 settings.wind.ElMax = 0*pi/180;                     % [rad] Maximum Elevation, user input in degrees (ex. 0) (Max == 90 Deg)
-settings.wind.AzMin = (360)*pi/180;                   % [rad] Minimum Azimuth, user input in degrees (ex. 90)
-settings.wind.AzMax = (360)*pi/180;                   % [rad] Maximum Azimuth, user input in degrees (ex. 90)
+settings.wind.AzMin = (90)*pi/180;                   % [rad] Minimum Azimuth, user input in degrees (ex. 90)
+settings.wind.AzMax = (90)*pi/180;                   % [rad] Maximum Azimuth, user input in degrees (ex. 90)
 
 % NOTE: wind azimuth angle indications (wind directed towards):
 % 0 deg (use 360 instead of 0)  -> North
