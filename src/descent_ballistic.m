@@ -127,8 +127,6 @@ end
 alpha_value = alpha;
 beta_value = beta;
 
-
-
 %% CHOSING THE CONDITION VALUE
 % interpolation of the coefficients with the value in the nearest condition of the Coeffs matrix
 

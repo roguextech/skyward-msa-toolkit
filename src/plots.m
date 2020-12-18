@@ -20,8 +20,11 @@ if settings.stoch.N == 1
     
     %% ASCENT PLOTS
     %%% Stability Margin
-    figure('Name','Stability Margin - ascent Phase','NumberTitle','off');
-    plot(data_ascent.integration.t, -data_ascent.coeff.XCP,'.'), title('Stability margin vs time'), grid on;
+    figure('Name','Stability Margins - ascent Phase','NumberTitle','off');
+    plot(data_ascent.integration.t, -data_ascent.coeff.XCPlon, '.',...
+        data_ascent.integration.t, -data_ascent.coeff.XCPlat, '.'),
+    title('Stability margin vs time'), grid on;
+    legend('Longitudinal', 'Lateral')
     xlabel('Time [s]'); ylabel('S.M.[/]')
     
     %%% Aero Forces

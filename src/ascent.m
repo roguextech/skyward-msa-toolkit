@@ -79,7 +79,6 @@ if abs(normQ-1) > 0.1
     Q = Q/normQ;
 end
 
-
 %% ADDING WIND (supposed to be added in NED axes);
 if settings.wind.model
     
@@ -90,7 +89,6 @@ if settings.wind.model
     end
     
 elseif settings.wind.input
-    
     [uw,vw,ww] = wind_input_generator(settings,z,uncert);
 end
 
@@ -121,7 +119,6 @@ C = settings.C;                         % [m]     caliber
 g = settings.g0/(1 + (-z*1e-3/6371))^2; % [N/kg]  module of gravitational field 
 tb = settings.tb;                       % [s]     Burning Time
 
-
 if settings.stoch.N == 1
     OMEGA = settings.OMEGA;      % [rad] Elevation Angle in the launch pad
 end
@@ -135,7 +132,6 @@ Izzf = settings.Izzf;        % [kg*m^2] Inertia to z-axis
 Ixxe = settings.Ixxe;        % [kg*m^2] Inertia to x-axis
 Iyye = settings.Iyye;        % [kg*m^2] Inertia to y-axis
 Izze = settings.Izze;        % [kg*m^2] Inertia to z-axis
-
 
 %% TIME-DEPENDENTS VARIABLES
 dI = 1/tb*([Ixxf Iyyf Izzf]'-[Ixxe Iyye Izze]');
@@ -173,6 +169,7 @@ beta_value = beta;
 % interpolation of the coefficients with the value in the nearest condition of the Coeffs matrix
 
 if t >= tb && M <= 0.7
+    
     switch settings.control
         case '0%'
             c = 1;
@@ -198,7 +195,7 @@ CNA = coeffsValues(4); CN0 = coeffsValues(5); Cl = coeffsValues(6);
 Clp = coeffsValues(7); Cma = coeffsValues(8); Cm0 = coeffsValues(9);
 Cmad = coeffsValues(10); Cmq = coeffsValues(11); Cnb = coeffsValues(12);
 Cn0 = coeffsValues(13); Cnr = coeffsValues(14); Cnp = coeffsValues(15);
-XCP_value = coeffsValues(16);
+% XCP_value = coeffsValues(16);
 
 % compute CN,CY,Cm,Cn (linearized with respect to alpha and beta):
 alpha0 = angle0(1); beta0 = angle0(2);
@@ -208,7 +205,14 @@ CY = (CY0 + CYB*(beta-beta0));
 Cm = (Cm0 + Cma*(alpha-alpha0));
 Cn = (Cn0 + Cnb*(beta-beta0));
 
-%%
+XCPlon = Cm/CN;
+XCPlat = Cn/CY;
+
+if Cn == 0 && CY == 0
+    XCPlat = -5;
+end
+
+%% 
 if -z < settings.lrampa*sin(OMEGA)      % No torque on the launchpad
     
     Fg = m*g*sin(OMEGA);                % [N] force due to the gravity
@@ -226,32 +230,27 @@ if -z < settings.lrampa*sin(OMEGA)      % No torque on the launchpad
     beta_value = NaN;
     Y = 0;
     Z = 0;
-    XCP_value = NaN;
-    
+    XCPlon = NaN;
+    XCPlat = NaN;
     
     if T < Fg                           % No velocity untill T = Fg
         du = 0;
     end
     
 else
-    %% FORCES
+%% FORCES
     % first computed in the body-frame reference system
-    qdyn = 0.5*rho*V_norm^2;       % [Pa] dynamics pressure
+    qdyn = 0.5*rho*V_norm^2;            % [Pa] dynamics pressure
     qdynL_V = 0.5*rho*V_norm*S*C;
     
-    if c == 1
-        X = qdyn*S*CA;             % [N] x-body component of the aerodynamics force
-    else
-        X = qdyn*S*CA;             % [N] x-body component of the aerodynamics force
-    end
+    X = qdyn*S*CA;                      % [N] x-body component of the aerodynamics force
+    Y = qdyn*S*CY;                      % [N] y-body component of the aerodynamics force
+    Z = qdyn*S*CN;                      % [N] z-body component of the aerodynamics force
+    Fg = quatrotate(Q, [0 0 m*g])';     % [N] force due to the gravity in body frame
     
-    Y = qdyn*S*CY;                 % [N] y-body component of the aerodynamics force
-    Z = qdyn*S*CN;                 % [N] z-body component of the aerodynamics force
-    Fg = quatrotate(Q,[0 0 m*g])'; % [N] force due to the gravity in body frame
+    F = Fg +[-X+T, +Y, -Z]';            % [N] total forces vector
     
-    F = Fg +[-X+T,+Y,-Z]';         % [N] total forces vector
-    
-    %% STATE DERIVATIVES
+%% STATE DERIVATIVES
     % velocity
     du = F(1)/m-q*w+r*v;
     dv = F(2)/m-r*u+p*w;
@@ -321,5 +320,6 @@ parout.coeff.Cmq = Cmq;
 parout.coeff.Cnb = Cnb;
 parout.coeff.Cnr = Cnr;
 parout.coeff.Cnp = Cnp;
-parout.coeff.XCP = XCP_value;
+parout.coeff.XCPlon = XCPlon;
+parout.coeff.XCPlat = XCPlat;
 
