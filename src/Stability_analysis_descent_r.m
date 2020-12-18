@@ -1,8 +1,8 @@
 clc
 close all
 
-% data_ascent.m file required: run simulation before
-% linearization around staedy state (in this case line 424 of the drogue
+% data_para.m file required: run simulation before
+% linearization around steady state (in this case line 424 of the drogue
 % state vector)
 % doesn't compute line 354 double(A)
 
