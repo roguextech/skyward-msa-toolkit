@@ -8,7 +8,18 @@ addpath(path);
 format short e
 %% Load data
 run('config.m');
-% load('data_ascent.m');
+% drogue parameters
+drg.S     = settings.para(1).S;               % [m^2]  Drogue surface
+drg.mass  = settings.para(1).mass;            % [kg]   Drogue mass
+drg.CD    = settings.para(1).CD;              % [-]    Drogue drag coefficient
+drg.CX    = settings.para(1).CX;              % [-]    Drogue opening force coefficient
+drg.m     = settings.para(1).m;               % [-]    Exponent of the time surface model 
+drg.nf    = settings.para(1).nf;              % [-]    Adimensional opening time coefficient
+drg.z_cut = settings.para(1).z_cut;           % [m]    Final altitude of drogue
+drg.L     = settings.para(1).ShockCord_L;     % [m]    Drogue shock cord length
+drg.K     = settings.para(1).ShockCord_k;     % [N/m]  Shock Cord elastic constant
+drg.C     = settings.para(1).ShockCord_c;     % [Ns/m] Shock Cord damping coefficient
+drg.Vexit = settings.para(1).Vexit;           % [m/s]  Speed of nosecone extraction
 
 % ROCKET 
 Ta = data_ascent.state.T;
@@ -35,24 +46,6 @@ syms x_rocket y_rocket z_rocket u_rocket v_rocket w_rocket p_rocket q_rocket r_r
 
 
 %%
-% x_rocket = X0(1);
-% y_rocket = X0(2);
-% z_rocket = X0(3);
-% u_rocket = X0(4);
-% v_rocket = X0(5);
-% w_rocket = X0(6);
-% p_rocket = X0(7);
-% q_rocket = X0(8);
-% r_rocket = X0(9);
-% q0_rocket = X0(10);
-% q1_rocket = X0(11);
-% q2_rocket = X0(12);
-% q3_rocket = X0(13);
-% m_rocket = settings.ms;
-% Ixx = settings.Ixxe;
-% Iyy = settings.Iyye;
-% Izz = settings.Izze;
-
 Q_rocket = [ q0_rocket q1_rocket q2_rocket q3_rocket];
 Q_conj_rocket = [ q0_rocket -q1_rocket -q2_rocket -q3_rocket];
 normQ_rocket = norm(Q_rocket);
@@ -62,7 +55,7 @@ normQ_rocket = norm(Q_rocket);
 % end
 Q_rocket = Q_rocket/normQ_rocket;
 
-m_para = settings.mnc + sum([settings.para(1:2).mass]);
+m_para = settings.mnc + drg.mass;
 
 %% ADDING WIND (supposed to be added in NED axes);
 if settings.wind.model || settings.wind.input   % will be computed inside the integrations
@@ -166,10 +159,6 @@ h_vect = [vr_para -ur_para 0];                                                % 
 %     n_vers = n_vect/norm(n_vect);
 % end
 
-%% PARACHUTE CONSTANTS
-% CD and S will be computed later
-CL_para = settings.para(1).CL;                                             % [/] Parachute Lift Coefficient
-
 %% ROCKET CONSTANTS
 % Everything related to empty condition (descent-fase)
 g = 9.80655;                                                                  % [N/kg] module of gravitational field at zero
@@ -229,8 +218,7 @@ posRelXcg_Poi = (dcm_conj*[(settings.xcg(2)-settings.Lnc) 0 0]')';
 pos_Poi = pos_rocket + posRelXcg_Poi;
 
 % (BODY) velocity vector of that point
-c = (dcm*[p_rocket q_rocket r_rocket]')';
-vel_Poi = vel_rocket + cross(c,[(settings.xcg(2)-settings.Lnc) 0 0]);
+vel_Poi = vel_rocket + cross([p_rocket q_rocket r_rocket],[(settings.xcg(2)-settings.Lnc) 0 0]);
 
 % Relative position vector between parachute and that point.
 relPos_vecNED = pos_para - pos_Poi; % (NED) relative position vector pointed towards parachute
@@ -265,36 +253,29 @@ relVel_chord = relVel_vecNED * relPos_versNED';
 
 %% PARACHUTE FORCES
 % computed in the NED-frame reference system
-S_para = settings.para(1).S;                                               % [m^2]   Surface
+S_para = drg.S;                                                   % [m^2]   Surface
+CD_para = drg.CD;
+D0 = sqrt(4*drg.S/pi);
+t0 = drg.nf * D0/V_norm_para;
+tx = t0 * drg.CX^(1/drg.m);
+SCD0 = S_para*CD_para;                                            % [m^2]   Surface
 t0p(1) = Ta(end);
-% if para ~= 1
-%     if t < t0p(para) + settings.para(para).OverExp_t                              % Linear interpolation for the over-expansion phase
-%         SCD_para = (settings.para(para).S*settings.para(para).CD)/...
-%             (settings.para(para).OverExp_t) * (t-t0p(para));
-%         D_para = 0.5*rho*V_norm_para^2*SCD_para*t_vers';                          % [N] Drag vector
-%     else
-%         CD_para = settings.para(para).CD;                                         % [/] Parachute Drag Coefficient
-%         D_para = 0.5*rho*V_norm_para^2*S_para*CD_para*t_vers';                    % [N] Drag vector
-%     end
-%     if norm(D_para) <= norm(0.5*rho*V_norm_para^2*settings.para(para-1).S*settings.para(para-1).CD*t_vers')
-%         D_para = 0.5*rho*V_norm_para^2*settings.para(para-1).S*settings.para(para-1).CD*t_vers';
-%     end
+
+dt = t-t0p;
+
+% if dt < 0
+%     SCD_para = 0;
+% elseif dt < tx
+    SCD_para = SCD0 * (dt/t0)^drg.m;
 % else
-    if t < t0p(1) + settings.para(1).OverExp_t                              % Linear interpolation for the over-expansion phase
-        SCD_para = (settings.para(1).S*settings.para(1).CD)/...
-            (settings.para(1).OverExp_t) * (Ta(end)-t0p(1));
-        D_para = 0.5*rho*V_norm_para^2*SCD_para*t_vers';                          % [N] Drag vector
-    else
-        CD_para = settings.para(1).CD;                                         % [/] Parachute Drag Coefficient
-        D_para = 0.5*rho*V_norm_para^2*S_para*CD_para*t_vers';                    % [N] Drag vector
-    end
+%     SCD_para = SCD0 * (1+(drg.CX-1)*exp(-2*(dt-tx)/t0));
 % end
 
-L_para = 0.5*rho*V_norm_para^2*S_para*CL_para*n_vers';                        % [N] Lift vector
+D_para = 0.5*rho*V_norm_para^2*SCD_para*t_vers';
 Fg_para = [0 0 m_para*g]';                                                    % [N] Gravitational Force vector
 
 Ft_chord_para = -T_chord * relPos_versNED;                                    % [N] Chord tension vector (parachute view)
-F_para = D_para + L_para + Fg_para + Ft_chord_para';                          % [N] (BODY) total forces vector
+F_para = D_para + Fg_para + Ft_chord_para';                          % [N] (BODY) total forces vector
 
 %% ROCKET FORCES
 % computed in the body-frame reference system
@@ -311,9 +292,8 @@ dv_rocket = F_rocket(2)/m_rocket-r_rocket*u_rocket+p_rocket*w_rocket;
 dw_rocket = F_rocket(3)/m_rocket-p_rocket*v_rocket+q_rocket*u_rocket;
 
 % Rotation
-b = (dcm_conj*[(settings.xcg(2)-settings.Lnc) 0 0]')';
-%b = quatrotate(Q_conj_rocket,[(settings.xcg(2)-settings.Lnc) 0 0]);
-Momentum = cross(b, -Ft_chord_para);                                          % [Nm] Chord tension moment
+b = [(settings.xcg(2)-settings.Lnc) 0 0];
+Momentum = cross(b, Ft_chord_rocket);                                          % [Nm] Chord tension moment
 
 dp_rocket = (Iyy-Izz)/Ixx*q_rocket*r_rocket + Momentum(1)/Ixx;
 dq_rocket = (Izz-Ixx)/Iyy*p_rocket*r_rocket + Momentum(2)/Iyy;
@@ -371,7 +351,7 @@ A = subs(A, {x_rocket y_rocket z_rocket u_rocket v_rocket w_rocket p_rocket q_ro
 A = double(A);
 
 % Eigenvalues evaluation
-lambda = eig(A);
+lambda = eig(A)
 
 %% Post-Process
 
