@@ -340,7 +340,7 @@ if settings.stoch.N == 1
     end
 else   %%%% STOCHASTIC PLOTS (only if N>1)
     
-    %% LANDING POINTS 2DCHo
+    %% LANDING POINTS 2D
     % Position Scaled map in background
     figure('Name', 'Landing Points', 'NumberTitle','off')
     if settings.landing_map
