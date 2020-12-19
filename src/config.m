@@ -193,7 +193,7 @@ settings.ode.optionsasc1 = odeset('Events',@event_apogee,'InitialStep',1);    %O
 
 settings.ode.optionsasc2 = odeset('InitialStep',1);                           %ODE options for due to the opening delay of the parachute
 
-settings.ode.optionspara = odeset('Events',@event_para_cut);              %ODE options for the parachutes
+settings.ode.optionspara1 = odeset('Events',@event_para_cut);              %ODE options for the parachutes
 
 settings.ode.optionsdesc = odeset('Events',@event_landing);                   %ODE options for ballistic descent
 
@@ -236,8 +236,8 @@ settings.wind.MagMin = 5;                           % [m/s] Minimum Magnitude
 settings.wind.MagMax = 5;                          % [m/s] Maximum Magnitude
 settings.wind.ElMin = 0*pi/180;                     % [rad] Minimum Elevation, user input in degrees (ex. 0)
 settings.wind.ElMax = 0*pi/180;                     % [rad] Maximum Elevation, user input in degrees (ex. 0) (Max == 90 Deg)
-settings.wind.AzMin = (90)*pi/180;                   % [rad] Minimum Azimuth, user input in degrees (ex. 90)
-settings.wind.AzMax = (90)*pi/180;                   % [rad] Maximum Azimuth, user input in degrees (ex. 90)
+settings.wind.AzMin = (270)*pi/180;                   % [rad] Minimum Azimuth, user input in degrees (ex. 90)
+settings.wind.AzMax = (270)*pi/180;                   % [rad] Maximum Azimuth, user input in degrees (ex. 90)
 
 % NOTE: wind azimuth angle indications (wind directed towards):
 % 0 deg (use 360 instead of 0)  -> North
