@@ -1,9 +1,9 @@
-function [dY, parout] = phase1(t, Y, settings, uw, vw, ww, para, t0p, uncert, Hour, Day)
+function [dY, parout] = drogue_descent(t, Y, settings, uw, vw, ww, para, t0p, uncert, Hour, Day)
 %% RECALLING THE STATE
 % Rocket state
 x_rocket = Y(1);
 y_rocket = Y(2);
-z_rocket = Y(3)
+z_rocket = Y(3);
 u_rocket = Y(4);
 v_rocket = Y(5);
 w_rocket = Y(6);
