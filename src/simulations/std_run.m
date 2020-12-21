@@ -85,7 +85,6 @@ tf = settings.ode.final_time;
 X0 = [0 0 0]';
 V0 = [0 0 0]';
 W0 = [0 0 0]';
-theta0 = [0 0 0]';
 
 settings.OMEGA = settings.OMEGAmin;
 
@@ -101,11 +100,11 @@ else
     end
     
 end
-Q0 = angle2quat(settings.PHI, settings.OMEGA, 0*pi/180, 'ZYX')';
+Q0 = angleToQuat(settings.PHI, settings.OMEGA, 0*pi/180, 'ZYX')';
 
 %% ASCENT
 % ascent phase computation
-Y0a = [X0; V0; W0; Q0; settings.Ixxf; settings.Iyyf; settings.Izzf; theta0];
+Y0a = [X0; V0; W0; Q0; settings.Ixxf; settings.Iyyf; settings.Izzf];
 [Ta, Ya] = ode113(@ascent, [0, tf], Y0a, settings.ode.optionsasc1, settings, uw, vw, ww, uncert); % till the apogee
 
 if settings.para(1).delay ~= 0 % checking if the actuation delay is different from zero

@@ -5,15 +5,13 @@ ASCENT - ode function of the 6DOF Rigid Rocket Model
 
 INPUTS:
             - t, integration time;
-            - Y, state vector, [ x y z | u v w | p q r | q0 q1 q2 q3 | m | Ixx Iyy Izz | thetax thetay thetaz]:
+            - Y, state vector, [ x y z | u v w | p q r | q0 q1 q2 q3 Ixx Iyy Izz]:
 
                                 * (x y z), NED{north, east, down} horizontal frame;
                                 * (u v w), body frame velocities;
                                 * (p q r), body frame angular rates;
-                                * m , total mass;
                                 * (Ixx Iyy Izz), Inertias;
                                 * (q0 q1 q2 q3), attitude unit quaternion.
-                                * (thetax thetay thetaz), body angles;
  
 
             - settings, rocket data structure;
@@ -72,7 +70,6 @@ Izz = Y(16);
 
 %% QUATERION ATTITUDE
 Q = [q0 q1 q2 q3];
-Q_conj = [q0 -q1 -q2 -q3];
 normQ = norm(Q);
 
 if abs(normQ-1) > 0.1
@@ -91,8 +88,9 @@ if settings.wind.model
 elseif settings.wind.input
     [uw,vw,ww] = wind_input_generator(settings,z,uncert);
 end
-
-wind = quatrotate(Q, [uw vw ww]);
+dcm = quatToDcm(Q);
+wind = dcm*[uw; vw; ww];
+% wind = quatrotate(Q, [uw vw ww]);
 
 % Relative velocities (plus wind);
 ur = u - wind(1);
@@ -100,7 +98,8 @@ vr = v - wind(2);
 wr = w - wind(3);
 
 % Body to Inertial velocities
-Vels = quatrotate(Q_conj,[u v w]);
+Vels = dcm'*[u; v; w];
+% Vels = quatrotate(Q_conj,[u v w]);
 V_norm = norm([ur vr wr]);
 
 %% ATMOSPHERE DATA
@@ -246,7 +245,7 @@ else
     X = qdyn*S*CA;                      % [N] x-body component of the aerodynamics force
     Y = qdyn*S*CY;                      % [N] y-body component of the aerodynamics force
     Z = qdyn*S*CN;                      % [N] z-body component of the aerodynamics force
-    Fg = quatrotate(Q, [0 0 m*g])';     % [N] force due to the gravity in body frame
+    Fg = dcm*[0; 0; m*g];               % [N] force due to the gravity in body frame
     
     F = Fg +[-X+T, +Y, -Z]';            % [N] total forces vector
     
@@ -284,7 +283,6 @@ dY(10:13) = dQQ;
 dY(14) = Ixxdot;
 dY(15) = Iyydot;
 dY(16) = Izzdot;
-dY(17:19) = [p q r];
 dY = dY';
 
 %% SAVING THE QUANTITIES FOR THE PLOTS
@@ -297,6 +295,8 @@ parout.interp.alt = -z;
 
 parout.wind.NED_wind = [uw, vw, ww];
 parout.wind.body_wind = wind;
+
+parout.rotations.dcm = dcm;
 
 parout.velocities = Vels;
 

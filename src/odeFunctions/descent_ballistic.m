@@ -67,7 +67,6 @@ Iyy = settings.Iyye;
 Izz = settings.Izze;
 
 Q = [ q0 q1 q2 q3];
-Q_conj = [ q0 -q1 -q2 -q3];
 normQ = norm(Q);
 
 Q = Q/normQ;
@@ -87,7 +86,8 @@ elseif settings.wind.input
     
 end
 
-    wind = quatrotate(Q, [uw vw ww]);
+dcm = quatToDcm(Q);
+wind = dcm*[uw; vw; ww];
 
 % Relative velocities (plus wind);
 ur = u - wind(1);
@@ -95,7 +95,7 @@ vr = v - wind(2);
 wr = w - wind(3);
 
 % Body to Inertial velocities
-Vels = quatrotate(Q_conj,[u v w]);
+Vels = dcm'*[u; v; w];
 V_norm = norm([ur vr wr]);
 
 %% CONSTANTS
@@ -159,7 +159,7 @@ qdynL_V = 0.5*rho*V_norm*S*C;   %
 X = qdyn*S*CA;                  % [N] x-body component of the aerodynamics force
 Y = qdyn*S*CY;                  % [N] y-body component of the aerodynamics force
 Z = qdyn*S*CN;                  % [N] z-body component of the aerodynamics force
-Fg = quatrotate(Q,[0 0 m*g])';  % [N] force due to the gravity
+Fg = dcm*[0; 0; m*g];           % [N] force due to the gravity
 
 F = Fg +[-X,+Y,-Z]';            % [N] total forces vector
 
@@ -203,6 +203,8 @@ parout.interp.alt = -z;
 
 parout.wind.NED_wind = [uw, vw, ww];
 parout.wind.body_wind = wind;
+
+parout.rotations.dcm = dcm;
 
 parout.velocities = Vels;
 

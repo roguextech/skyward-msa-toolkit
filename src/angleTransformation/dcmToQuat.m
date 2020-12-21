@@ -1,0 +1,2 @@
+function q = dcmToQuat(dmc)
+

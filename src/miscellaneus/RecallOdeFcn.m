@@ -30,6 +30,9 @@ for i = 1:NT
     all_steps.interp.alt(i) = single_step.interp.alt;
     all_steps.wind.body_wind(1:3,i) = single_step.wind.body_wind;
     all_steps.wind.NED_wind(1:3,i) = single_step.wind.NED_wind;
+    
+    all_steps.rotations.dcm(:, :, i) = single_step.rotations.dcm;
+    
     all_steps.velocities(i, 1:3) = single_step.velocities;
     
     all_steps.air.rho(i) = single_step.air.rho;

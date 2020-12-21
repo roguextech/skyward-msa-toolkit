@@ -61,17 +61,20 @@ if settings.stoch.N == 1
     xlabel('Time [s]'); ylabel('Drag Coeff CD [/]')
     
     %%% Angles(body)
-    figure('Name', 'Eulerian Angles - ascent Phase', 'NumberTitle', 'off');
+   
+    [yaw, pitch, roll] = dcmToAngle(data_ascent.rotations.dcm);
+    
+    figure('Name', 'Euler Angles - ascent Phase', 'NumberTitle', 'off');
     subplot(3,1,1)
-    plot(data_ascent.integration.t, data_ascent.state.Y(:, 18)*180/pi)
+    plot(data_ascent.integration.t, pitch*180/pi)
     grid on, xlabel('time [s]'), ylabel('pitch angle [deg]');
     
     subplot(3,1,2)  
-    plot(data_ascent.integration.t, data_ascent.state.Y(:, 19)*180/pi)
+    plot(data_ascent.integration.t, yaw*180/pi)
     grid on, xlabel('time [s]'), ylabel('yaw angle [deg]');
     
     subplot(3,1,3)
-    plot(data_ascent.integration.t, data_ascent.state.Y(:, 17)*180/pi)
+    plot(data_ascent.integration.t, roll*180/pi)
     grid on, xlabel('time [s]'), ylabel('roll angle [deg]')
     
     %% 3D TRAJECTORY
