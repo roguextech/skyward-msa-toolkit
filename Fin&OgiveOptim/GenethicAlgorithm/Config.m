@@ -23,7 +23,11 @@ Release date: 18/10/2019
 % launchpad 
 settings.z0 = 109;                   %[m] Launchpad Altitude
 settings.lrampa = 4.9;               %[m] LaunchPad route (launchpad length-distance from ground of the first hook)
+settings.lat0 = 39.201778;                                                          % Launchpad latitude
+settings.lon0 = -8.138368;                                                          % Launchpad longitude
 
+% Gravity costant at launch latitude and altitude:
+settings.g0 = gravitywgs84(settings.z0, settings.lat0);
 % launchpad directions
 % for a single run the maximum and the minimum value of the following
 % angles must be the same.
@@ -31,20 +35,27 @@ settings.OMEGA = 84*pi/180;         %[rad] Minimum Elevation Angle, user input i
 settings.PHI = 0*pi/180;            %[rad] Maximum Azimuth Angle from North Direction, user input in degrees (ex. 90)
 
 %% ENGINE DETAILS
-load('MotorsList.mat'); motors = MotorsByName;
+% load motors data 
+Motors = load('Motors.mat');
+Motors = [Motors.Cesaroni Motors.Aerotech];
+
 name = 'M2020';
 % name = 'M1890';
 % name = 'M1800';
-settings.motor.exp_time = motors.(name).t;
-settings.motor.exp_thrust = motors.(name).T;
-settings.mp = motors.(name).mp;                                            % [kg]   Propellant Mass                                                
-settings.tb = motors.(name).t(end) ;                                                     % [s]    Burning time
-settings.mfr = settings.mp/settings.tb;                                               % [kg/s] Mass Flow Rate
-settings.ms = 21;                                                   % [kg]   Total Mass
-settings.m0 = settings.ms + settings.mp;                            % [kg]   Structural Mass
-settings.mnc = 0.400;                                               % [kg]   Nosecone Mass
+% name = 'M2000R';
 
-clear ('motors','name')
+n_name = [Motors.MotorName] == name;
+settings.motor.exp_time = Motors(n_name).t;
+settings.motor.exp_thrust = Motors(n_name).T;
+settings.motor.exp_m = Motors(n_name).m;
+settings.mp = Motors(n_name).mp;         % [kg]   Propellant Mass                                                
+settings.tb = Motors(n_name).t(end) ;    % [s]    Burning time
+mm = Motors(n_name).mm;                  % [kg]   Total Mass of the Motor 
+settings.ms = 18.5 + mm - settings.mp;   % [kg]   Structural Mass
+settings.m0 = settings.ms + settings.mp; % [kg]   Total Mass
+settings.mnc = 0.400;                    % [kg]   Nosecone Mass
+
+clear ('Motors','name')
 
 
 %% GEOMETRY DETAILS

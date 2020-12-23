@@ -18,7 +18,7 @@ settings.lat0 = 39.201778;                                                      
 settings.lon0 = -8.138368;                                                          % Launchpad longitude
 
 % Gravity costant at launch latitude and altitude:
-settings.g0 = gravitywgs84(settings.z0,settings.lat0);
+settings.g0 = gravitywgs84(settings.z0, settings.lat0);
 
 % launchpad roccaraso
 % settings.z0 = 1416;                                                                 %[m] Launchpad Altitude

@@ -46,9 +46,9 @@ createFor006(datcom);
 
 %% LAUNCHPAD DYNAMICS
 % State
-X0pad = [0; 0; 0; 0; settings.m0];
+X0pad = [0; 0; 0; 0];
 % Attitude
-Q0 = angle2quat(settings.PHI, settings.OMEGA, 0*pi/180, 'ZYX')';
+Q0 = angleToQuat(settings.PHI, settings.OMEGA, 0*pi/180)';
 
 [Tpad, Ypad] = ode113(@LaunchPadFreeDyn, [0, 10], X0pad, settings.ode.optionspad,...
     settings, Q0, Coeffs0.CA(2));
