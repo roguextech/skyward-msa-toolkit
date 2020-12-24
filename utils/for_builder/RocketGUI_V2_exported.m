@@ -572,7 +572,6 @@ classdef RocketGUI_V2_exported < matlab.apps.AppBase
             switch buttonPressed
                 case 'Add Alpha'
                     app.UITableAlpha.Data = [app.UITableAlpha.Data; 0];
-%                     sortedValues = sort(app.UITableAlpha.Data);
                     app.UITableAlpha.Data = sort(app.UITableAlpha.Data);
                 case 'Add Beta'
                     app.UITableBeta.Data = [app.UITableBeta.Data; 0];
@@ -758,6 +757,7 @@ classdef RocketGUI_V2_exported < matlab.apps.AppBase
         function ResetPlotButtonPushed(app, event)
             updatePlot(app);
             app.RocketUIAxes.XLim = [-10 app.RocketLengthEditField.Value+15];
+            app.RocketUIAxes.YLim = [-90 90];
             app.FinsUIAxes.YLim = [-app.FinThicknessEditField.Value app.FinThicknessEditField.Value];
             grid(app.FinsUIAxes,'minor');
         end
