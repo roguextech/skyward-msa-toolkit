@@ -20,7 +20,7 @@ Update date: 21/10/20
 %% STARTING CONDITIONS
 
 % Attitude
-Q0 = angle2quat(settings.PHI, settings.OMEGA, 0*pi/180,'ZYX')';
+Q0 = angleToQuat(settings.PHI, settings.OMEGA, 0*pi/180)';
 
 %% WIND GENERATION
 
@@ -31,7 +31,7 @@ tf = settings.ode.final_time;
 X0 = [0 0 0]';
 V0 = [0 0 0]';
 W0 = [0 0 0]';
-X0a = [X0; V0; W0; Q0; settings.m0; settings.Ixxf; settings.Iyyf; settings.Izzf];
+X0a = [X0; V0; W0; Q0; settings.Ixxf; settings.Iyyf; settings.Izzf];
 [~,Ya] = ode113(@Ascent, [0, tf], X0a, settings.ode.optionsasc, settings, uw, vw, ww);
 
 %% CALCULATE OUTPUT QUANTITIES

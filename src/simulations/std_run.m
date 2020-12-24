@@ -100,7 +100,7 @@ else
     end
     
 end
-Q0 = angleToQuat(settings.PHI, settings.OMEGA, 0*pi/180, 'ZYX')';
+Q0 = angleToQuat(settings.PHI, settings.OMEGA, 0*pi/180)';
 
 %% ASCENT
 % ascent phase computation
