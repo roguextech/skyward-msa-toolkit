@@ -81,14 +81,14 @@ settings.S = pi*settings.C^2/4;    % [m^2]    Cross-sectional Surface
 % z-axis: downward
 
 % inertias for full configuration (with all the propellant embarqued) obtained with CAD's
-settings.Ixxf = 0.0540;                     % [kg*m^2] Inertia to x-axis
-settings.Iyyf = 13.7274;                    % [kg*m^2] Inertia to y-axis
-settings.Izzf = 13.7302;                    % [kg*m^2] Inertia to z-axis
+settings.Ixxf = 0.08;                     % [kg*m^2] Inertia to x-axis
+settings.Iyyf = 13.21;                    % [kg*m^2] Inertia to y-axis
+settings.Izzf = 13.21;                    % [kg*m^2] Inertia to z-axis
 
 % inertias for empty configuration (all the propellant consumed) obtained with CAD's
-settings.Ixxe = 0.0498;                     % [kg*m^2] Inertia to x-axis
-settings.Iyye = 11.5612;                    % [kg*m^2] Inertia to y-axis
-settings.Izze = 11.5640;                    % [kg*m^2] Inertia to z-axis
+settings.Ixxe = 0.07;                     % [kg*m^2] Inertia to x-axis
+settings.Iyye = 10.27;                    % [kg*m^2] Inertia to y-axis
+settings.Izze = 10.27;                    % [kg*m^2] Inertia to z-axis
 
 %% AERODYNAMICS DETAILS
 % These coefficients are obtained using MISSILE DATCOM
@@ -178,7 +178,7 @@ settings.wind.input = false;
 % Wind is generated for every altitude interpolating with the coefficient defined below
 
 settings.wind.input_ground = 7;                          % wind magnitude at the ground [m/s]
-settings.wind.input_alt = [0 100 600 750 900 1500 2500]; % altitude vector [m]
+settings.wind.input_alt = [0 100 600 750 900 1500 4000]; % altitude vector [m]
 settings.wind.input_mult = [0 0 10 15 20 30 30];         % percentage of increasing magnitude at each altitude
 settings.wind.input_azimut = [30 30 30 30 30 30 30];     % wind azimut angle at each altitude (toward wind incoming direction) [deg]
 
@@ -197,8 +197,8 @@ settings.wind.MagMin = 6;           % [m/s] Minimum Magnitude
 settings.wind.MagMax = 6;           % [m/s] Maximum Magnitude
 settings.wind.ElMin = 0*pi/180;     % [rad] Minimum Elevation, user input in degrees (ex. 0)
 settings.wind.ElMax = 0*pi/180;     % [rad] Maximum Elevation, user input in degrees (ex. 0) (Max == 90 Deg)
-settings.wind.AzMin = (30)*pi/180; % [rad] Minimum Azimuth, user input in degrees (ex. 90)
-settings.wind.AzMax = (30)*pi/180; % [rad] Maximum Azimuth, user input in degrees (ex. 90)
+settings.wind.AzMin = (180)*pi/180; % [rad] Minimum Azimuth, user input in degrees (ex. 90)
+settings.wind.AzMax = (180)*pi/180; % [rad] Maximum Azimuth, user input in degrees (ex. 90)
 
 % NOTE: wind azimuth angle indications (wind directed towards):
 % 0 deg (use 360 instead of 0)  -> North
