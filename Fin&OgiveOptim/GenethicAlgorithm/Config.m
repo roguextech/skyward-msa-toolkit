@@ -39,10 +39,10 @@ settings.PHI = 0*pi/180;            %[rad] Maximum Azimuth Angle from North Dire
 Motors = load('Motors.mat');
 Motors = [Motors.Cesaroni Motors.Aerotech];
 
-name = 'M2020';
+% name = 'M2020';
 % name = 'M1890';
 % name = 'M1800';
-% name = 'M2000R';
+name = 'M2000R';
 
 n_name = [Motors.MotorName] == name;
 settings.motor.exp_time = Motors(n_name).t;
@@ -53,10 +53,8 @@ settings.tb = Motors(n_name).t(end) ;    % [s]    Burning time
 mm = Motors(n_name).mm;                  % [kg]   Total Mass of the Motor 
 settings.ms = 18.5 + mm - settings.mp;   % [kg]   Structural Mass
 settings.m0 = settings.ms + settings.mp; % [kg]   Total Mass
-settings.mnc = 0.400;                    % [kg]   Nosecone Mass
 
 clear ('Motors','name')
-
 
 %% GEOMETRY DETAILS
 % This parameters should be the same parameters set up in MISSILE DATCOM
@@ -71,14 +69,14 @@ settings.S = pi*settings.C^2/4;             % [m^2]    Cross-sectional Surface
 % z-axis: downward
 
 % inertias for full configuration (with all the propellant embarqued) obtained with CAD's
-settings.Ixxf = 0.0540;                     % [kg*m^2] Inertia to x-axis
-settings.Iyyf = 13.7274;                    % [kg*m^2] Inertia to y-axis
-settings.Izzf = 13.7302;                    % [kg*m^2] Inertia to z-axis
+settings.Ixxf = 0.08;                     % [kg*m^2] Inertia to x-axis
+settings.Iyyf = 13.21;                    % [kg*m^2] Inertia to y-axis
+settings.Izzf = 13.21;                    % [kg*m^2] Inertia to z-axis
 
 % inertias for empty configuration (all the propellant consumed) obtained with CAD's
-settings.Ixxe = 0.0498;                     % [kg*m^2] Inertia to x-axis
-settings.Iyye = 11.5612;                    % [kg*m^2] Inertia to y-axis
-settings.Izze = 11.5640;                    % [kg*m^2] Inertia to z-axis
+settings.Ixxe = 0.07;                     % [kg*m^2] Inertia to x-axis
+settings.Iyye = 10.27;                    % [kg*m^2] Inertia to y-axis
+settings.Izze = 10.27;                    % [kg*m^2] Inertia to z-axis
 
 %% INTEGRATION OPTIONS
 settings.ode.final_time =  2000;                                                % [s] Final integration time

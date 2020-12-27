@@ -1,4 +1,4 @@
-function [coeffsValues, angle0] = interpCoeffs(t, alpha, M, beta, alt, c, alpha_tot, settings)
+function [coeffsValues, angle0] = interpCoeffs(t, alpha, M, beta, alt, settings)
 %{
 interpCoeffs - interpolation of aerodynamic coefficients.
 
@@ -32,10 +32,10 @@ M_datcom = settings.Machs;
 % Last two entries of cellT and inst are for the evaluation of the XCP for
 % alpha = alpha_tot and beta = 0.
 cellT = {A_datcom, M_datcom, B_datcom, H_datcom, A_datcom, B_datcom};
-inst = [alpha, M, beta, alt, alpha_tot, 0];
+inst = [alpha, M, beta, alt];
 
-index = zeros(6, 1);
-for i = 1:6
+index = zeros(4, 1);
+for i = 1:4
     [~, index(i)] = min(abs(cellT{i} - inst(i)));
 end
 
@@ -48,15 +48,10 @@ for i = 1:16
     CmatE = CoeffsE.(coeffsNames{i});
     CmatF = CoeffsF.(coeffsNames{i});
     
-    VE = CmatE(index(1), index(2), index(3), index(4), c);
-    
-    if i == 16, VE = CmatE(index(5), index(2), index(6), index(4), c); end
+    VE = CmatE(index(1), index(2), index(3), index(4));
   
     if t <= tb
-        VF = CmatF(index(1), index(2), index(3), index(4));
-        
-        if i == 16, VE = CmatF(index(5), index(2), index(6), index(4)); end
-        
+        VF = CmatF(index(1), index(2), index(3), index(4));        
         coeffsValues(i) =  t/tb*(VE-VF)+VF;
     else 
         coeffsValues(i) = VE;

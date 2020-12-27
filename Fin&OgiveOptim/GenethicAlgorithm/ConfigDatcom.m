@@ -17,12 +17,12 @@ datcom.Beta = 0;
 datcom.Alt = settings.z0 + 0:1000:4000; 
 
 %% Fixed Parameters
-datcom.xcg = [1.75, 1.62] - 0.4;                           % [m] CG position from the end of Lcenter [full, empty]
+datcom.xcg = [1.52, 1.36] - 0.28;                          % [m] CG position from the end of Lcenter [full, empty]
 datcom.D = settings.C;                                     % [m] rocket diameter
 datcom.S = settings.S;                                     % [m^2] rocket cross section
-datcom.Lcenter = 2.4;                                      % [m] Lcenter : Centerbody length
+datcom.Lcenter = 2.51 - 0.28;                              % [m] Lcenter : Centerbody length
 datcom.Npanel = 3;                                         % [m] number of fins
 datcom.Ler = 0.003;                                        % [deg] Leading edge radius
 datcom.d = 0;                                              % [m] rocket tip-fin distance
 datcom.zup_raw = 0.0015;                                   % [m] fin semi-thickness 
-datcom.Lmaxu_raw = 0.0015;                                  % [m] Fraction of chord from leading edge to max thickness
+datcom.Lmaxu_raw = 0.0015;                                 % [m] Fraction of chord from leading edge to max thickness

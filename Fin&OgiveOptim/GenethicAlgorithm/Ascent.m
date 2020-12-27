@@ -1,11 +1,10 @@
 function dY = Ascent(t, Y, settings, uw, vw, ww)
 % ODE-Function of the 6DOF Rigid Rocket Model
-% State = ( x y z | u v w | p q r | q0 q1 q2 q3 | m | Ixx Iyy Izz )
+% State = ( x y z | u v w | p q r | q0 q1 q2 q3 Ixx Iyy Izz )
 %
 % (x y z): NED Earth's Surface Centered Frame ("Inertial") coordinates
 % (u v w): body frame velocities
 % (p q r): body frame angular rates
-% m : total mass
 % (Ixx Iyy Izz): Inertias
 % (q0 q1 q2 q3): attitude unit quaternion
 %
@@ -117,16 +116,14 @@ end
 if not(ur < 1e-9 || V_norm < 1e-9)
     alpha = atan(wr/ur);
     beta = atan(vr/ur);                         % beta = asin(vr/V_norm); is the classical notation, Datcom uses this one though.
-    alpha_tot = atan(sqrt(wr^2 + vr^2)/ur);     % datcom 97' definition
-else
+   else
     alpha = 0;
     beta = 0;
-    alpha_tot = 0;
 end
 
 %% INTERPOLATE AERODYNAMIC COEFFICIENTS:
-[coeffsValues, angle0] = interpCoeffs(t,alpha,M,beta,absoluteAltitude,...
-    1,alpha_tot,settings);
+[coeffsValues, angle0] = interpCoeffs(t, alpha, M, beta, absoluteAltitude,...
+settings);
 
 % Retrieve Coefficients
 CA = coeffsValues(1); CYB = coeffsValues(2); CY0 = coeffsValues(3);
@@ -134,15 +131,14 @@ CNA = coeffsValues(4); CN0 = coeffsValues(5); Cl = coeffsValues(6);
 Clp = coeffsValues(7); Cma = coeffsValues(8); Cm0 = coeffsValues(9);
 Cmad = coeffsValues(10); Cmq = coeffsValues(11); Cnb = coeffsValues(12);
 Cn0 = coeffsValues(13); Cnr = coeffsValues(14); Cnp = coeffsValues(15);
-% XCP_value = coeffsValues(16);
 
 % compute CN,CY,Cm,Cn (linearized with respect to alpha and beta):
 alpha0 = angle0(1); beta0 = angle0(2);
 
-CN = (CN0 + CNA*(alpha-alpha0));
-CY = (CY0 + CYB*(beta-beta0));
-Cm = (Cm0 + Cma*(alpha-alpha0));
-Cn = (Cn0 + Cnb*(beta-beta0));
+CN = (CN0 + CNA*(alpha - alpha0));
+CY = (CY0 + CYB*(beta - beta0));
+Cm = (Cm0 + Cma*(alpha - alpha0));
+Cn = (Cn0 + Cnb*(beta - beta0));
 
 %% 
 OMEGA = settings.OMEGA;
