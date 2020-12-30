@@ -57,7 +57,6 @@ end
 X0 = [0 0 0]';
 V0 = [0 0 0]';
 W0 = [0 0 0]';
-theta0 = [0 0 0]';
 
 % PreAllocation
 LP = zeros(settings.stoch.N, 3);
@@ -119,8 +118,8 @@ parfor i = 1:settings.stoch.N
     PHI = settings.PHImin + rand*(settings.PHImax - settings.PHImin);
 
     % Attitude
-    Q0 = angle2quat(PHI, OMEGA, 0*pi/180, 'ZYX')';
-    Y0a = [X0; V0; W0; Q0; settings.Ixxf; settings.Iyyf; settings.Izzf; theta0];
+    Q0 = angleToQuat(PHI, OMEGA, 0*pi/180)';
+    Y0a = [X0; V0; W0; Q0; settings.Ixxf; settings.Iyyf; settings.Izzf];
     [Ta,Ya] = ode113(@ascent, [0, tf], Y0a, settings.ode.optionsasc1, settings, uw, vw, ww, uncert, Hour, Day, OMEGA);
     [data_ascent{i}] = RecallOdeFcn(@ascent, Ta, Ya, settings, uw, vw, ww, uncert, Hour, Day, OMEGA);
     data_ascent{i}.state.Y = Ya;

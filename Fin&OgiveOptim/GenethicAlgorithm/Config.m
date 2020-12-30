@@ -37,7 +37,7 @@ settings.PHI = 0*pi/180;            %[rad] Maximum Azimuth Angle from North Dire
 %% ENGINE DETAILS
 % load motors data 
 Motors = load('Motors.mat');
-Motors = [Motors.Cesaroni Motors.Aerotech];
+Motors = [Motors.Cesaroni, Motors.Aerotech];
 
 % name = 'M2020';
 % name = 'M1890';

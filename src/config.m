@@ -38,8 +38,8 @@ end
 % angles must be the same.
 settings.OMEGAmin = 84*pi/180; % [rad] Minimum Elevation Angle, user input in degrees (ex. 80)
 settings.OMEGAmax = 84*pi/180; % [rad] Maximum Elevation Angle, user input in degrees (ex. 80)
-settings.PHImin = 0*pi/180;    % [rad] Minimum Azimuth Angle from North Direction, user input in degrees (ex. 90)
-settings.PHImax = 0*pi/180;    % [rad] Maximum Azimuth Angle from North Direction, user input in degrees (ex. 90)
+settings.PHImin = 330*pi/180;    % [rad] Minimum Azimuth Angle from North Direction, user input in degrees (ex. 90)
+settings.PHImax = 330*pi/180;    % [rad] Maximum Azimuth Angle from North Direction, user input in degrees (ex. 90)
 settings.upwind = false;       % If true, phi is selected according to wind direction (constant wind model only)
 settings.PHIsigma = 0*pi/180;  % Stocasthic simulation only
 
@@ -48,12 +48,12 @@ settings.PHIsigma = 0*pi/180;  % Stocasthic simulation only
 DATA_PATH = '../data/';
 filename = strcat(DATA_PATH,'Motors.mat');
 Motors = load(filename);
-Motors = [Motors.Cesaroni Motors.Aerotech];
+Motors = [Motors.Cesaroni, Motors.Aerotech];
 
-name = 'M2020';
+% name = 'M2020';
 % name = 'M1890';
 % name = 'M1800';
-% name = 'M2000R';
+name = 'M2000R';
 
 n_name = [Motors.MotorName] == name;
 settings.motor.exp_time = Motors(n_name).t;
@@ -106,18 +106,18 @@ settings.Izze = 10.27;                    % [kg*m^2] Inertia to z-axis
 % DATA_PATH = '../data/';
 
 % Coefficients in full configuration
-filename_full = strcat(DATA_PATH,'full.mat');
-CoeffsF = load(filename_full,'Coeffs');
+filename_full = strcat(DATA_PATH, 'full.mat');
+CoeffsF = load(filename_full, 'Coeffs');
 settings.CoeffsF = CoeffsF.Coeffs;
 clear('CoeffsF');
 
 % Coefficients in empty configuration
-filename_empty = strcat(DATA_PATH,'empty.mat');
-CoeffsE = load(filename_empty,'Coeffs');
+filename_empty = strcat(DATA_PATH, 'empty.mat');
+CoeffsE = load(filename_empty, 'Coeffs');
 settings.CoeffsE = CoeffsE.Coeffs;
 clear('CoeffsE');
 
-s = load(filename_full,'State');
+s = load(filename_full, 'State');
 settings.Alphas = s.State.Alphas';
 settings.Betas = s.State.Betas';
 settings.Altitudes = s.State.Altitudes';
@@ -128,16 +128,16 @@ settings.control = '0%';      % aerobrakes 0% 50% or 100% opened
 
 %% PARACHUTES DETAILS
 % parachute 1
-settings.para(1).S = 1.55;    % [m^2]   Surface
-settings.para(1).mass = 0.4;  % [kg]   Parachute Mass
-settings.para(1).CD = 0.75;   % [/] Parachute Drag Coefficient
+settings.para(1).S = 0.4;    % [m^2]   Surface
+settings.para(1).mass = 0.2;  % [kg]   Parachute Mass
+settings.para(1).CD = 0.78;   % [/] Parachute Drag Coefficient
 settings.para(1).CL = 0;      % [/] Parachute Lift Coefficient
 settings.para(1).delay = 1;   % [s] drogue opening delay
-settings.para(1).z_cut = 300; % [m] Final altitude of the parachute
+settings.para(1).z_cut = 450; % [m] Final altitude of the parachute
 
 % parachute 2
 settings.para(2).S = 10.5;    % [m^2]   Surface
-settings.para(2).mass = 0.8;  % [kg]   Parachute Mass
+settings.para(2).mass = 1.5;  % [kg]   Parachute Mass
 settings.para(2).CD = 0.7;    % [/] Parachute Drag Coefficient
 settings.para(2).CL = 0;      % [/] Parachute Lift Coefficient
 settings.para(2).z_cut = 0;   % [m] Final altitude of the parachute
@@ -193,12 +193,12 @@ settings.wind.input_uncertainty = [1, 1];
 
 % Wind is generated randomly from the minimum to the maximum parameters which defines the wind.
 % Setting the same values for min and max will fix the parameters of the wind.
-settings.wind.MagMin = 6;           % [m/s] Minimum Magnitude
-settings.wind.MagMax = 6;           % [m/s] Maximum Magnitude
+settings.wind.MagMin = 4;           % [m/s] Minimum Magnitude
+settings.wind.MagMax = 4;           % [m/s] Maximum Magnitude
 settings.wind.ElMin = 0*pi/180;     % [rad] Minimum Elevation, user input in degrees (ex. 0)
 settings.wind.ElMax = 0*pi/180;     % [rad] Maximum Elevation, user input in degrees (ex. 0) (Max == 90 Deg)
-settings.wind.AzMin = (180)*pi/180; % [rad] Minimum Azimuth, user input in degrees (ex. 90)
-settings.wind.AzMax = (180)*pi/180; % [rad] Maximum Azimuth, user input in degrees (ex. 90)
+settings.wind.AzMin = (90)*pi/180; % [rad] Minimum Azimuth, user input in degrees (ex. 90)
+settings.wind.AzMax = (90)*pi/180; % [rad] Maximum Azimuth, user input in degrees (ex. 90)
 
 % NOTE: wind azimuth angle indications (wind directed towards):
 % 0 deg (use 360 instead of 0)  -> North
@@ -209,7 +209,7 @@ settings.wind.AzMax = (180)*pi/180; % [rad] Maximum Azimuth, user input in degre
 %% BALLISTIC SIMULATION
 % Set to True to run a ballistic (without drogues) simulation
 
-settings.ballistic = true;
+settings.ballistic = false;
 
 %% STOCHASTIC DETAILS
 % If N > 1 the stochastic routine is started
