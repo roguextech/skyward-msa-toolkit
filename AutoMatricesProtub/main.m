@@ -13,18 +13,18 @@ Release date: 18/10/2019
 % State values in which the aerodynamic coefficients will be computed
 datcom.Mach = 0.05:0.05:1;
 datcom.Alpha = [-22 -15 -10 -7.5 -5 -2.5 -1 -0.5 -0.1 0 0.1 0.5 1 2.5 5 7.5 10 15 22];
-datcom.Beta = [-0.1 0 0.1];
+datcom.Beta = [-15 -10 -7.5 -5 -0.1 0 0.1 5 7.5 10 15 ];
 Alt0 = 109;                                     % [m] local altitude
 datcom.Alt = Alt0 + 0:200:3600;
 
 %% Design Parameters
-datcom.Chord1 = 0.25; 
-datcom.Chord2 = 0.12; 
-datcom.Height = 0.16;                            
-datcom.shape = 'parall';
+datcom.Chord1 = 0.35; 
+datcom.Chord2 = 0.11; 
+datcom.Height = 0.14;                            
+datcom.shape = 'rect';
 
 %% Fixed Parameters
-vars.xcg = [1.52, 1.36] - 0.28 + 0.26;          % [m] CG position [full, empty]
+vars.xcg = [1.52, 1.36] - 0.28 + 0.28;          % [m] CG position [full, empty]
 datcom.D = 0.15;                                % [m] rocket diameter
 datcom.Lnose = 0.26;                            % [m] nose length
 datcom.Lcenter = 2.51 - 0.28;                   % [m] Lcenter : Centerbody length

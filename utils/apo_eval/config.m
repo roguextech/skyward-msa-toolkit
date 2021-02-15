@@ -117,11 +117,10 @@ settings.ode.optionsdesc = odeset('AbsTol',1E-3,'RelTol',1E-12,...
 
 
 %% Random wind model
-
 % Wind is generated randomly from the minimum to the maximum parameters which defines the wind.
 % Setting the same values for min and max will fix the parameters of the wind.
-settings.wind.MagMin = 9;                   % [m/s] Minimum Magnitude
-settings.wind.MagMax = 9;                   % [m/s] Maximum Magnitude
+settings.wind.MagMin = 4;                   % [m/s] Minimum Magnitude
+settings.wind.MagMax = 4;                   % [m/s] Maximum Magnitude
 settings.wind.ElMin = 0*pi/180;             % [rad] Minimum Elevation, user input in degrees (ex. 0)
 settings.wind.ElMax = 0*pi/180;             % [rad] Maximum Elevation, user input in degrees (ex. 0) (Max == 90 Deg)
 settings.wind.AzMin = (180)*pi/180;         % [rad] Minimum Azimuth, user input in degrees (ex. 90)

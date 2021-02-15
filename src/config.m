@@ -13,7 +13,8 @@ Release date: 16/04/2016
 %% LAUNCH SETUP
 % launchpad pont the sor
 settings.z0 = 109;                                                                  %[m] Launchpad Altitude
-settings.lrampa = 4.9;                                                              %[m] LaunchPad route (distance from ground of the first hook)
+settings.lpin = 1.150;                                                              %[m] Distance from base of second pin
+settings.lrampa = 5.9 - settings.lpin;                                              %[m] LaunchPad route (total available route)
 settings.lat0 = 39.201778;                                                          % Launchpad latitude
 settings.lon0 = -8.138368;                                                          % Launchpad longitude
 
@@ -22,8 +23,8 @@ settings.g0 = gravitywgs84(settings.z0, settings.lat0);
 
 % launchpad roccaraso
 % settings.z0 = 1416;                                                                 %[m] Launchpad Altitude
-% settings.lrampa = 4.9;                                                              %[m] LaunchPad route (distance from ground of the first hook)
-% settings.lat0 = 41.810093;                                                          % Launchpad latitude
+% settings.lpin = 1.150;                                                              %[m] Distance from base of second pin
+% settings.lrampa = 5.9 - settings.lpin;                                              %[m] LaunchPad route (total available route)% settings.lat0 = 41.810093;                                                          % Launchpad latitude
 % settings.lon0 = 14.052546;                                                          % Launchpad longitude
 
 settings.satellite3D = false;
@@ -38,8 +39,8 @@ end
 % angles must be the same.
 settings.OMEGAmin = 84*pi/180; % [rad] Minimum Elevation Angle, user input in degrees (ex. 80)
 settings.OMEGAmax = 84*pi/180; % [rad] Maximum Elevation Angle, user input in degrees (ex. 80)
-settings.PHImin = 330*pi/180;    % [rad] Minimum Azimuth Angle from North Direction, user input in degrees (ex. 90)
-settings.PHImax = 330*pi/180;    % [rad] Maximum Azimuth Angle from North Direction, user input in degrees (ex. 90)
+settings.PHImin = 0*pi/180;    % [rad] Minimum Azimuth Angle from North Direction, user input in degrees (ex. 90)
+settings.PHImax = 0*pi/180;    % [rad] Maximum Azimuth Angle from North Direction, user input in degrees (ex. 90)
 settings.upwind = false;       % If true, phi is selected according to wind direction (constant wind model only)
 settings.PHIsigma = 0*pi/180;  % Stocasthic simulation only
 
@@ -54,6 +55,7 @@ Motors = [Motors.Cesaroni, Motors.Aerotech];
 % name = 'M1890';
 % name = 'M1800';
 name = 'M2000R';
+%name = 'L1365M';
 
 n_name = [Motors.MotorName] == name;
 settings.motor.exp_time = Motors(n_name).t;
@@ -193,12 +195,12 @@ settings.wind.input_uncertainty = [1, 1];
 
 % Wind is generated randomly from the minimum to the maximum parameters which defines the wind.
 % Setting the same values for min and max will fix the parameters of the wind.
-settings.wind.MagMin = 4;           % [m/s] Minimum Magnitude
-settings.wind.MagMax = 4;           % [m/s] Maximum Magnitude
+settings.wind.MagMin = 10;           % [m/s] Minimum Magnitude
+settings.wind.MagMax = 10;           % [m/s] Maximum Magnitude
 settings.wind.ElMin = 0*pi/180;     % [rad] Minimum Elevation, user input in degrees (ex. 0)
 settings.wind.ElMax = 0*pi/180;     % [rad] Maximum Elevation, user input in degrees (ex. 0) (Max == 90 Deg)
-settings.wind.AzMin = (90)*pi/180; % [rad] Minimum Azimuth, user input in degrees (ex. 90)
-settings.wind.AzMax = (90)*pi/180; % [rad] Maximum Azimuth, user input in degrees (ex. 90)
+settings.wind.AzMin = (180)*pi/180; % [rad] Minimum Azimuth, user input in degrees (ex. 90)
+settings.wind.AzMax = (180)*pi/180; % [rad] Maximum Azimuth, user input in degrees (ex. 90)
 
 % NOTE: wind azimuth angle indications (wind directed towards):
 % 0 deg (use 360 instead of 0)  -> North
