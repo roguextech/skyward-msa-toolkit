@@ -1,33 +1,56 @@
 function dY = Ascent(t, Y, settings, uw, vw, ww)
-% ODE-Function of the 6DOF Rigid Rocket Model
-% State = ( x y z | u v w | p q r | q0 q1 q2 q3 Ixx Iyy Izz )
-%
-% (x y z): NED Earth's Surface Centered Frame ("Inertial") coordinates
-% (u v w): body frame velocities
-% (p q r): body frame angular rates
-% (Ixx Iyy Izz): Inertias
-% (q0 q1 q2 q3): attitude unit quaternion
-%
-%
-% NOTE: To get the NED velocities the body-frame must be multiplied for the
-% conjugated of the current attitude quaternion
-% E.G.
-%
-%
-% quatrotate(quatconj(Y(:,10:13)),Y(:,4:6))
+%{
 
-% Author: Ruben Di Battista
-% Skyward Experimental Rocketry | CRD Dept | crd@skywarder.eu
-% email: ruben.dibattista@skywarder.eu
-% Website: http://www.skywarder.eu
-% April 2014; Last revision: 31.XII.2014
-% License:  2-clause BSD
+ASCENT - ode function of the 6DOF Rigid Rocket Model
 
-% Author: Francesco Colombi
-% Skyward Experimental Rocketry | CRD Dept | crd@skywarder.eu
-% email: francesco.colombi@skywarder.eu
-% Release date: 16/04/2016
+INPUTS:
+            - t, integration time;
+            - Y, state vector, [ x y z | u v w | p q r | q0 q1 q2 q3 | Ixx Iyy Izz]:
 
+                                * (x y z), NED{north, east, down} horizontal frame;
+                                * (u v w), body frame velocities;
+                                * (p q r), body frame angular rates;
+                                * (Ixx Iyy Izz), Inertias;
+                                * (q0 q1 q2 q3), attitude unit quaternion.
+ 
+
+            - settings, rocket data structure;
+            - uw, wind component along x;
+            - vw, wind component along y;
+            - ww, wind component along z;
+            - uncert, wind uncertanties;
+            - Hour, hour of the day of the needed simulation;
+            - Day, day of the month of the needed simulation;
+            - OMEGA, launchpad azimuth angle;
+
+OUTPUTS:
+            - dY, state derivatives;
+            - parout, interesting fligth quantities structure (aerodyn coefficients, forces and so on..).
+
+
+NOTE: To get the NED velocities the body-frame must be multiplied for the
+conjugated of the current attitude quaternion
+E.G.  quatrotate(quatconj(Y(:,10:13)),Y(:,4:6))
+
+
+Author: Ruben Di Battista
+Skyward Experimental Rocketry | CRD Dept | crd@skywarder.eu
+email: ruben.dibattista@skywarder.eu
+April 2014; Last revision: 31.XII.2014
+
+Author: Francesco Colombi
+Skyward Experimental Rocketry | CRD Dept | crd@skywarder.eu
+email: francesco.colombi@skywarder.eu
+Release date: 16/04/2016
+
+Author: Adriano Filippo Inno
+Skyward Experimental Rocketry | AFD Dept | crd@skywarder.eu
+email: adriano.filippo.inno@skywarder.eu
+Release date: 13/01/2018
+
+%}
+
+% recalling the states
 % x = Y(1);
 % y = Y(2);
 z = Y(3);
@@ -83,6 +106,7 @@ S = settings.S;                         % [m^2]   cross surface
 C = settings.C;                         % [m]     caliber
 g = settings.g0/(1 + (-z*1e-3/6371))^2; % [N/kg]  module of gravitational field 
 tb = settings.tb;                       % [s]     Burning Time
+OMEGA = settings.OMEGA;      % [rad] Elevation Angle in the launch pad
 
 % inertias for full configuration (with all the propellant embarqued) obtained with CAD's
 Ixxf = settings.Ixxf;        % [kg*m^2] Inertia to x-axis
@@ -141,7 +165,6 @@ Cm = (Cm0 + Cma*(alpha - alpha0));
 Cn = (Cn0 + Cnb*(beta - beta0));
 
 %% 
-OMEGA = settings.OMEGA;
 if -z < settings.lrampa*sin(OMEGA)      % No torque on the launchpad
     
     Fg = m*g*sin(OMEGA);                % [N] force due to the gravity
@@ -170,7 +193,7 @@ else
     Z = qdyn*S*CN;                      % [N] z-body component of the aerodynamics force
     Fg = dcm*[0; 0; m*g];               % [N] force due to the gravity in body frame
     
-    F = Fg +[-X+T, +Y, -Z]';            % [N] total forces vector
+    F = Fg +[-X+T, Y, -Z]';             % [N] total forces vector
     
 %% STATE DERIVATIVES
     % velocity
@@ -179,20 +202,20 @@ else
     dw = F(3)/m-p*v+q*u;
     
     % Rotation
-    dp = (Iyy-Izz)/Ixx*q*r + qdynL_V/Ixx*(V_norm*Cl+Clp*p*C/2)-Ixxdot*p/Ixx;
-    dq = (Izz-Ixx)/Iyy*p*r + qdynL_V/Iyy*(V_norm*Cm + (Cmad+Cmq)*q*C/2)...
-        -Iyydot*q/Iyy;
-    dr = (Ixx-Iyy)/Izz*p*q + qdynL_V/Izz*(V_norm*Cn + (Cnr*r+Cnp*p)*C/2)...
-        -Izzdot*r/Izz;
+    dp = (Iyy - Izz)/Ixx*q*r + qdynL_V/Ixx*(V_norm*Cl+Clp*p*C/2) - Ixxdot*p/Ixx;
+    dq = (Izz - Ixx)/Iyy*p*r + qdynL_V/Iyy*(V_norm*Cm + (Cmad+Cmq)*q*C/2)...
+        - Iyydot*q/Iyy;
+    dr = (Ixx - Iyy)/Izz*p*q + qdynL_V/Izz*(V_norm*Cn + (Cnr*r+Cnp*p)*C/2)...
+        - Izzdot*r/Izz;
     
 end
 % Quaternions
-OM = 1/2* [ 0 -p -q -r  ;
-    p  0  r -q  ;
-    q -r  0  p  ;
-    r  q -p  0 ];
+OM = [ 0 -p -q -r  ;
+       p  0  r -q  ;
+       q -r  0  p  ;
+       r  q -p  0 ];
 
-dQQ = OM*Q';
+dQQ = 1/2*OM*Q';
 
 %% FINAL DERIVATIVE STATE ASSEMBLING
 dY(1:3) = Vels;

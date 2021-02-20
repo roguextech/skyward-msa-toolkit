@@ -5,7 +5,7 @@ ASCENT - ode function of the 6DOF Rigid Rocket Model
 
 INPUTS:
             - t, integration time;
-            - Y, state vector, [ x y z | u v w | p q r | q0 q1 q2 q3 Ixx Iyy Izz]:
+            - Y, state vector, [ x y z | u v w | p q r | q0 q1 q2 q3 | Ixx Iyy Izz]:
 
                                 * (x y z), NED{north, east, down} horizontal frame;
                                 * (u v w), body frame velocities;
@@ -46,11 +46,10 @@ Release date: 16/04/2016
 Author: Adriano Filippo Inno
 Skyward Experimental Rocketry | AFD Dept | crd@skywarder.eu
 email: adriano.filippo.inno@skywarder.eu
-Release date: 13/01/2018
 
 %}
 
-% recalling the state
+% recalling the states
 % x = Y(1);
 % y = Y(2);
 z = Y(3);
@@ -247,7 +246,7 @@ else
     Z = qdyn*S*CN;                      % [N] z-body component of the aerodynamics force
     Fg = dcm*[0; 0; m*g];               % [N] force due to the gravity in body frame
     
-    F = Fg +[-X+T, +Y, -Z]';            % [N] total forces vector
+    F = Fg +[-X+T, Y, -Z]';             % [N] total forces vector
     
 %% STATE DERIVATIVES
     % velocity
@@ -256,20 +255,20 @@ else
     dw = F(3)/m-p*v+q*u;
     
     % Rotation
-    dp = (Iyy-Izz)/Ixx*q*r + qdynL_V/Ixx*(V_norm*Cl+Clp*p*C/2)-Ixxdot*p/Ixx;
-    dq = (Izz-Ixx)/Iyy*p*r + qdynL_V/Iyy*(V_norm*Cm + (Cmad+Cmq)*q*C/2)...
-        -Iyydot*q/Iyy;
-    dr = (Ixx-Iyy)/Izz*p*q + qdynL_V/Izz*(V_norm*Cn + (Cnr*r+Cnp*p)*C/2)...
-        -Izzdot*r/Izz;
+    dp = (Iyy - Izz)/Ixx*q*r + qdynL_V/Ixx*(V_norm*Cl+Clp*p*C/2) - Ixxdot*p/Ixx;
+    dq = (Izz - Ixx)/Iyy*p*r + qdynL_V/Iyy*(V_norm*Cm + (Cmad+Cmq)*q*C/2)...
+        - Iyydot*q/Iyy;
+    dr = (Ixx - Iyy)/Izz*p*q + qdynL_V/Izz*(V_norm*Cn + (Cnr*r+Cnp*p)*C/2)...
+        - Izzdot*r/Izz;
     
 end
 % Quaternions
-OM = 1/2* [ 0 -p -q -r  ;
-    p  0  r -q  ;
-    q -r  0  p  ;
-    r  q -p  0 ];
+OM = [ 0 -p -q -r  ;
+       p  0  r -q  ;
+       q -r  0  p  ;
+       r  q -p  0 ];
 
-dQQ = OM*Q';
+dQQ = 1/2*OM*Q';
 
 %% FINAL DERIVATIVE STATE ASSEMBLING
 dY(1:3) = Vels;

@@ -24,10 +24,10 @@ datcom.Height = 0.14;
 datcom.shape = 'rect';
 
 %% Fixed Parameters
-vars.xcg = [1.52, 1.36] - 0.28 + 0.28;          % [m] CG position [full, empty]
+vars.xcg = [1.52, 1.36];                        % [m] CG position [full, empty]
 datcom.D = 0.15;                                % [m] rocket diameter
 datcom.Lnose = 0.26;                            % [m] nose length
-datcom.Lcenter = 2.51 - 0.28;                   % [m] Lcenter : Centerbody length
+datcom.Lcenter = 2.51 - 0.28;                   % [m] Centerbody length
 datcom.Npanel = 3;                              % [m] number of fins
 datcom.Ler = 0.003;                             % [deg] Leading edge radius
 datcom.d = 0;                                   % [m] rocket tip-fin distance
@@ -43,7 +43,7 @@ datcom.xprot = datcom.Lcenter + datcom.Lnose - 0.85; % axial position
 datcom.nloc = 3; % number of brakes
 datcom.lprot = 0.005; % brakes thickness
 datcom.wprot = 0.088; % brakes width
-vars.hprot = linspace(0, 0.0387, 3); % brakes length, first entry must be always 0!
+vars.hprot = linspace(0, 0.0387, 30); % brakes length, first entry must be always 0!
 
 
 %% Run 

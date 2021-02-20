@@ -20,17 +20,17 @@ Release date: 18/10/2019
 %}
 
 %% LAUNCH SETUP
-% launchpad 
-settings.z0 = 109;                   %[m] Launchpad Altitude
-settings.lrampa = 4.9;               %[m] LaunchPad route (launchpad length-distance from ground of the first hook)
-settings.lat0 = 39.201778;                                                          % Launchpad latitude
-settings.lon0 = -8.138368;                                                          % Launchpad longitude
+% launchpad pont the sor
+settings.z0 = 109;                                               %[m] Launchpad Altitude
+lpin = 1.150;                                                    %[m] Distance from base of second pin
+settings.lrampa = 5.9 - lpin;                           %[m] LaunchPad route (total available route)
+settings.lat0 = 39.201778;                                       % Launchpad latitude
+settings.lon0 = -8.138368;                                       % Launchpad longitude
 
-% Gravity costant at launch latitude and altitude:
-settings.g0 = gravitywgs84(settings.z0, settings.lat0);
+
+settings.g0 = gravitywgs84(settings.z0, settings.lat0);          % Gravity costant at launch latitude and altitude
+
 % launchpad directions
-% for a single run the maximum and the minimum value of the following
-% angles must be the same.
 settings.OMEGA = 84*pi/180;         %[rad] Minimum Elevation Angle, user input in degrees (ex. 80)       
 settings.PHI = 0*pi/180;            %[rad] Maximum Azimuth Angle from North Direction, user input in degrees (ex. 90)
 
@@ -84,7 +84,7 @@ settings.ode.optionsasc = odeset('Events', @EventApogee,'InitialStep',1);      %
 settings.ode.optionspad = odeset('Events', @EventPad);                         %ODE options for ascend
 
 %% wind
-settings.wind.Mag = 10;                   % [m/s] Magnitude
+settings.wind.Mag = 8;                     % [m/s] Magnitude
 
 %% Optimization Choice
 settings.cal_min = 1.5;                    % minum stability margin required
