@@ -84,13 +84,13 @@ settings.S = pi*settings.C^2/4;    % [m^2]    Cross-sectional Surface
 
 % inertias for full configuration (with all the propellant embarqued) obtained with CAD's
 settings.Ixxf = 0.08;                     % [kg*m^2] Inertia to x-axis
-settings.Iyyf = 13.21;                    % [kg*m^2] Inertia to y-axis
-settings.Izzf = 13.21;                    % [kg*m^2] Inertia to z-axis
+settings.Iyyf = 13.01;                    % [kg*m^2] Inertia to y-axis
+settings.Izzf = 13.01;                    % [kg*m^2] Inertia to z-axis
 
 % inertias for empty configuration (all the propellant consumed) obtained with CAD's
 settings.Ixxe = 0.07;                     % [kg*m^2] Inertia to x-axis
-settings.Iyye = 10.27;                    % [kg*m^2] Inertia to y-axis
-settings.Izze = 10.27;                    % [kg*m^2] Inertia to z-axis
+settings.Iyye = 10.06;                    % [kg*m^2] Inertia to y-axis
+settings.Izze = 10.06;                    % [kg*m^2] Inertia to z-axis
 
 %% AERODYNAMICS DETAILS
 % These coefficients are obtained using MISSILE DATCOM
