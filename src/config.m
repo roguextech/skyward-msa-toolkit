@@ -18,14 +18,15 @@ settings.lrampa = 5.9 - lpin;                                              %[m] 
 settings.lat0 = 39.201778;                                                          % Launchpad latitude
 settings.lon0 = -8.138368;                                                          % Launchpad longitude
 
-
-settings.g0 = gravitywgs84(settings.z0, settings.lat0);                             % Gravity costant at launch latitude and altitude
-
 % launchpad roccaraso
 % settings.z0 = 1416;                                                               %[m] Launchpad Altitude
 % settings.lpin = 1.150;                                                            %[m] Distance from base of second pin
-% settings.lrampa = 5.9 - settings.lpin;                                            %[m] LaunchPad route (total available route)% settings.lat0 = 41.810093;                                                          % Launchpad latitude
+% settings.lrampa = 5.9 - settings.lpin;                                            %[m] LaunchPad route (total available route)
+% settings.lat0 = 41.810093;                                                        % Launchpad latitude
 % settings.lon0 = 14.052546;                                                        % Launchpad longitude
+
+settings.g0 = gravitywgs84(settings.z0, settings.lat0);                             % Gravity costant at launch latitude and altitude
+
 
 settings.satellite3D = false;
 

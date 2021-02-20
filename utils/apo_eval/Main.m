@@ -12,7 +12,7 @@ addpath(path);
 run config.m
 
 % data of the analyis 
-ms = (18.5:1:21.5); % structural mass without case+propellant
+ms = (20:1:21); % structural mass without case+propellant
 n_mass = length(ms);
 n_motors = size(settings.motors,2);
 
@@ -28,6 +28,7 @@ for j = 1:n_motors
     
     settings.motor.exp_time = settings.motors(j).t;
     settings.motor.exp_thrust = settings.motors(j).T;
+    settings.motor.exp_m = settings.motors(j).m;
     settings.mp = settings.motors(j).mp;                                % [kg]   Propellant Mass
     settings.mm = settings.motors(j).mm;
     settings.tb = settings.motor.exp_time(end);                         % [s]    Burning time
