@@ -24,10 +24,11 @@ datcom.Height = 0.14;
 datcom.shape = 'rect';
 
 %% Fixed Parameters
-vars.xcg = [1.52, 1.36];                        % [m] CG position [full, empty]
+vars.xcg = [1.49, 1.33];                        % [m] CG position [full, empty]
 datcom.D = 0.15;                                % [m] rocket diameter
-datcom.Lnose = 0.26;                            % [m] nose length
-datcom.Lcenter = 2.51 - 0.28;                   % [m] Centerbody length
+datcom.Lnose = 0.28;                            % [m] nose length
+Ltotal = 2.495;                                 % [m] rocket length
+datcom.Lcenter = Ltotal - datcom.Lnose;         % [m] Centerbody length
 datcom.Npanel = 3;                              % [m] number of fins
 datcom.Ler = 0.003;                             % [deg] Leading edge radius
 datcom.d = 0;                                   % [m] rocket tip-fin distance
