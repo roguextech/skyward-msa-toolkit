@@ -10,7 +10,6 @@ Release date: 16/04/2016
 
 %}
 
-
 %% LAUNCH SETUP
 % launchpad pont the sor
 settings.z0 = 109;                                                                  %[m] Launchpad Altitude
