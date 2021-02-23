@@ -118,7 +118,7 @@ g = settings.g0/(1 + (-z*1e-3/6371))^2; % [N/kg]  module of gravitational field
 tb = settings.tb;                       % [s]     Burning Time
 
 if settings.stoch.N == 1
-    OMEGA = settings.OMEGA;      % [rad] Elevation Angle in the launch pad
+    OMEGA = settings.OMEGA;             % [rad] Elevation Angle in the launch pad
 end
 
 % inertias for full configuration (with all the propellant embarqued) obtained with CAD's
