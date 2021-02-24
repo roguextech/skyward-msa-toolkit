@@ -1,4 +1,5 @@
 function [dY, parout] = main_descent(t, Y, settings, uw, vw, ww, para1, para2, t0p, uncert, Hour, Day)
+
 %% RECALLING THE STATE
 % Rocket state
 x_rocket = Y(1);
@@ -74,6 +75,7 @@ vr_para1 = v_para1 - vw;
 wr_para1 = w_para1 - ww;
 
 Vels_para1 = [u_para1 v_para1 w_para1];
+Vrel_para1 = [ur_para1 vr_para1 wr_para1];
 V_norm_para1 = norm([ur_para1 vr_para1 wr_para1]);
 
 % Parachute 2 (NED) relative velocities (plus wind) 
@@ -82,68 +84,22 @@ vr_para2 = v_para2 - vw;
 wr_para2 = w_para2 - ww;
 
 Vels_para2 = [u_para2 v_para2 w_para2];
+Vrel_para2 = [ur_para2 vr_para2 wr_para2];
 V_norm_para2 = norm([ur_para2 vr_para2 wr_para2]);
 
 %% PARACHUTE 1 REFERENCE FRAME
 % The parachutes are approximated as rectangular surfaces with the normal
 % vector perpendicular to the relative velocity
-
-t_vect1 = -[ur_para1 vr_para1 wr_para1];                                          % Tangenzial vector
-h_vect1 = [vr_para1 -ur_para1 0];                                                % horizontal vector    
-
-if all(abs(h_vect1) < 1e-8)
-    if all([uw vw 0] == 0) % to prevent NaN
-        t_vers1 = t_vect1/norm(t_vect1);                                         % Tangenzial versor
-        h_vers1 = [0 0 0];                                                     % horizontal versor
-        n_vers1 = [0 0 0];                                                     % Normal versor
-    else
-        h_vect1 = [vw -uw 0];
-        t_vers1 = t_vect1/norm(t_vect1);
-        h_vers1 = h_vect1/norm(h_vect1);
-        n_vect1 = cross(t_vers1, h_vers1);
-        n_vers1 = n_vect1/norm(n_vect1);
-    end
+if all(abs(Vrel_para1) < 1e-3)
+    t_vers1 = [0, 0, -1];
 else
-    t_vers1 = t_vect1/norm(t_vect1);
-    h_vers1 = h_vect1/norm(h_vect1);
-    n_vect1 = cross(t_vers1, h_vers1);
-    n_vers1 = n_vect1/norm(n_vect1);
+    t_vers1 = -Vrel_para1/V_norm_para1;
 end
 
-if (n_vers1(3) > 0) % If the normal vector is downward directed
-    n_vect1 = cross(h_vers1, t_vers1);
-    n_vers1 = n_vect1/norm(n_vect1);
-end
-
-%% PARACHUTE 2 REFERENCE FRAME
-% The parachutes are approximated as rectangular surfaces with the normal
-% vector perpendicular to the relative velocity
-
-t_vect2 = -[ur_para2 vr_para2 wr_para2];                                          % Tangenzial vector
-h_vect2 = [vr_para2 -ur_para2 0];                                                % horizontal vector    
-
-if all(abs(h_vect2) < 1e-8)
-    if all([uw vw 0] == 0) % to prevent NaN
-        t_vers2 = t_vect2/norm(t_vect2);                                         % Tangenzial versor
-        h_vers2 = [0 0 0];                                                     % horizontal versor
-        n_vers2 = [0 0 0];                                                     % Normal versor
-    else
-        h_vect2 = [vw -uw 0];
-        t_vers2 = t_vect2/norm(t_vect2);
-        h_vers2 = h_vect2/norm(h_vect2);
-        n_vect2 = cross(t_vers2, h_vers2);
-        n_vers2 = n_vect2/norm(n_vect2);
-    end
+if all(abs(Vrel_para2) < 1e-3)
+    t_vers2 = [0, 0, -1];
 else
-    t_vers2 = t_vect2/norm(t_vect2);
-    h_vers2 = h_vect2/norm(h_vect2);
-    n_vect2 = cross(t_vers2, h_vers2);
-    n_vers2 = n_vect2/norm(n_vect2);
-end
-
-if (n_vers2(3) > 0) % If the normal vector is downward directed
-    n_vect2 = cross(h_vers2, t_vers2);
-    n_vers2 = n_vect2/norm(n_vect2);
+    t_vers2 = -Vrel_para2/V_norm_para2;
 end
 
 %% CONSTANTS
@@ -159,106 +115,70 @@ M_rocket = V_norm_rocket/a;
 M_value_rocket = M_rocket;
 
 %% RELATIVE POSITION AND VELOCITY VECTORS (PARA1)
-% (NED) positions of parachute and rocket
-pos_para1 = [x_para1 y_para1 z_para1]; pos_rocket = [x_rocket y_rocket z_rocket];
-
-% (NED) parachute velocity, (BODY) rocket velocity
-vel_para1 = [u_para1 v_para1 w_para1]; vel_rocket = [u_rocket v_rocket w_rocket];
-
-% (NED) relative position vector pointed from xcg to the point from where the
-% parachute has been deployed
-posRelXcg_Poi1 = quatrotate(Q_conj_rocket,[(settings.xcg(2)-settings.Lnc) 0 0]);
-
-% (NED) position vector of that point from the origin
-pos_Poi1 = pos_rocket + posRelXcg_Poi1;
-
-% (BODY) velocity vector of that point
-vel_Poi1 = vel_rocket + cross([p_rocket q_rocket r_rocket],[(settings.xcg(2)-settings.Lnc) 0 0]);
-
-% Relative position vector between parachute and that point.
-relPos_vecNED1 = pos_para1 - pos_Poi1;                                           % (NED) relative position vector pointed towards parachute
-relPos_vecBODY1 = quatrotate(Q_rocket,relPos_vecNED1);                          % (BODY)   "         "      "       "       "       "
-relPos_versNED1 = relPos_vecNED1/norm(relPos_vecNED1);                           % (NED) relative position versor pointed towards parachute
-relPos_versBODY1 = relPos_vecBODY1/norm(relPos_vecBODY1);                        % (BODY)   "         "      "       "       "       "
-
-if all(abs(relPos_vecNED1) < 1e-8) || all(abs(relPos_vecBODY1) < 1e-8)          % to prevent NaN
-    relPos_vecNED1 = [0 0 0];
-    relPos_versNED1 = [0 0 0];
-    relPos_versBODY1= [0 0 0];
+posPara1 = [x_para1 y_para1 z_para1];
+posPara2 = [x_para2 y_para2 z_para2];
+posRocket = [x_rocket y_rocket z_rocket];
+posDepl = posRocket + quatrotate(Q_conj_rocket,[(settings.xcg(2)-settings.Lnc) 0 0]);
+posRelDrgMain = posPara1 - posPara2;
+posRelDrgDepl = posPara1 - posDepl;
+posRelMainDepl = posPara2 - posDepl;
+if norm(posRelDrgMain) < 1e-3
+    posRelDrgMain = [0, 0, -1e-3];
+end
+if norm(posRelDrgDepl) < 1e-3
+    posRelDrgDepl = [0, 0, -1e-3];
+end
+if norm(posRelMainDepl) < 1e-3
+    posRelMainDepl = [0, 0, -1e-3];
+end
+posRelDrgMain_vers = posRelDrgMain/norm(posRelDrgMain);
+posRelDrgDepl_vers = posRelDrgDepl/norm(posRelDrgDepl);
+posRelMainDepl_vers = posRelMainDepl/norm(posRelMainDepl);
+%% CHORD TENSION (ELASTIC-DAMPING MODEL)
+if norm(posRelDrgMain) > para1.L
+    T_chordRel = (norm(posRelDrgMain) - para1.L)* para1.K;
+else
+    T_chordRel = 0;
 end
 
-% (NED) relative velocity vector between parachute and that point, pointed
-% towards rocket
-relVel_vecNED1 = quatrotate(Q_conj_rocket,vel_Poi1) - vel_para1;
-
-% (NED) relative velocity projected along the chock chord. Pointed towards
-% parachute
-relVel_chord1 = relVel_vecNED1 * relPos_versNED1';
-
-%% RELATIVE POSITION AND VELOCITY VECTORS (PARA2)
-% (NED) positions of parachute and rocket
-pos_para2 = [x_para2 y_para2 z_para2]; pos_rocket = [x_rocket y_rocket z_rocket];
-
-% (NED) parachute velocity, (BODY) rocket velocity
-vel_para2 = [u_para2 v_para2 w_para2]; vel_rocket = [u_rocket v_rocket w_rocket];
-
-% (NED) relative position vector pointed from xcg to the point from where the
-% parachute has been deployed
-posRelXcg_Poi2 = quatrotate(Q_conj_rocket,[(settings.xcg(2)-settings.Lnc) 0 0]);
-
-% (NED) position vector of that point from the origin
-pos_Poi2 = pos_rocket + posRelXcg_Poi2;
-
-% (BODY) velocity vector of that point
-vel_Poi2 = vel_rocket + cross([p_rocket q_rocket r_rocket],[(settings.xcg(2)-settings.Lnc) 0 0]);
-
-% Relative position vector between parachute and that point.
-relPos_vecNED2 = pos_para2 - pos_Poi2;                                           % (NED) relative position vector pointed towards parachute
-relPos_vecBODY2 = quatrotate(Q_rocket,relPos_vecNED2);                          % (BODY)   "         "      "       "       "       "
-relPos_versNED2 = relPos_vecNED2/norm(relPos_vecNED2);                           % (NED) relative position versor pointed towards parachute
-relPos_versBODY2 = relPos_vecBODY2/norm(relPos_vecBODY2);                        % (BODY)   "         "      "       "       "       "
-
-if all(abs(relPos_vecNED2) < 1e-8) || all(abs(relPos_vecBODY2) < 1e-8)          % to prevent NaN
-    relPos_vecNED2 = [0 0 0];
-    relPos_versNED2 = [0 0 0];
-    relPos_versBODY2= [0 0 0];
-end
-
-% (NED) relative velocity vector between parachute and that point, pointed
-% towards rocket
-relVel_vecNED2 = quatrotate(Q_conj_rocket,vel_Poi2) - vel_para2;
-
-% (NED) relative velocity projected along the chock chord. Pointed towards
-% parachute
-relVel_chord2 = relVel_vecNED2 * relPos_versNED2';
-
-%% CHORD TENSION (ELASTIC-DAMPING MODEL) PARA1
-if norm(relPos_vecNED1) > (para2.L + para1.L)                      % [N] Chord tension (elastic-damping model)
-    T_chord1 = (norm(relPos_vecNED1) - (para2.L + para1.L))* para1.K -...
-        relVel_chord1 * para1.C;
+if norm(posRelDrgDepl) > (para2.L + para1.L)                      % [N] Chord tension (elastic-damping model)
+    T_chord1 = (norm(posRelDrgDepl) - (para2.L + para1.L))* para1.K;
 else
     T_chord1 = 0;
 end
 
-%% CHORD TENSION (ELASTIC-DAMPING MODEL) PARA2
-if norm(relPos_vecNED2) > para2.L                     % [N] Chord tension (elastic-damping model)
-    T_chord2 = (norm(relPos_vecNED2) - para2.L)* para2.K -...
-        relVel_chord2 * para2.C;
+if norm(posRelMainDepl) > para2.L                     % [N] Chord tension (elastic-damping model)
+    T_chord2 = (norm(posRelMainDepl) - para2.L)* para2.K;
 else
     T_chord2 = 0;
-end
+end 
 
 %% PARACHUTES FORCES PARA 1
 % computed in the NED-frame reference system
 S_para1 = para1.S;                                                   % [m^2]   Surface
 CD_para1 = para1.CD;
+D0 = sqrt(4*para1.S/pi);
+t0 = para1.nf * D0/V_norm_para1;
+tx = t0 * para1.CX^(1/para1.m);
+SCD0_1 = S_para1*CD_para1;
 
-D_para1 = 0.5*rho*V_norm_para1^2*S_para1*CD_para1*t_vers1';
-Fg_para1 = [0 0 m_para1*g]';                                                    % [N] Gravitational Force vector
+dt = t-t0p(1);
 
-Ft_chord_para1 = -T_chord1 * relPos_versNED1;
+if dt < 0
+    SCD_para1 = 0;
+elseif dt < tx
+    SCD_para1 = SCD0_1 * (dt/t0)^para1.m;
+else
+    SCD_para1 = SCD0_1 * (1+(para1.CX-1)*exp(-2*(dt-tx)/t0));
+end
 
-F_para1 = D_para1 + Fg_para1 + Ft_chord_para1';                          % [N] (BODY) total forces vector
+D_para1 = 0.5*rho*V_norm_para1^2*SCD_para1*t_vers1';
+Fg_para1 = [0 0 m_para1*g]';                                                   % [N] Gravitational Force vector
+
+Ft_chordRel_para1 = -T_chordRel * posRelDrgMain_vers;
+Ft_chord_para1 = -T_chord1 * posRelDrgDepl_vers;
+
+F_para1 = D_para1 + Fg_para1 + Ft_chord_para1' + Ft_chordRel_para1';                          % [N] (BODY) total forces vector
 
 %% PARACHUTE FORCES PARA 2
 % computed in the NED-frame reference system
@@ -267,30 +187,33 @@ CD_para2 = para2.CD;
 D0 = sqrt(4*para2.S/pi);
 t0 = para2.nf * D0/V_norm_para2;
 tx = t0 * para2.CX^(1/para2.m);
-SCD0 = S_para2*CD_para2;
+SCD0_2 = S_para2*CD_para2;
 
-dt = t-t0p;
+dt = t-t0p(2);
 
 if dt < 0
     SCD_para2 = 0;
 elseif dt < tx
-    SCD_para2 = SCD0 * (dt/t0)^para2.m;
+    SCD_para2 = SCD0_2 * (dt/t0)^para2.m;
 else
-    SCD_para2 = SCD0 * (1+(para2.CX-1)*exp(-2*(dt-tx)/t0));
+    SCD_para2 = SCD0_2 * (1+(para2.CX-1)*exp(-2*(dt-tx)/t0));
 end
 
 D_para2 = 0.5*rho*V_norm_para2^2*SCD_para2*t_vers2';
 Fg_para2 = [0 0 m_para2*g]';                                                    % [N] Gravitational Force vector
 
-Ft_chord_para2 = -T_chord2 * relPos_versNED2;                                    % [N] Chord tension vector (parachute view)
-F_para2 = D_para2 + Fg_para2 + Ft_chord_para2';                          % [N] (BODY) total forces vector
+Ft_chordRel_para2 = T_chordRel * posRelDrgMain_vers;
+Ft_chord_para2 = -T_chord2 * posRelMainDepl_vers;
+
+F_para2 = D_para2 + Fg_para2 + Ft_chord_para2' + Ft_chordRel_para2';                          % [N] (BODY) total forces vector
 
 %% ROCKET FORCES
 % computed in the body-frame reference system
 Fg_rocket = quatrotate(Q_rocket,[0 0 m_rocket*g])';                           % [N] force due to the gravity
 
-Ft_chord_rocket1 = T_chord1 * relPos_versBODY1;                                  % [N] Chord tension vector (rocket view)
-Ft_chord_rocket2 = T_chord2 * relPos_versBODY2;
+Ft_chord_rocket1 = T_chord1 * quatrotate(Q_rocket,posRelDrgDepl_vers);                                  % [N] Chord tension vector (rocket view)
+Ft_chord_rocket2 = T_chord2 * quatrotate(Q_rocket,posRelMainDepl_vers);
+
 F_rocket = Fg_rocket + Ft_chord_rocket1' + Ft_chord_rocket2';                                      % [N] (NED) total forces vector
 
 %% ROCKET STATE DERIVATIVES
@@ -362,36 +285,14 @@ parout.wind.body_wind = wind;
 parout.velocities = Vels_rocket;
 
 parout.forces.T = T;
-parout.forces.T_chord = T_chord1;
+parout.forces.T_chord1 = T_chordRel;
+parout.forces.T_chord2 = T_chord2;
 
-parout.SCD = S_para1*CD_para1;
+parout.SCD1 = SCD_para1/SCD0_1;
+parout.SCD2 = SCD_para2/SCD0_2;
 
 parout.air.rho = rho;
 parout.air.P = P;
 
 parout.accelerations.body_acc = [du_rocket, dv_rocket, dw_rocket];
 parout.accelerations.ang_acc = [dp_rocket, dq_rocket, dr_rocket];
-
-% Main data
-parout.integration.t2 = t;
-
-parout.interp.M2 = M_value_rocket;
-parout.interp.alt2 = -z_rocket;
-parout.interp.alpha2 = 0;
-parout.interp.beta2 = 0;
-
-parout.wind.NED_wind2 = [uw, vw, ww];
-parout.wind.body_wind2 = wind;
-
-parout.velocities2 = Vels_rocket;
-
-parout.forces.T2 = T;
-parout.forces.T_chord2 = T_chord2;
-
-parout.SCD2 = SCD_para2;
-
-parout.air.rho2 = rho;
-parout.air.P2 = P;
-
-parout.accelerations.body_acc2 = [du_rocket, dv_rocket, dw_rocket];
-parout.accelerations.ang_acc2 = [dp_rocket, dq_rocket, dr_rocket];
