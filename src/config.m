@@ -138,6 +138,10 @@ clear('s');
 
 settings.control = '0%';                                            % aerobrakes 0% 50% or 100% opened
 
+%% DESCENT PHASE MODEL
+settings.descent3DOF = false;
+% set to false in order to start a 6DOF parachute descent phase
+
 %% PARACHUTES DETAILS
 settings.Npara = 2;
 

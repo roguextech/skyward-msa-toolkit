@@ -37,6 +37,7 @@ for i = 1:NT
     
     all_steps.accelerations.body_acc(i, 1:3) = single_step.accelerations.body_acc;
     
+    
     if isequal(fun_info.function, 'main_extraction') || isequal(fun_info.function, 'main_descent')
         all_steps2.integration.t(i) = single_step.integration.t2;
         all_steps2.interp.alt(i) = single_step.interp.alt2;
@@ -78,23 +79,25 @@ for i = 1:NT
             all_steps.coeff.XCP(i) = single_step.coeff.XCP;
         end
     else
-        all_steps.interp.M(i) = single_step.interp.M;
-        all_steps.interp.alpha(i) = single_step.interp.alpha;
-        all_steps.interp.beta(i) = single_step.interp.beta;
-        all_steps.forces.T(i) = single_step.forces.T;
-        all_steps.forces.T_chord(i) = single_step.forces.T_chord;
-        all_steps.SCD(i) = single_step.SCD;
-        all_steps.accelerations.ang_acc(i, 1:3) = single_step.accelerations.ang_acc;
-        
-        if isequal(fun_info.function, 'main_extraction') || isequal(fun_info.function, 'main_descent')
-            all_steps2.interp.M(i) = single_step.interp.M2;
-            all_steps2.interp.alpha(i) = single_step.interp.alpha2;
-            all_steps2.interp.beta(i) = single_step.interp.beta2;
-            all_steps2.forces.T(i) = single_step.forces.T2;
-            all_steps2.forces.T_chord(i) = single_step.forces.T_chord2;
-            all_steps2.SCD(i) = single_step.SCD2;
-            all_steps2.accelerations.ang_acc(i, 1:3) = single_step.accelerations.ang_acc2;
+        if not(isequal(fun_info.function, 'descent_parachute'))
+            all_steps.interp.M(i) = single_step.interp.M;
+            all_steps.interp.alpha(i) = single_step.interp.alpha;
+            all_steps.interp.beta(i) = single_step.interp.beta;
+            all_steps.forces.T(i) = single_step.forces.T;
+            all_steps.forces.T_chord(i) = single_step.forces.T_chord;
+            all_steps.SCD(i) = single_step.SCD;
+            all_steps.accelerations.ang_acc(i, 1:3) = single_step.accelerations.ang_acc;
+
+            if isequal(fun_info.function, 'main_extraction') || isequal(fun_info.function, 'main_descent')
+                all_steps2.interp.M(i) = single_step.interp.M2;
+                all_steps2.interp.alpha(i) = single_step.interp.alpha2;
+                all_steps2.interp.beta(i) = single_step.interp.beta2;
+                all_steps2.forces.T(i) = single_step.forces.T2;
+                all_steps2.forces.T_chord(i) = single_step.forces.T_chord2;
+                all_steps2.SCD(i) = single_step.SCD2;
+                all_steps2.accelerations.ang_acc(i, 1:3) = single_step.accelerations.ang_acc2;
+            end
         end
     end
-    
+
 end

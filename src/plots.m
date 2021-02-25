@@ -58,7 +58,7 @@ if settings.stoch.N == 1
     xlabel('Time [s]'); ylabel('Drag Coeff CD [/]')
     
     %%% Angles(body)
-    if settings.ballistic
+    if settings.ballistic || settings.descent3DOF
         figure('Name', 'Eulerian Angles - ascent phase', 'NumberTitle', 'off');
         subplot(3,1,1)
         plot(data_ascent.integration.t, data_ascent.state.Y(:, 19)*180/pi)
@@ -179,8 +179,8 @@ if settings.stoch.N == 1
     figure('Name','Horizontal Frame Velocities - All Flight','NumberTitle','off');
     
     % Rotate velocities 
-    if not(settings.ballistic)
-        Vhframe = [quatrotate(quatconj(Ya(:, 10:13)), Ya(:, 4:6)); quatrotate(quatconj(Yf(Na + 1:end, 10:13)),Yf(Na + 1:end, 4:6))];
+    if not(settings.ballistic) && settings.descent3DOF
+        Vhframe = [quatrotate(quatconj(Ya(:, 10:13)), Ya(:, 4:6)); Yf(Na + 1:end, 4:6)];
     else
         Vhframe = [quatrotate(quatconj(Ya(:, 10:13)), Ya(:, 4:6)); quatrotate(quatconj(Yf(Na + 1:end, 10:13)),Yf(Na + 1:end, 4:6))];
     end 
@@ -240,7 +240,7 @@ if settings.stoch.N == 1
     plot(data_ascent.integration.t(1:end-1), data_ascent.interp.M(1:end-1)), grid on;
     xlabel('Time [s]'); ylabel('Mach M [/]')
     
-    if not(settings.ballistic)
+    if not(settings.ballistic) && not(settings.descent3DOF)
         for i = 1: Np
             hold on
             plot(data_para{i}.integration.t, data_para{i}.interp.M);
@@ -252,7 +252,7 @@ if settings.stoch.N == 1
     plot(Ta, abs_V), grid on;
     xlabel('time [s]'), ylabel('|V| [m/s]');
     
-    if not(settings.ballistic)
+    if not(settings.ballistic) && not(settings.descent3DOF)
         for i = 1: Np
             hold on
             plot(data_para{i}.integration.t, abs_Vd{i});
@@ -264,7 +264,7 @@ if settings.stoch.N == 1
     plot(Ta, abs_A/9.80665), grid on;
     xlabel('time [s]'), ylabel('|A| [g]');
     
-    if not(settings.ballistic)
+    if not(settings.ballistic) && not(settings.descent3DOF)
         for i = 1: Np
             hold on
             plot(data_para{i}.integration.t, abs_Ad{i}/9.80665);
@@ -325,7 +325,7 @@ if settings.stoch.N == 1
     
     delete('ascent_plot.mat')
     
-    if not(settings.ballistic)
+    if not(settings.ballistic) && not(settings.descent3DOF)
         %% Parachute chord tension
          figure('Name', 'Parachute chord tension - Descent Phase', 'NumberTitle', 'off')
 

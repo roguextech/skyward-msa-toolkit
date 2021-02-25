@@ -124,8 +124,47 @@ save('ascent_plot.mat', 'data_ascent');
 %% PARATCHUTES
 % Initial Condition are the last from ascent (need to rotate because
 % velocities are in body axes)
+if settings.descent3DOF
+    Y0p = [Ya(end, 1:3) quatrotate(quatconj(Ya(end, 10:13)),Ya(end, 4:6))];
+    data_para = cell(settings.Npara, 1);
+    Yf = Ya(:, 1:6);
+    Tf  = Ta;
+    t0p = Ta(end);
 
-[data_para, Tf, Yf, bound_value] = descent_parachute6dof(Ta, Ya, settings, uw, vw, ww, uncert);
+    for i = 1:settings.Npara
+        para = i;
+        [Tp, Yp] = ode113(@descent_parachute, [t0p, tf], Y0p, settings.ode.optionspara1,...
+            settings, uw, vw, ww, para, uncert);
+
+        [data_para{para}] = RecallOdeFcn(@descent_parachute, Tp, Yp, settings, uw, vw, ww, para, uncert);
+        data_para{para}.state.Y = Yp;
+        data_para{para}.state.T = Tp;
+
+        % total state
+        Yf = [Yf; Yp];
+        Tf = [Tf; Tp];
+
+        % updating ODE starting conditions
+        Y0p = Yp(end, :);
+        t0p = Tp(end);
+
+    end
+
+    %% TIME, POSITION AND VELOCITY AT PARACHUTES DEPLOYMENT
+    % Usefull values for the plots
+    bound_value = struct;
+    bound_value(1).t = Ta(end);
+    bound_value(1).X = [Ya(end, 2), Ya(end, 1), -Ya(end, 3)];
+    bound_value(1).V = quatrotate(quatconj(Ya(end, 10:13)), Ya(end, 4:6));
+
+    for i = 1:settings.Npara
+        bound_value(i+1).t = data_para{i}.state.T(end);
+        bound_value(i+1).X = [data_para{i}.state.Y(end, 2), data_para{i}.state.Y(end, 1), -data_para{i}.state.Y(end, 3)];
+        bound_value(i+1).V = [data_para{i}.state.Y(end, 4), data_para{i}.state.Y(end, 5), -data_para{i}.state.Y(end, 6)];
+    end
+else
+    [data_para, Tf, Yf, bound_value] = descent_parachute6dof(Ta, Ya, settings, uw, vw, ww, uncert);
+end
 
 %% PARACHUTE PLOT
 save('descent_para_plot.mat', 'data_para');
