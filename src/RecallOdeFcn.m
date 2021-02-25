@@ -1,4 +1,4 @@
-function [all_steps, all_steps2] = RecallOdeFcn(fun, T, Y, varargin)
+function [all_steps] = RecallOdeFcn(fun, T, Y, varargin)
 %{
 
 RECALLODEFCN - This function allows to compute some parameters used
@@ -37,18 +37,6 @@ for i = 1:NT
     
     all_steps.accelerations.body_acc(i, 1:3) = single_step.accelerations.body_acc;
     
-    if isequal(fun_info.function, 'main_extraction') || isequal(fun_info.function, 'main_descent')
-        all_steps2.integration.t(i) = single_step.integration.t2;
-        all_steps2.interp.alt(i) = single_step.interp.alt2;
-        all_steps2.wind.body_wind(1:3,i) = single_step.wind.body_wind2;
-        all_steps2.wind.NED_wind(1:3,i) = single_step.wind.NED_wind2;
-        all_steps2.velocities(i, 1:3) = single_step.velocities2;
-
-        all_steps2.air.rho(i) = single_step.air.rho2;
-        all_steps2.air.P(i) = single_step.air.P2;
-
-        all_steps2.accelerations.body_acc(i, 1:3) = single_step.accelerations.body_acc2;
-    end
     
     if not(isequal(fun_info.function, 'descent_parachute')) && not(isequal(fun_info.function, 'drogue_descent')) ...
             && not(isequal(fun_info.function, 'main_extraction')) && not(isequal(fun_info.function, 'main_descent'))
@@ -82,19 +70,11 @@ for i = 1:NT
         all_steps.interp.alpha(i) = single_step.interp.alpha;
         all_steps.interp.beta(i) = single_step.interp.beta;
         all_steps.forces.T(i) = single_step.forces.T;
-        all_steps.forces.T_chord(i) = single_step.forces.T_chord;
-        all_steps.SCD(i) = single_step.SCD;
+        all_steps.forces.T_chord1(i) = single_step.forces.T_chord1;
+        all_steps.forces.T_chord2(i) = single_step.forces.T_chord2;
+        all_steps.SCD1(i) = single_step.SCD1;
+        all_steps.SCD2(i) = single_step.SCD2;
         all_steps.accelerations.ang_acc(i, 1:3) = single_step.accelerations.ang_acc;
-        
-        if isequal(fun_info.function, 'main_extraction') || isequal(fun_info.function, 'main_descent')
-            all_steps2.interp.M(i) = single_step.interp.M2;
-            all_steps2.interp.alpha(i) = single_step.interp.alpha2;
-            all_steps2.interp.beta(i) = single_step.interp.beta2;
-            all_steps2.forces.T(i) = single_step.forces.T2;
-            all_steps2.forces.T_chord(i) = single_step.forces.T_chord2;
-            all_steps2.SCD(i) = single_step.SCD2;
-            all_steps2.accelerations.ang_acc(i, 1:3) = single_step.accelerations.ang_acc2;
-        end
     end
     
 end

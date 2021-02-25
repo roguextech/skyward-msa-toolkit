@@ -100,13 +100,11 @@ if settings.stoch.N == 1
     
     if not(settings.ballistic)
         load('descent_para_plot.mat');
-        for i = 1:settings.Npara
-            zd{i} = -data_para{i}.state.Y(:, 3);
-            Vd = data_para{i}.velocities(:, 1:3);
-            Ad = data_para{i}.accelerations.body_acc;
-            abs_Vd{i} = vecnorm(Vd');
-            abs_Ad{i} = vecnorm(Ad');
-        end
+        zd = -data_descent.state.Y(:, 3);
+        Vd = data_descent.velocities(:, 1:3);
+        Ad = data_descent.accelerations.body_acc;
+        abs_Vd = vecnorm(Vd');
+        abs_Ad = vecnorm(Ad');
     end
    
     % DATA RECORD (display)
@@ -180,4 +178,4 @@ if settings.plots
     run('plots.m')
 end
 
-clearvars -except T data_ascent data_para data_bal flag LP Yp
+clearvars -except T data_ascent data_descent data_bal flag LP Yp

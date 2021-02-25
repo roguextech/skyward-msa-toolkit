@@ -143,14 +143,14 @@ settings.Npara = 2;
 
 % parachute 1
 settings.para(1).S = 0.5;                                          % [m^2]   Surface
-settings.para(1).mass = 6;                                        % [kg]   Parachute Mass
+settings.para(1).mass = 5.6;                                        % [kg]   Parachute Mass
 settings.para(1).CD = 0.7;                                         % [/] Parachute Drag Coefficient
 settings.para(1).CX = 1.4;
 settings.para(1).CL = 0;                                            % [/] Parachute Lift Coefficient
 settings.para(1).m = 1;
 settings.para(1).nf = 12;
 settings.para(1).delay = 0;                                         % [s] drogue opening delay
-settings.para(1).z_cut = 300;                                       % [m] Final altitude of the parachute
+settings.para(1).z_cut = 600;                                       % [m] Final altitude of the parachute
 settings.para(1).ShockCord_L = 4       ;                       % [m] shock cord length
 settings.para(1).ShockCord_k = 1000;                                % [N/m^2] shock cord elastic constant
 settings.para(1).ShockCord_c = 0;                                  % [Ns/m] shock cord damping coefficient
@@ -236,8 +236,8 @@ settings.wind.MagMin = 5;                           % [m/s] Minimum Magnitude
 settings.wind.MagMax = 5;                          % [m/s] Maximum Magnitude
 settings.wind.ElMin = 0*pi/180;                     % [rad] Minimum Elevation, user input in degrees (ex. 0)
 settings.wind.ElMax = 0*pi/180;                     % [rad] Maximum Elevation, user input in degrees (ex. 0) (Max == 90 Deg)
-settings.wind.AzMin = (270)*pi/180;                   % [rad] Minimum Azimuth, user input in degrees (ex. 90)
-settings.wind.AzMax = (270)*pi/180;                   % [rad] Maximum Azimuth, user input in degrees (ex. 90)
+settings.wind.AzMin = (45)*pi/180;                   % [rad] Minimum Azimuth, user input in degrees (ex. 90)
+settings.wind.AzMax = (45)*pi/180;                   % [rad] Maximum Azimuth, user input in degrees (ex. 90)
 
 % NOTE: wind azimuth angle indications (wind directed towards):
 % 0 deg (use 360 instead of 0)  -> North
