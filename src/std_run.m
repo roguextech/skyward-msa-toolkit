@@ -125,8 +125,8 @@ save('ascent_plot.mat', 'data_ascent');
 % Initial Condition are the last from ascent (need to rotate because
 % velocities are in body axes)
 
-[data_descent, Tf, Yf, bound_value] = descent_parachute6dof(Ta, Ya, settings, uw, vw, ww, uncert);
+[data_para, Tf, Yf, bound_value] = descent_parachute6dof(Ta, Ya, settings, uw, vw, ww, uncert);
 
 %% PARACHUTE PLOT
-save('descent_para_plot.mat', 'data_descent');
+save('descent_para_plot.mat', 'data_para');
 

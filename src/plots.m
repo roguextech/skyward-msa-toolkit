@@ -74,65 +74,31 @@ if settings.stoch.N == 1
     else
         figure('Name', 'Eulerian Angles - aLL flight', 'NumberTitle', 'off');
         subplot(3,1,1)
-        plot(data_ascent.integration.t, data_ascent.state.Y(:, 19)*180/pi)
+        h(1) = plot(data_ascent.integration.t, data_ascent.state.Y(:, 19)*180/pi+...
+                settings.OMEGAmin*180/pi);
+        hold on;
+        for i = 1:settings.Npara
+            h(i+1) = plot(data_para{i}.state.T,data_para{i}.state.Y(:,21)*180/pi + settings.OMEGAmin*180/pi);
+        end
         grid on, xlabel('time [s]'), ylabel('pitch angle [deg]');
+        legend(h(:), {'Ascent', 'Parachute 1', 'Parachute 2'}, 'Location', 'southeast');
 
         subplot(3,1,2)
-        plot(data_ascent.integration.t, data_ascent.state.Y(:, 20)*180/pi)
+        plot(data_ascent.integration.t, data_ascent.state.Y(:, 20)*180/pi+...
+            settings.PHImin*180/pi);
+        hold on;
+        for i = 1:settings.Npara
+            plot(data_para{i}.state.T,data_para{i}.state.Y(:,22)*180/pi+settings.PHImin*180/pi);
+        end
         grid on, xlabel('time [s]'), ylabel('yaw angle [deg]');
 
         subplot(3,1,3)
-        plot(data_ascent.integration.t, data_ascent.state.Y(:, 18)*180/pi)
-        grid on, xlabel('time [s]'), ylabel('roll angle [deg]')
-        
-        figure('Name','distanza paracadute','NumberTitle','off');
-        subplot(2,1,1);
-        vec = [];
-        for i = 1:length(data_descent.state.T)
-            pos_para = data_descent.state.Y(i,14:16);
-            pos_depl = data_descent.state.Y(i,1:3) + quatrotate(quatconj(data_descent.state.Y(i,10:13)),[1.2, 0, 0]);
-            val = -pos_para(3) + pos_depl(3);
-            vec = [vec;val];
-        end
-        plot(data_descent.state.T,vec);
-        grid on, xlabel('time [s]'), ylabel('distanza drogue [m]');
-        
-        subplot(2,1,2);
-        vec = [];
-        for i = 1:length(data_descent.state.T)
-            pos_para = data_descent.state.Y(i,20:22);
-            pos_depl = data_descent.state.Y(i,1:3) + quatrotate(quatconj(data_descent.state.Y(i,10:13)),[1.2, 0, 0]);
-            val = norm(pos_para - pos_depl);
-            vec = [vec;val];
-        end
-        plot(data_descent.state.T,vec);
-        grid on, xlabel('time [s]'), ylabel('distanza main [m]');
-        
-        figure('Name','velocità paracaduti','NumberTitle','off');
-        subplot(2,1,1);
-        plot(data_descent.state.T,-data_descent.state.Y(:,19));
-        subplot(2,1,2);
-        plot(data_descent.state.T,-data_descent.state.Y(:,25));
-        
-        figure('Name','Tensione corde','NumberTitle','off');
-        plot(data_descent.state.T,data_descent.forces.T_chord1);
+        plot(data_ascent.integration.t, data_ascent.state.Y(:, 18)*180/pi);
         hold on;
-        plot(data_descent.state.T,data_descent.forces.T_chord2);
-        
-%         figure;
-%         plot3()
-%         for i = 1:1:length(data_descent.state.T)
-%             punta = data_descent.state.Y(i,1:3)+ quatrotate(quatconj(data_descent.state.Y(i,10:13)),[50, 0, 0]);
-%             coda = data_descent.state.Y(i,1:3) + quatrotate(quatconj(data_descent.state.Y(i,10:13)),[-50, 0, 0]);
-%             drogue = data_descent.state.Y(i,14:16);
-%             main = data_descent.state.Y(i,20:22);
-%             P1 = plot3([punta(1), coda(1)],[punta(2), coda(2)],[-punta(3), -coda(3)],'-b','LineWidth',1.5);
-%             hold on;
-%             pause(0.1);
-%             axis equal;
-%             drawnow;
-%         end
- 
+        for i = 1:settings.Npara
+            plot(data_para{i}.state.T,data_para{i}.state.Y(:,20)*180/pi);
+        end
+        grid on, xlabel('time [s]'), ylabel('roll angle [deg]')
     end
     
     %% 3D TRAJECTORY
@@ -208,13 +174,6 @@ if settings.stoch.N == 1
     end
     
     %% IMPORTANT FEATURES DURING FLIGHT
-    figure('Name','SCD - parachutes plot','NumberTitle','off');
-    subplot(2,1,1);
-    plot(data_descent.state.T,data_descent.SCD1);
-    grid on, xlabel('time [s]'), ylabel('SCD'), title('Drogue');
-    subplot(2,1,2);
-    plot(data_descent.state.T,data_descent.SCD2);
-    grid on, xlabel('time [s]'), ylabel('SCD'), title('Main');
     
     %% HORIZONTAL-FRAME VELOCITIES(subplotted)
     figure('Name','Horizontal Frame Velocities - All Flight','NumberTitle','off');
@@ -269,7 +228,7 @@ if settings.stoch.N == 1
     if not(settings.ballistic)
         for i = 1: Np
             hold on
-            h(i+1) = plot(data_descent.integration.t, zd);
+            h(i+1) = plot(data_para{i}.integration.t, zd{i});
             grid on;
         end
     end
@@ -284,7 +243,7 @@ if settings.stoch.N == 1
     if not(settings.ballistic)
         for i = 1: Np
             hold on
-            plot(data_descent.integration.t, data_descent.interp.M);
+            plot(data_para{i}.integration.t, data_para{i}.interp.M);
             grid on
         end
     end
@@ -294,9 +253,11 @@ if settings.stoch.N == 1
     xlabel('time [s]'), ylabel('|V| [m/s]');
     
     if not(settings.ballistic)
-        hold on
-        plot(data_descent.integration.t, abs_Vd);
-        grid on;
+        for i = 1: Np
+            hold on
+            plot(data_para{i}.integration.t, abs_Vd{i});
+            grid on;
+        end
     end
     
     subplot(2,3,6)
@@ -304,9 +265,11 @@ if settings.stoch.N == 1
     xlabel('time [s]'), ylabel('|A| [g]');
     
     if not(settings.ballistic)
-        hold on
-        plot(data_descent.integration.t, abs_Ad/9.80665);
-        grid on;
+        for i = 1: Np
+            hold on
+            plot(data_para{i}.integration.t, abs_Ad{i}/9.80665);
+            grid on;
+        end
     end
     
     
@@ -361,7 +324,20 @@ if settings.stoch.N == 1
     plot(Yf(end, 2), -Yf(end, 3), 'rx','markersize',7);
     
     delete('ascent_plot.mat')
-   
+    
+    if not(settings.ballistic)
+        %% Parachute chord tension
+         figure('Name', 'Parachute chord tension - Descent Phase', 'NumberTitle', 'off')
+
+         h = zeros(Np, 1);
+         for i = 1:Np
+            hold on
+            h(i) = plot(data_para{i}.integration.t, data_para{i}.forces.T_chord); grid on;
+            xlabel('Time [s]'); ylabel('Chord tension [N]'); title('Chord tension');
+         end
+         legend(h(:), strcat('chord tension parachute ',  " " , string(1)), strcat('chord tension parachute ',  " " , string(2)), 'Location', 'best');
+         
+    end
 else   %%%% STOCHASTIC PLOTS (only if N>1)
     
     %% LANDING POINTS 2DCHo
