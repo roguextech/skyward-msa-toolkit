@@ -168,20 +168,21 @@ bound_value(1).t = Ta(end);
 bound_value(1).X = [Ya(end, 2), Ya(end, 1), -Ya(end, 3)];
 bound_value(1).V = quatrotate(quatconj(Ya(end, 10:13)), Ya(end, 4:6));
 
+
 if not(settings.descent6DOF)
     for i = 1:settings.Npara
         bound_value(i+1).t = data_para{i}.state.T(end);
         bound_value(i+1).X = [data_para{i}.state.Y(end, 2), data_para{i}.state.Y(end, 1), -data_para{i}.state.Y(end, 3)];
-        bound_value(i+1).V = [data_para{i}.state.Y(end, 4), data_para{i}.state.Y(end, 5), -data_para{i}.state.Y(end, 6)];
+        bound_value(i+1).V = [data_para{i}.state.Y(end, 4), data_para{i}.state.Y(end, 5), data_para{i}.state.Y(end, 6)];
     end
 else
     bound_value(2).t = data_para{2}.state.T(1);
     bound_value(2).X = [data_para{2}.state.Y(1, 2), data_para{2}.state.Y(1, 1), -data_para{2}.state.Y(1, 3)];
-    bound_value(2).V = [data_para{2}.state.Y(1, 4), data_para{2}.state.Y(1, 5), -data_para{2}.state.Y(1, 6)];
+    bound_value(2).V = quatrotate(quatconj(data_para{2}.state.Y(1, 10:13)), data_para{2}.state.Y(1, 4:6));
     
     bound_value(3).t = data_para{2}.state.T(end);
     bound_value(3).X = [data_para{2}.state.Y(end, 2), data_para{2}.state.Y(end, 1), -data_para{2}.state.Y(end, 3)];
-    bound_value(3).V = [data_para{2}.state.Y(end, 4), data_para{2}.state.Y(end, 5), -data_para{2}.state.Y(end, 6)];
+    bound_value(3).V = quatrotate(quatconj(data_para{2}.state.Y(end, 10:13)), data_para{2}.state.Y(end, 4:6));
     
 end
 
