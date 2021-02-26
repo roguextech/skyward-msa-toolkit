@@ -1,13 +1,22 @@
 %% LAUNCH SETUP
 
 % launchpad
-settings.z0 = 0;                   %[m] Launchpad Altitude
-settings.lrampa = 3;               %[m] LaunchPad route (launchpad length-distance from ground of the first hook)
+settings.z0 = 109;                                                          %[m] Launchpad Altitude
+lpin = 1.150;                                                               %[m] Distance from base of second pin
+settings.lrampa = 5.9 - lpin;                                               %[m] LaunchPad route (total available route)
+% Portogallo 
+settings.lat0 = 39.201778;                                                          % Launchpad latitude
+settings.lon0 = -8.138368;                                                          % Launchpad longitude
+% Roccaraso 
+% settings.lat0 = 41.810093;                                                        % Launchpad latitude
+% settings.lon0 = 14.052546;                                                        % Launchpad longitude
+
+settings.g0 = gravitywgs84(settings.z0, settings.lat0);                     % Gravity costant at launch latitude and altitude
 
 % launchpad directions
 % for a single run the maximum and the minimum value of the following
 % angles must be the same.
-settings.OMEGA = 85*pi/180;        %[rad] Minimum Elevation Angle, user input in degrees (ex. 80)
+settings.OMEGA = 84*pi/180;        %[rad] Minimum Elevation Angle, user input in degrees (ex. 80)
 settings.PHI = 0*pi/180;           %[rad] Maximum Azimuth Angle from North Direction, user input in degrees (ex. 90)
 
 %% ENGINE DETAILS
@@ -19,7 +28,7 @@ Motors = load(filename);
 motors = [Motors.Cesaroni Motors.Aerotech];
 
 % save in settings the acceptable motors 
-settings.Itot_range = [8000 9000];
+settings.Itot_range = [8400 9000];
 j=1;
 for i=1:size(motors,2)
     
@@ -38,7 +47,6 @@ clear('motors' , 'i' , 'j')
 
 settings.C = 0.150;                          % [m]      Caliber (Fuselage Diameter)
 settings.S = pi*(settings.C/2)^2;            % [m^2]    Cross-sectional Surface
-settings.L = 3;                              % [m]      Rocket length
 
 %% MASS GEOMERTY DETAILS
 % x-axis: along the fuselage
@@ -46,15 +54,14 @@ settings.L = 3;                              % [m]      Rocket length
 % z-axis: downward
 
 % inertias for full configuration (with all the propellant embarqued) obtained with CAD's
-settings.Ixxf = 0.0540;                     % [kg*m^2] Inertia to x-axis
-settings.Iyyf = 13.7274;                    % [kg*m^2] Inertia to y-axis
-settings.Izzf = 13.7302;                    % [kg*m^2] Inertia to z-axis
+settings.Ixxf = 0.08;                     % [kg*m^2] Inertia to x-axis
+settings.Iyyf = 13.01;                    % [kg*m^2] Inertia to y-axis
+settings.Izzf = 13.01;                    % [kg*m^2] Inertia to z-axis
 
 % inertias for empty configuration (all the propellant consumed) obtained with CAD's
-settings.Ixxe = 0.0498;                     % [kg*m^2] Inertia to x-axis
-settings.Iyye = 11.5612;                    % [kg*m^2] Inertia to y-axis
-settings.Izze = 11.5640;                    % [kg*m^2] Inertia to z-axis
-
+settings.Ixxe = 0.07;                     % [kg*m^2] Inertia to x-axis
+settings.Iyye = 10.06;                    % [kg*m^2] Inertia to y-axis
+settings.Izze = 10.06;                    % [kg*m^2] Inertia to z-axis
 
 %% AERODYNAMICS DETAILS
 % These coefficients are obtained using MISSILE DATCOM
@@ -117,7 +124,6 @@ settings.ode.optionsdesc = odeset('AbsTol',1E-3,'RelTol',1E-12,...
 
 
 %% Random wind model
-
 % Wind is generated randomly from the minimum to the maximum parameters which defines the wind.
 % Setting the same values for min and max will fix the parameters of the wind.
 settings.wind.MagMin = 4;                   % [m/s] Minimum Magnitude

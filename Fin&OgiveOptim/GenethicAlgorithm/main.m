@@ -25,7 +25,7 @@ tic
 lb(1) = 25;     % 1 --> chord1         [cm]
 lb(2) = 10;     % 2 --> chord2         [cm]
 lb(3) = 10;     % 3 --> heigth         [cm]
-lb(4) = 3;      % 4 --> Fin type       [/]
+lb(4) = 2;      % 4 --> Fin type       [/]
 lb(5) = 25;     % 5 --> Ogive Length   [cm]
 lb(6) = 1;      % 6 --> Ogive Type     [/]
 
@@ -33,7 +33,7 @@ lb(6) = 1;      % 6 --> Ogive Type     [/]
 ub(1) = 50;     % 1 --> chord1         [cm]
 ub(2) = 20;     % 2 --> chord2         [cm]
 ub(3) = 40;     % 3 --> heigth         [cm]
-ub(4) = 3;      % 4 --> Fin type       [/]
+ub(4) = 2;      % 4 --> Fin type       [/]
 ub(5) = 50;     % 5 --> Ogive Length   [cm]
 ub(6) = 1;      % 6 --> Ogive Type     [/]
 

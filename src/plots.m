@@ -20,8 +20,11 @@ if settings.stoch.N == 1
     
     %% ASCENT PLOTS
     %%% Stability Margin
-    figure('Name','Stability Margin - ascent Phase','NumberTitle','off');
-    plot(data_ascent.integration.t, -data_ascent.coeff.XCP,'.'), title('Stability margin vs time'), grid on;
+    figure('Name','Stability Margins - ascent Phase','NumberTitle','off');
+    plot(data_ascent.integration.t, -data_ascent.coeff.XCPlon, '.',...
+        data_ascent.integration.t, -data_ascent.coeff.XCPlat, '.'),
+    title('Stability margin vs time'), grid on;
+    legend('Longitudinal', 'Lateral')
     xlabel('Time [s]'); ylabel('S.M.[/]')
     
     %%% Aero Forces
@@ -58,48 +61,21 @@ if settings.stoch.N == 1
     xlabel('Time [s]'); ylabel('Drag Coeff CD [/]')
     
     %%% Angles(body)
-    if settings.ballistic || settings.descent3DOF
-        figure('Name', 'Eulerian Angles - ascent phase', 'NumberTitle', 'off');
-        subplot(3,1,1)
-        plot(data_ascent.integration.t, data_ascent.state.Y(:, 19)*180/pi)
-        grid on, xlabel('time [s]'), ylabel('pitch angle [deg]');
-
-        subplot(3,1,2)
-        plot(data_ascent.integration.t, data_ascent.state.Y(:, 20)*180/pi)
-        grid on, xlabel('time [s]'), ylabel('yaw angle [deg]');
-
-        subplot(3,1,3)
-        plot(data_ascent.integration.t, data_ascent.state.Y(:, 18)*180/pi)
-        grid on, xlabel('time [s]'), ylabel('roll angle [deg]')
-    else
-        figure('Name', 'Eulerian Angles - aLL flight', 'NumberTitle', 'off');
-        subplot(3,1,1)
-        h(1) = plot(data_ascent.integration.t, data_ascent.state.Y(:, 19)*180/pi+...
-                settings.OMEGAmin*180/pi);
-        hold on;
-        for i = 1:settings.Npara
-            h(i+1) = plot(data_para{i}.state.T,data_para{i}.state.Y(:,21)*180/pi + settings.OMEGAmin*180/pi);
-        end
-        grid on, xlabel('time [s]'), ylabel('pitch angle [deg]');
-        legend(h(:), {'Ascent', 'Parachute 1', 'Parachute 2'}, 'Location', 'southeast');
-
-        subplot(3,1,2)
-        plot(data_ascent.integration.t, data_ascent.state.Y(:, 20)*180/pi+...
-            settings.PHImin*180/pi);
-        hold on;
-        for i = 1:settings.Npara
-            plot(data_para{i}.state.T,data_para{i}.state.Y(:,22)*180/pi+settings.PHImin*180/pi);
-        end
-        grid on, xlabel('time [s]'), ylabel('yaw angle [deg]');
-
-        subplot(3,1,3)
-        plot(data_ascent.integration.t, data_ascent.state.Y(:, 18)*180/pi);
-        hold on;
-        for i = 1:settings.Npara
-            plot(data_para{i}.state.T,data_para{i}.state.Y(:,20)*180/pi);
-        end
-        grid on, xlabel('time [s]'), ylabel('roll angle [deg]')
-    end
+   
+    [yaw, pitch, roll] = dcmToAngle(data_ascent.rotations.dcm);
+    
+    figure('Name', 'Euler Angles - ascent Phase', 'NumberTitle', 'off');
+    subplot(3,1,1)
+    plot(data_ascent.integration.t, pitch*180/pi)
+    grid on, xlabel('time [s]'), ylabel('pitch angle [deg]');
+    
+    subplot(3,1,2)  
+    plot(data_ascent.integration.t, yaw*180/pi)
+    grid on, xlabel('time [s]'), ylabel('yaw angle [deg]');
+    
+    subplot(3,1,3)
+    plot(data_ascent.integration.t, roll*180/pi)
+    grid on, xlabel('time [s]'), ylabel('roll angle [deg]')
     
     %% 3D TRAJECTORY
     
@@ -110,8 +86,8 @@ if settings.stoch.N == 1
     xlabel('y, East [m]'), ylabel('x, North [m]'), zlabel('Altitude [m]')
     
     % randomly generation of colors:
-    Np = settings.Npara;                 
-    Colors = rand(3, Np);    
+    Np = settings.Npara;
+    Colors = rand(3, Np);
     
     % adding concentric circles
     if not(settings.terrain)
@@ -124,9 +100,9 @@ if settings.stoch.N == 1
             z_plot = zeros(length(theta_plot), 1);
             plot3(y_plot, x_plot, z_plot, '--r')
         end
-       
+        
     else
-    
+        
         % adding surf terrain map
         X_t = -6000:30:6000;
         Y_t = -6000:30:6000;
@@ -173,18 +149,16 @@ if settings.stoch.N == 1
         campitch(g, -25);
     end
     
-    %% IMPORTANT FEATURES DURING FLIGHT
-    
     %% HORIZONTAL-FRAME VELOCITIES(subplotted)
     figure('Name','Horizontal Frame Velocities - All Flight','NumberTitle','off');
     
-    % Rotate velocities 
-    if not(settings.ballistic) && settings.descent3DOF
+    % Rotate velocities
+    if not(settings.ballistic)
         Vhframe = [quatrotate(quatconj(Ya(:, 10:13)), Ya(:, 4:6)); Yf(Na + 1:end, 4:6)];
     else
         Vhframe = [quatrotate(quatconj(Ya(:, 10:13)), Ya(:, 4:6)); quatrotate(quatconj(Yf(Na + 1:end, 10:13)),Yf(Na + 1:end, 4:6))];
-    end 
-        
+    end
+    
     % x axis
     subplot(3,1,1);
     plot(Tf, Vhframe(:, 1)), hold on, grid on, xlabel('Time[s]'), ylabel('Velocity-x [m/s]');
@@ -222,55 +196,23 @@ if settings.stoch.N == 1
     end
     
     %% ALTITUDE,MACH,VELOCITY,ACCELERATION(subplotted)
-    figure('Name','Altitude, Mach, Velocity-Abs, Acceleration-Abs - Ascent Phase','NumberTitle','off');
+    figure('Name','Altitude, Mach, Velocity-Abs, Acceleration-Abs - ascent Phase','NumberTitle','off');
     subplot(2,3,1:3)
-    h(1) = plot(Ta, za); grid on, xlabel('time [s]'), ylabel('altitude [m]');
-    if not(settings.ballistic)
-        for i = 1: Np
-            hold on
-            h(i+1) = plot(data_para{i}.integration.t, zd{i});
-            grid on;
-        end
-    end
-    if not(settings.ballistic)
-        legend(h(:), {'Ascent', 'Parachute 1', 'Parachute 2'}, 'Location', 'southeast');
-    end
+    plot(Ta, za), grid on, xlabel('time [s]'), ylabel('altitude [m]');
     
     subplot(2,3,4)
     plot(data_ascent.integration.t(1:end-1), data_ascent.interp.M(1:end-1)), grid on;
     xlabel('Time [s]'); ylabel('Mach M [/]')
     
-    if not(settings.ballistic) && not(settings.descent3DOF)
-        for i = 1: Np
-            hold on
-            plot(data_para{i}.integration.t, data_para{i}.interp.M);
-            grid on
-        end
-    end
     
     subplot(2,3,5)
     plot(Ta, abs_V), grid on;
     xlabel('time [s]'), ylabel('|V| [m/s]');
     
-    if not(settings.ballistic) && not(settings.descent3DOF)
-        for i = 1: Np
-            hold on
-            plot(data_para{i}.integration.t, abs_Vd{i});
-            grid on;
-        end
-    end
     
     subplot(2,3,6)
     plot(Ta, abs_A/9.80665), grid on;
     xlabel('time [s]'), ylabel('|A| [g]');
-    
-    if not(settings.ballistic) && not(settings.descent3DOF)
-        for i = 1: Np
-            hold on
-            plot(data_para{i}.integration.t, abs_Ad{i}/9.80665);
-            grid on;
-        end
-    end
     
     
     %% TRAJECTORY PROJECTIONS(subplotted)
@@ -291,8 +233,8 @@ if settings.stoch.N == 1
     h(Np+2) = plot(Yf(end,2), Yf(end,1), 'rx','markersize',7);
     
     if not(settings.ballistic)
-            legend(h(:), {'Apogee', strcat('parachute ',  " " , string(2:Np), " ", 'opening'), 'Launch point',...
-        'Landing point'}, 'Location', 'southeast');
+        legend(h(:), {'Apogee', strcat('parachute ',  " " , string(2:Np), " ", 'opening'), 'Launch point',...
+            'Landing point'}, 'Location', 'southeast');
     else
         legend(h(:), {'Apogee','Launch point', 'Landing point'}, 'Location', 'southeast');
     end
@@ -325,22 +267,9 @@ if settings.stoch.N == 1
     
     delete('ascent_plot.mat')
     
-    if not(settings.ballistic) && not(settings.descent3DOF)
-        %% Parachute chord tension
-         figure('Name', 'Parachute chord tension - Descent Phase', 'NumberTitle', 'off')
-
-         h = zeros(Np, 1);
-         for i = 1:Np
-            hold on
-            h(i) = plot(data_para{i}.integration.t, data_para{i}.forces.T_chord); grid on;
-            xlabel('Time [s]'); ylabel('Chord tension [N]'); title('Chord tension');
-         end
-         legend(h(:), strcat('chord tension parachute ',  " " , string(1)), strcat('chord tension parachute ',  " " , string(2)), 'Location', 'best');
-         
-    end
 else   %%%% STOCHASTIC PLOTS (only if N>1)
     
-    %% LANDING POINTS 2DCHo
+    %% LANDING POINTS 2D
     % Position Scaled map in background
     figure('Name', 'Landing Points', 'NumberTitle','off')
     if settings.landing_map
@@ -357,9 +286,9 @@ else   %%%% STOCHASTIC PLOTS (only if N>1)
     xlabel('m')
     ylabel('m')
     end
-    if settings.ballistic 
+    if settings.ballistic
         title('Landing Points in ballistic');
-    else   
+    else
         title('Landing Points with 2nd drouge');
     end
     

@@ -13,25 +13,27 @@ Release date: 18/10/2019
 % State values in which the aerodynamic coefficients will be computed
 datcom.Mach = 0.05:0.05:1;
 datcom.Alpha = [-22 -15 -10 -7.5 -5 -2.5 -1 -0.5 -0.1 0 0.1 0.5 1 2.5 5 7.5 10 15 22];
-datcom.Beta = [-0.1 0 0.1];
-datcom.Alt = 0:200:4000;
+datcom.Beta = [-15 -10 -7.5 -5 -0.1 0 0.1 5 7.5 10 15 ];
+Alt0 = 109;                                     % [m] local altitude
+datcom.Alt = Alt0 + 0:200:3600;
 
 %% Design Parameters
-datcom.Chord1 = 0.26; 
-datcom.Chord2 = 0.13; 
-datcom.Height = 0.15;                            
-datcom.shape = 'parall';
+datcom.Chord1 = 0.35; 
+datcom.Chord2 = 0.11; 
+datcom.Height = 0.14;                            
+datcom.shape = 'rect';
 
 %% Fixed Parameters
-vars.xcg = [1.75, 1.62] - 0.4 + 0.28;           % [m] CG position [full, empty]
+vars.xcg = [1.49, 1.33];                        % [m] CG position [full, empty]
 datcom.D = 0.15;                                % [m] rocket diameter
 datcom.Lnose = 0.28;                            % [m] nose length
-datcom.Lcenter = 2.4;                           % [m] Lcenter : Centerbody length
+Ltotal = 2.495;                                 % [m] rocket length
+datcom.Lcenter = Ltotal - datcom.Lnose;         % [m] Centerbody length
 datcom.Npanel = 3;                              % [m] number of fins
 datcom.Ler = 0.003;                             % [deg] Leading edge radius
 datcom.d = 0;                                   % [m] rocket tip-fin distance
 datcom.zup_raw = 0.0015;                        % [m] fin semi-thickness 
-datcom.Lmaxu_raw = 0.006;                       % [m] Fraction of chord from leading edge to max thickness
+datcom.Lmaxu_raw = 0.0015;                      % [m] Fraction of chord from leading edge to max thickness
 
 %% Ogive parameters
 datcom.OgType = 'KARMAN';
