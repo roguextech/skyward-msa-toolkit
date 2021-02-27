@@ -146,7 +146,7 @@ settings.para(2).CL = 0;      % [/] Parachute Lift Coefficient
 settings.para(2).z_cut = 0;   % [m] Final altitude of the parachute
 
 %% DESCENT PHASE MODEL
-settings.descent6DOF = false;
+settings.descent6DOF = true;
 % set to true in order to start a 6DOF parachute descent phase
 
 % only if setting.descent6DOF == true
@@ -223,8 +223,8 @@ settings.wind.input_uncertainty = [1, 1];
 
 % Wind is generated randomly from the minimum to the maximum parameters which defines the wind.
 % Setting the same values for min and max will fix the parameters of the wind.
-settings.wind.MagMin = 10;           % [m/s] Minimum Magnitude
-settings.wind.MagMax = 10;           % [m/s] Maximum Magnitude
+settings.wind.MagMin = 2;           % [m/s] Minimum Magnitude
+settings.wind.MagMax = 2;           % [m/s] Maximum Magnitude
 settings.wind.ElMin = 0*pi/180;     % [rad] Minimum Elevation, user input in degrees (ex. 0)
 settings.wind.ElMax = 0*pi/180;     % [rad] Maximum Elevation, user input in degrees (ex. 0) (Max == 90 Deg)
 settings.wind.AzMin = (180)*pi/180; % [rad] Minimum Azimuth, user input in degrees (ex. 90)

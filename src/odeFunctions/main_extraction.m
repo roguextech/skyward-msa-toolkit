@@ -74,6 +74,7 @@ vr_para1 = v_para1 - vw;
 wr_para1 = w_para1 - ww;
 
 Vels_para1 = [u_para1 v_para1 w_para1];
+Vrel_para1 = [ur_para1 vr_para1 wr_para1];
 V_norm_para1 = norm([ur_para1 vr_para1 wr_para1]);
 
 % Parachute 2 (NED) relative velocities (plus wind) 
@@ -82,43 +83,20 @@ vr_para2 = v_para2 - vw;
 wr_para2 = w_para2 - ww;
 
 Vels_para2 = [u_para2 v_para2 w_para2];
-V_norm_para2 = norm([ur_para2 vr_para2 wr_para2]);
 
 %% PARACHUTE REFERENCE FRAME
 % The parachutes are approximated as rectangular surfaces with the normal
 % vector perpendicular to the relative velocity
-
-t_vect = -[ur_para1 vr_para1 wr_para1];                                          % Tangenzial vector
-h_vect = [vr_para1 -ur_para1 0];                                                % horizontal vector    
-
-if all(abs(h_vect) < 1e-8)
-    if all([uw vw 0] == 0) % to prevent NaN
-        t_vers = t_vect/norm(t_vect);                                         % Tangenzial versor
-        h_vers = [0 0 0];                                                     % horizontal versor
-        n_vers = [0 0 0];                                                     % Normal versor
-    else
-        h_vect = [vw -uw 0];
-        t_vers = t_vect/norm(t_vect);
-        h_vers = h_vect/norm(h_vect);
-        n_vect = cross(t_vers, h_vers);
-        n_vers = n_vect/norm(n_vect);
-    end
+if V_norm_para1 < 1e-3
+    t_vers = [0, 0, -1];
 else
-    t_vers = t_vect/norm(t_vect);
-    h_vers = h_vect/norm(h_vect);
-    n_vect = cross(t_vers, h_vers);
-    n_vers = n_vect/norm(n_vect);
-end
-
-if (n_vers(3) > 0) % If the normal vector is downward directed
-    n_vect = cross(h_vers, t_vers);
-    n_vers = n_vect/norm(n_vect);
+    t_vers = -Vrel_para1/V_norm_para1;
 end
 
 %% CONSTANTS
 % Everything related to empty condition (descent-fase)
-g = 9.80655;                                                                  % [N/kg] module of gravitational field at zero
-T = 0;                                                                        % No Thrust
+g = 9.80655;       
+T = 0;          
 
 %% ATMOSPHERE DATA
 % since z_rocket is similar to z_para, atmospherical data will be computed
@@ -129,37 +107,38 @@ M_value_rocket = M_rocket;
 
 %% RELATIVE POSITION AND VELOCITY VECTORS
 % (NED) positions of parachutes
-pos_para1 = [x_para1 y_para1 z_para1]; pos_para2 = [x_para2 y_para2 z_para2];
+posPara1 = [x_para1 y_para1 z_para1];
+posPara2 = [x_para2 y_para2 z_para2];
 
-% (NED) parachute velocities
-vel_para1 = [u_para1 v_para1 w_para1]; vel_para2 = [u_para2 v_para2 w_para2];
+% (NED) relative position between parachutes
+posRel = posPara1 - posPara2;
 
-% (NED) relative postion vector, pointed towards parachute 1
-relPos_vecNED = pos_para1 - pos_para2;
-
-% (NED) relative velocity vector
-relVel_vecNED = vel_para1 - vel_para2;
-
-relPos_versNED = relPos_vecNED/norm(relPos_vecNED);
-
-if all(abs(relPos_vecNED) < 1e-8)          % to prevent NaN
-    relPos_vecNED = [0 0 0];
-    relPos_versNED = [0 0 0];
+if norm(posRel) < 1e-3
+    posRel_vers = [0, 0, -1];
+else
+    posRel_vers = posRel/norm(posRel);
 end
 
-% if > 0 the two parachutes are getting away from each other
-relVel_chord = relVel_vecNED * relPos_versNED';
+% (NED) velocities of parachutes
+velPara1 = [u_para1 v_para1 w_para1];
+velPara2 = [u_para2 v_para2 w_para2];
+
+% (NED) relative velocity between parachuts
+velRel = velPara1 - velPara2;
+
+% Relative velocity projected along the shock chord
+velRel_chord = velRel * posRel';
 
 %% CHORD TENSION (ELASTIC-DAMPING MODEL)
-if norm(relPos_vecNED) > (settings.para(para(2)).L - settings.para(para(1)).L)                      % [N] Chord tension (elastic-damping model)
-    T_chord = (norm(relPos_vecNED) - (settings.para(para(2)).L - settings.para(para(1)).L))* settings.para(para(1)).K +...
-        relVel_chord * settings.para(para(1)).C;
+if norm(posRel) > (settings.para(para(2)).L - settings.para(para(1)).L) 
+    T_chord = (norm(posRel) - (settings.para(para(2)).L - settings.para(para(1)).L))* settings.para(para(1)).K -...
+        velRel_chord * settings.para(para(1)).C;
 else
     T_chord = 0;
 end
 
 %% DROGUE FORCES
-S_para = settings.para(para(1)).S;                                                   % [m^2]   Surface
+S_para = settings.para(para(1)).S;                      
 CD_para = settings.para(para(1)).CD;
 D0 = sqrt(4*settings.para(para(1)).S/pi);
 t0 = settings.para(para(1)).nf * D0/V_norm_para1;
@@ -180,22 +159,21 @@ D_para1 = 0.5*rho*V_norm_para1^2*SCD_para*t_vers';
 
 Fg_para1 = [0 0 m_para1*g]';
 
-Ft_chord_para1 = -T_chord * relPos_versNED;
+Ft_chord_para1 = -T_chord * posRel_vers;
 F_para1 = D_para1 + Fg_para1 + Ft_chord_para1'; 
 
-%% MAIN FORCES                                                 % [N] Gravitational Force vector
+%% MAIN FORCES                           
 Fg_para2 = [0 0 m_para2*g]';
 
-Ft_chord_para2 = T_chord * relPos_versNED;
+Ft_chord_para2 = T_chord * posRel_vers;
 
 F_para2 = Fg_para2 + Ft_chord_para2';
 
 
 %% ROCKET FORCES
 % computed in the body-frame reference system
-Fg_rocket = quatrotate(Q_rocket,[0 0 m_rocket*g])';                           % [N] force due to the gravity
-
-F_rocket = Fg_rocket;                                      % [N] (NED) total forces vector
+Fg_rocket = quatrotate(Q_rocket,[0 0 m_rocket*g])';
+F_rocket = Fg_rocket;    
 
 %% ROCKET STATE DERIVATIVES
 % velocity (BODY frame)

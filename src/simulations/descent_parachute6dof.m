@@ -21,22 +21,20 @@ function [data_para, Tp, Yp] = descent_parachute6dof(Ta, Ya, settings, uw, vw, w
 % -  data_para     [2x1 struct]  descent phases data                    [-]
 %
 % -------------------------------------------------------------------------
-
-    %% PHASE 0 : Set up data
-    drg = settings.para(1);
-    main = settings.para(2);
     
     % Creating the output struct
     data_para = cell(settings.Npara, 1);
 
     %% PHASE 1 : Drogue descent
     % Initial conditions
-    posPara0 = quatrotate(quatconj(Ya(end,10:13)),...                         % (NED) position of the point from where the parachute will be deployed
+    posPara0 = quatrotate(quatconj(Ya(end,10:13)),...                         % (NED) Initial drogue position
         [(settings.xcg-settings.Lnose) 0 0]) + Ya(end,1:3);
-    velPara0 = quatrotate(quatconj(Ya(end,10:13)),Ya(end,4:6)+...             % (NED) Initial parachute position
-        [drg.Vexit 0 0]) + quatrotate(quatconj(Ya(end,10:13)),...
+    
+    velPara0 = quatrotate(quatconj(Ya(end,10:13)),Ya(end,4:6)+...             % (NED) Initial drogue velocity
+        [settings.para(1).Vexit 0 0]) + quatrotate(quatconj(Ya(end,10:13)),...
         cross(Ya(end,7:9),[(settings.xcg-settings.Lnose) 0 0]));
-    Y0p = [Ya(end, 1:16) posPara0 velPara0];                     % Initializing starting state vector
+    
+    Y0p = [Ya(end, 1:16) posPara0 velPara0];                                  % Initializing starting state vector
 
     t0p = Ta(end);
     tf  = settings.ode.final_time;
@@ -59,14 +57,14 @@ function [data_para, Tp, Yp] = descent_parachute6dof(Ta, Ya, settings, uw, vw, w
 
     %% PHASE 2 : Main Extraction
     % Initial conditions
-    posMain0 = quatrotate(quatconj(Yp1(end,10:13)),...  
+    posMain0 = quatrotate(quatconj(Yp1(end,10:13)),...                        % (NED) Initial main position
         [(settings.xcg-settings.Lnose) 0 0]) + Yp1(end,1:3);
 
-    velMain0 = quatrotate(quatconj(Yp1(end,10:13)),Yp1(end,4:6)) +...
+    velMain0 = quatrotate(quatconj(Yp1(end,10:13)),Yp1(end,4:6)) +...         % (NED) INitial main velocity
         quatrotate(quatconj(Yp1(end,10:13)),cross(Yp1(end,7:9),...
         [(settings.xcg-settings.Lnose) 0 0]));
 
-    Y0p = [Yp1(end,1:22) posMain0 velMain0];
+    Y0p = [Yp1(end,1:22) posMain0 velMain0];                                  % Initializing starting state vector
     t0p = Ta(end);
 
     % ODE
@@ -100,18 +98,18 @@ function [data_para, Tp, Yp] = descent_parachute6dof(Ta, Ya, settings, uw, vw, w
     % Main
     data_para{2}.state.Y        = [Yp2(:,1:16) Yp2(:,23:28)];
     data_para{2}.state.T        = Tp2; 
-    data_para{2}.integration.t  = [data_paraf1.integration.t];
-    data_para{2}.interp.alt     = [data_paraf1.interp.alt];
-    data_para{2}.wind.body_wind = [data_paraf1.wind.body_wind];
-    data_para{2}.wind.NED_wind  = [data_paraf1.wind.NED_wind];
-    data_para{2}.velocities     = [data_paraf1.velocities];
-    data_para{2}.air.rho        = [data_paraf1.air.rho];
-    data_para{2}.air.P          = [data_paraf1.air.P];
-    data_para{2}.accelerations.body_acc = [data_paraf1.accelerations.body_acc];
-    data_para{2}.interp.M       = [data_paraf1.interp.M];
-    data_para{2}.forces.T_chord = [data_paraf1.forces.T_chord(:,2)];
-    data_para{2}.SCD            = [data_paraf1.SCD(:,2)];
-    data_para{2}.accelerations.ang_acc = [data_paraf1.accelerations.ang_acc];
+    data_para{2}.integration.t  = data_paraf1.integration.t;
+    data_para{2}.interp.alt     = data_paraf1.interp.alt;
+    data_para{2}.wind.body_wind = data_paraf1.wind.body_wind;
+    data_para{2}.wind.NED_wind  = data_paraf1.wind.NED_wind;
+    data_para{2}.velocities     = data_paraf1.velocities;
+    data_para{2}.air.rho        = data_paraf1.air.rho;
+    data_para{2}.air.P          = data_paraf1.air.P;
+    data_para{2}.accelerations.body_acc = data_paraf1.accelerations.body_acc;
+    data_para{2}.interp.M       = data_paraf1.interp.M;
+    data_para{2}.forces.T_chord = data_paraf1.forces.T_chord(:,2);
+    data_para{2}.SCD            = data_paraf1.SCD(:,2);
+    data_para{2}.accelerations.ang_acc = data_paraf1.accelerations.ang_acc;
  
     %% PHASE 3 : Main descent
     % Initial conditions
