@@ -281,15 +281,39 @@ if settings.stoch.N == 1
     
     if not(settings.ballistic) && settings.descent6DOF
         %% Parachute chord tension
-         figure('Name', 'Parachute chord tension - Descent Phase', 'NumberTitle', 'off')
-
+         figure('Name', 'Descent Phase', 'NumberTitle', 'off')
+         subplot(2,1,1)
          h = zeros(Np, 1);
          for i = 1:Np
             hold on
             h(i) = plot(data_para{i}.integration.t, data_para{i}.forces.T_chord); grid on;
-            xlabel('Time [s]'); ylabel('Chord tension [N]'); title('Chord tension');
+            xlabel('Time [s]'); ylabel('Chord tension [N]'); title('Chord tension - Descent Phase');
          end
          legend(h(:), strcat('chord tension parachute ',  " " , string(1)), strcat('chord tension parachute ',  " " , string(2)), 'Location', 'best');
+         
+         %% Parachute drag force
+         %figure('Name', 'Parachute drag force - Descent Phase', 'NumberTitle', 'off')
+         subplot(2,1,2)
+         h = zeros(Np, 1);
+         for i = 1:Np
+            hold on
+            h(i) = plot(data_para{i}.integration.t, data_para{i}.forces.D); grid on;
+            xlabel('Time [s]'); ylabel('Drag [N]'); title('Drag force - Descent Phase');
+         end
+         legend(h(:), strcat('drag parachute ',  " " , string(1)), strcat('drag parachute ',  " " , string(2)), 'Location', 'best');
+         
+         %% Payload acceleration descent phase
+         figure('Name', 'Acceleration - Descent Phase', 'NumberTitle', 'off')
+
+         h = zeros(Np, 1);
+         for i = 1:Np
+            hold on
+            AA = data_para{i}.accelerations.body_acc;
+            abs_AA = vecnorm(AA');
+            h(i) = plot(data_para{i}.integration.t, abs_AA/9.80665); grid on;
+            xlabel('Time [s]'); ylabel('|A| [g]'); title('Acceleration - Descent Phase');
+         end
+         legend(h(:), strcat('drag parachute ',  " " , string(1)), strcat('drag parachute ',  " " , string(2)), 'Location', 'best');
          
     end
 else   %%%% STOCHASTIC PLOTS (only if N>1)

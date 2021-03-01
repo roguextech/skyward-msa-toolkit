@@ -50,6 +50,7 @@ function [data_para, Tp, Yp] = descent_parachute6dof(Ta, Ya, settings, uw, vw, w
     data_para{1}.state.T = Tp1;
     
     data_para{1}.forces.T_chord = data_para{1}.forces.T_chord(:,1); 
+    data_para{1}.forces.D = data_para{1}.forces.D(:,1); 
     data_para{1}.SCD = data_para{1}.SCD(:,1);
     
     Yp = [Yp1, NaN*ones(size(Yp1,1),6)];
@@ -92,6 +93,7 @@ function [data_para, Tp, Yp] = descent_parachute6dof(Ta, Ya, settings, uw, vw, w
     data_para{1}.accelerations.body_acc = [data_para{1}.accelerations.body_acc; data_paraf1.accelerations.body_acc];
     data_para{1}.interp.M       = [data_para{1}.interp.M, data_paraf1.interp.M];
     data_para{1}.forces.T_chord = [data_para{1}.forces.T_chord; data_paraf1.forces.T_chord(:,1)];
+    data_para{1}.forces.D       = [data_para{1}.forces.D; data_paraf1.forces.D(:,1)];
     data_para{1}.SCD            = [data_para{1}.SCD; data_paraf1.SCD(:,1)];
     data_para{1}.accelerations.ang_acc = [data_para{1}.accelerations.ang_acc; data_paraf1.accelerations.ang_acc];
 
@@ -108,6 +110,7 @@ function [data_para, Tp, Yp] = descent_parachute6dof(Ta, Ya, settings, uw, vw, w
     data_para{2}.accelerations.body_acc = data_paraf1.accelerations.body_acc;
     data_para{2}.interp.M       = data_paraf1.interp.M;
     data_para{2}.forces.T_chord = data_paraf1.forces.T_chord(:,2);
+    data_para{2}.forces.D       = data_paraf1.forces.D(:,2);
     data_para{2}.SCD            = data_paraf1.SCD(:,2);
     data_para{2}.accelerations.ang_acc = data_paraf1.accelerations.ang_acc;
  
@@ -140,6 +143,7 @@ function [data_para, Tp, Yp] = descent_parachute6dof(Ta, Ya, settings, uw, vw, w
     data_para{1}.accelerations.body_acc = [data_para{1}.accelerations.body_acc; data_paraf2.accelerations.body_acc];
     data_para{1}.interp.M       = [data_para{1}.interp.M, data_paraf2.interp.M];
     data_para{1}.forces.T_chord = [data_para{1}.forces.T_chord; data_paraf2.forces.T_chord(:,1)];
+    data_para{1}.forces.D       = [data_para{1}.forces.D; data_paraf2.forces.D(:,1)];
     data_para{1}.SCD            = [data_para{1}.SCD; data_paraf2.SCD(:,1)];
     data_para{1}.accelerations.ang_acc = [data_para{1}.accelerations.ang_acc; data_paraf2.accelerations.ang_acc];
 
@@ -156,6 +160,7 @@ function [data_para, Tp, Yp] = descent_parachute6dof(Ta, Ya, settings, uw, vw, w
     data_para{2}.accelerations.body_acc = [data_para{2}.accelerations.body_acc; data_paraf2.accelerations.body_acc];
     data_para{2}.interp.M       = [data_para{2}.interp.M, data_paraf2.interp.M];
     data_para{2}.forces.T_chord = [data_para{2}.forces.T_chord; data_paraf2.forces.T_chord(:,2)];
+    data_para{2}.forces.D       = [data_para{2}.forces.D; data_paraf2.forces.D(:,2)];
     data_para{2}.SCD            = [data_para{2}.SCD; data_paraf2.SCD(:,2)];
     data_para{2}.accelerations.ang_acc = [data_para{2}.accelerations.ang_acc; data_paraf2.accelerations.ang_acc];
     
