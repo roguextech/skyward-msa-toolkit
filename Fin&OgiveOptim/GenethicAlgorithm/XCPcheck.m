@@ -107,4 +107,4 @@ XCPconstraining = min([XCPlon; XCPlat]);
 
 ceq = [];
 
-c = settings.cal_min - XCPconstraining; 
+c = settings.cal_min - XCPconstraining;

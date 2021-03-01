@@ -32,7 +32,7 @@ X0 = [0 0 0]';
 V0 = [0 0 0]';
 W0 = [0 0 0]';
 X0a = [X0; V0; W0; Q0; settings.Ixxf; settings.Iyyf; settings.Izzf];
-[~,Ya] = ode113(@Ascent, [0, tf], X0a, settings.ode.optionsasc, settings, uw, vw, ww);
+[~, Ya] = ode113(@Ascent, [0, tf], X0a, settings.ode.optionsasc, settings, uw, vw, ww);
 
 %% CALCULATE OUTPUT QUANTITIES
 apogee = -Ya(end, 3);

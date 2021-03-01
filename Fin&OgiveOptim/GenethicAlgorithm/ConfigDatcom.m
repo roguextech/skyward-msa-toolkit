@@ -17,10 +17,11 @@ datcom.Beta = 0;
 datcom.Alt = settings.z0 + 0:1000:4000; 
 
 %% Fixed Parameters
-datcom.xcg = [1.52, 1.36] - 0.28;                          % [m] CG position from the end of Lcenter [full, empty]
+noseLenghtCad = 0.28;                                      % [m] current nose length from the CAD
+datcom.xcg = [1.49, 1.33] - noseLenghtCad;                 % [m] CG position from the end of Lcenter [full, empty]
 datcom.D = settings.C;                                     % [m] rocket diameter
 datcom.S = settings.S;                                     % [m^2] rocket cross section
-datcom.Lcenter = 2.51 - 0.28;                              % [m] Lcenter : Centerbody length
+datcom.Lcenter = 2.495 - noseLenghtCad;                    % [m] Lcenter : Centerbody length
 datcom.Npanel = 3;                                         % [m] number of fins
 datcom.Ler = 0.003;                                        % [deg] Leading edge radius
 datcom.d = 0;                                              % [m] rocket tip-fin distance

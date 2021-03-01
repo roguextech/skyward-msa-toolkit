@@ -13,14 +13,14 @@ Release date: 18/10/2019
 % State values in which the aerodynamic coefficients will be computed
 datcom.Mach = 0.05:0.05:1;
 datcom.Alpha = [-22 -15 -10 -7.5 -5 -2.5 -1 -0.5 -0.1 0 0.1 0.5 1 2.5 5 7.5 10 15 22];
-datcom.Beta = [-15 -10 -7.5 -5 -0.1 0 0.1 5 7.5 10 15 ];
+datcom.Beta = [-5 -2.5 -0.1 0 0.1 2.5 5];
 Alt0 = 109;                                     % [m] local altitude
-datcom.Alt = Alt0 + 0:200:3600;
+datcom.Alt = Alt0 + 0:400:4000;
 
 %% Design Parameters
 datcom.Chord1 = 0.35; 
-datcom.Chord2 = 0.11; 
-datcom.Height = 0.14;                            
+datcom.Chord2 = 0.12; 
+datcom.Height = 0.12;                            
 datcom.shape = 'rect';
 
 %% Fixed Parameters
@@ -44,7 +44,7 @@ datcom.xprot = datcom.Lcenter + datcom.Lnose - 0.85; % axial position
 datcom.nloc = 3; % number of brakes
 datcom.lprot = 0.005; % brakes thickness
 datcom.wprot = 0.088; % brakes width
-vars.hprot = linspace(0, 0.0387, 30); % brakes length, first entry must be always 0!
+vars.hprot = linspace(0, 0.0387, 3); % brakes length, first entry must be always 0!
 
 
 %% Run 

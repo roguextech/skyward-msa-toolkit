@@ -30,7 +30,7 @@ elseif x(6) == 6
     datcom.NosePower = 3/4;
 end
 
-%%
+%%%
 settings.Alphas = datcom.Alpha;
 settings.Betas = datcom.Beta;
 settings.Altitudes = datcom.Alt;
@@ -44,15 +44,18 @@ createFor006(datcom);
 datcom.xcg = xcg(2) + datcom.Lnose;
 createFor006(datcom);
 [settings.CoeffsE, ~] = datcomParser5();
-
+%%%
 settings.wind.Az = (360)*pi/180;
 apogee1 = RunSim(settings);
+
 settings.wind.Az = (180)*pi/180;
 apogee2 = RunSim(settings);
 
 settings.wind.Mag = 1;
 settings.wind.Az = (360)*pi/180;
 apogee3 = RunSim(settings);
+
 settings.wind.Az = (180)*pi/180;
 apogee4 = RunSim(settings);
+
 apogee = (- apogee1 - apogee2 - apogee3 - apogee4)/4;

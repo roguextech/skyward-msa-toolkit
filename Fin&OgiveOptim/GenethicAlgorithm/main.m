@@ -22,19 +22,19 @@ tic
 
 %% VARIABLES BOUNDARIES
 %%% Lower boundary
-lb(1) = 25;     % 1 --> chord1         [cm]
+lb(1) = 35;     % 1 --> chord1         [cm]
 lb(2) = 10;     % 2 --> chord2         [cm]
 lb(3) = 10;     % 3 --> heigth         [cm]
 lb(4) = 2;      % 4 --> Fin type       [/]
-lb(5) = 25;     % 5 --> Ogive Length   [cm]
+lb(5) = 28;     % 5 --> Ogive Length   [cm]
 lb(6) = 1;      % 6 --> Ogive Type     [/]
 
 %%% Upper boundary
-ub(1) = 50;     % 1 --> chord1         [cm]
+ub(1) = 35;     % 1 --> chord1         [cm]
 ub(2) = 20;     % 2 --> chord2         [cm]
 ub(3) = 40;     % 3 --> heigth         [cm]
 ub(4) = 2;      % 4 --> Fin type       [/]
-ub(5) = 50;     % 5 --> Ogive Length   [cm]
+ub(5) = 28;     % 5 --> Ogive Length   [cm]
 ub(6) = 1;      % 6 --> Ogive Type     [/]
 
 %%% Inequality constraint (A*x < b)
