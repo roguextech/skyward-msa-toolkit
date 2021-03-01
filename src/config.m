@@ -131,12 +131,12 @@ settings.control = '0%';      % aerobrakes 0% 50% or 100% opened
 
 %% PARACHUTES DETAILS
 % parachute 1
-settings.para(1).S = 0.4;     % [m^2] Surface
+settings.para(1).S = 0.5;     % [m^2] Surface
 settings.para(1).mass = 0.2;  % [kg] Parachute Mass
 settings.para(1).CD = 0.78;   % [/] Parachute Drag Coefficient
 settings.para(1).CL = 0;      % [/] Parachute Lift Coefficient
 settings.para(1).delay = 1;   % [s] drogue opening delay
-settings.para(1).z_cut = 450; % [m] Final altitude of the parachute
+settings.para(1).z_cut = 600; % [m] Final altitude of the parachute
 
 % parachute 2
 settings.para(2).S = 10.5;    % [m^2] Surface
@@ -184,10 +184,9 @@ settings.ode.final_time =  2000;                                    % [s] Final 
 
 settings.ode.optionsasc1 = odeset('Events', @event_apogee, 'InitialStep', 1);       %ODE options for ascend
 settings.ode.optionsasc2 = odeset('InitialStep', 1);                                %ODE options for due to the opening delay of the parachute
-settings.ode.optionspara1 = odeset('Events', @event_para_cut);                      %ODE options for the parachutes
-settings.ode.optionspara2 = odeset('Events', @event_main_exit);                     %ODE options for due to the extraction of the main parachute
-settings.ode.optionsdesc = odeset('Events', @event_landing);                        %ODE options for ballistic descent
-
+settings.ode.optionspara1 = odeset('Events', @event_para_cut,'AbsTol',1e-5,'RelTol',1e-5);                      %ODE options for the parachutes
+settings.ode.optionspara2 = odeset('Events', @event_main_exit,'AbsTol',1e-5,'RelTol',1e-5);                     %ODE options for due to the extraction of the main parachute
+settings.ode.optionsdesc = odeset('Events', @event_landing,'AbsTol',1e-5,'RelTol',1e-5);                        %ODE options for ballistic descent
 
 %% WIND DETAILS
 % select which model you want to use:
@@ -223,8 +222,8 @@ settings.wind.input_uncertainty = [1, 1];
 
 % Wind is generated randomly from the minimum to the maximum parameters which defines the wind.
 % Setting the same values for min and max will fix the parameters of the wind.
-settings.wind.MagMin = 2;           % [m/s] Minimum Magnitude
-settings.wind.MagMax = 2;           % [m/s] Maximum Magnitude
+settings.wind.MagMin = 5;           % [m/s] Minimum Magnitude
+settings.wind.MagMax = 5;           % [m/s] Maximum Magnitude
 settings.wind.ElMin = 0*pi/180;     % [rad] Minimum Elevation, user input in degrees (ex. 0)
 settings.wind.ElMax = 0*pi/180;     % [rad] Maximum Elevation, user input in degrees (ex. 0) (Max == 90 Deg)
 settings.wind.AzMin = (180)*pi/180; % [rad] Minimum Azimuth, user input in degrees (ex. 90)

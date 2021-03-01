@@ -198,6 +198,7 @@ if settings.stoch.N == 1
     end
     
     %% ALTITUDE,MACH,VELOCITY,ACCELERATION(subplotted)
+    %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
     figure('Name','Altitude, Mach, Velocity-Abs, Acceleration-Abs - Ascent Phase','NumberTitle','off');
     subplot(2,3,1:3)
     h(1) = plot(Ta, za); grid on, xlabel('time [s]'), ylabel('altitude [m]');
@@ -291,6 +292,81 @@ if settings.stoch.N == 1
          end
          legend(h(:), strcat('chord tension parachute ',  " " , string(1)), strcat('chord tension parachute ',  " " , string(2)), 'Location', 'best');
          
+%          for i = 1 : length(data_para{1}.state.T)
+%              if (data_para{1}.state.T(i) >= data_para{2}.state.T(1))
+%                  i1 = i;
+%                  break;
+%              end
+%          end
+%          myMovie = struct('cdata',[],'colormap',[]);
+%          fps = 24;
+%          myFig = figure('Name', 'Parachute chord tension - Descent Phase', 'NumberTitle', 'off');
+%          plot3([-10,10],[-10,-10],[-5,-5],'--'); hold on; grid on;
+%          plot3([-10,10],[10,10],[15,15],'--');
+%          myMovie(1) = getframe(myFig);
+%          i=1;
+%          while data_para{1}.state.T(i) < data_para{2}.state.T(1)
+%              punta = quatrotate(quatconj(data_para{1}.state.Y(i,10:13)),[1.5, 0, 0]);
+%              coda = quatrotate(quatconj(data_para{1}.state.Y(i,10:13)),[-1.5, 0, 0]);
+%              drogue = data_para{1}.state.Y(i,17:19) - data_para{1}.state.Y(i,1:3);
+%              [x,y,z] = sphere(100);
+%              x = x(50:end,:) + drogue(1);
+%              y = y(50:end,:) + drogue(2);
+%              z = z(50:end,:) - drogue(3);
+%              r = sqrt(3/pi);
+%              P1 = plot3(r.*x,r.*y,r.*z,'g');
+%              P2 = plot3([punta(1) coda(1)],[punta(2) coda(2)],[-punta(3), -coda(3)],'k-','LineWidth',2.5);
+%              P3 = plot3([punta(1) drogue(1)],[punta(2) drogue(2)],[-punta(3), -drogue(3)],'k-','LineWidth',0.1);
+%              myMovie(end+1) = getframe(myFig);
+%              drawnow;
+%              title("t = ", num2str(data_para{1}.state.T(i)- data_para{1}.state.T(1),'%.2f'));
+%              delete(P1);
+%              delete(P2);
+%              delete(P3);
+%              i = i+5;
+%          end
+%         i1 = i;
+%         
+%         for i=1:5:length(data_para{2}.state.T)
+%              punta = quatrotate(quatconj(data_para{2}.state.Y(i,10:13)),[1.5, 0, 0]);
+%              coda = quatrotate(quatconj(data_para{2}.state.Y(i,10:13)),[-1.5, 0, 0]);
+%              drogue = data_para{1}.state.Y(i+i1,17:19) - data_para{1}.state.Y(i+i1,1:3);
+%              main = data_para{2}.state.Y(i,17:19) - data_para{2}.state.Y(i,1:3);
+%              [x,y,z] = sphere(100);
+%              x = x(50:end,:) + drogue(1);
+%              y = y(50:end,:) + drogue(2);
+%              z = z(50:end,:) - drogue(3);
+%              r = sqrt(3/pi);
+%              P1 = plot3(r.*x,r.*y,r.*z,'g');
+%              [x,y,z] = sphere(100);
+%              x = x(50:end,:) + main(1);
+%              y = y(50:end,:) + main(2);
+%              z = z(50:end,:) - main(3);
+%              r = sqrt(3/pi);
+%              P2 = plot3(r.*x,r.*y,r.*z,'y');
+%              P3 = plot3([punta(1) coda(1)],[punta(2) coda(2)],[-punta(3), -coda(3)],'k-','LineWidth',2.5);
+%              P4 = plot3([punta(1) drogue(1)],[punta(2) drogue(2)],[-punta(3), -drogue(3)],'k-','LineWidth',0.1);
+%              P5 = plot3([punta(1) main(1)],[punta(2) main(2)],[-punta(3), -main(3)],'k-','LineWidth',0.1);
+%              myMovie(end+1) = getframe(myFig);
+%              drawnow;
+%              title("t = ", num2str(data_para{1}.state.T(i+i1)- data_para{1}.state.T(1),'%.2f'));
+%              delete(P1);
+%              delete(P2);
+%              delete(P3);
+%              delete(P4);
+%              delete(P5);
+%         end
+%         
+%         writerObj = VideoWriter( 'descent_mp4', 'MPEG-4');
+%         writerObj.Quality = 100;
+%         writerObj.FrameRate = fps;
+%         
+%         open( writerObj );        
+%    
+%         writeVideo( writerObj, myMovie );
+%         disp(sprintf('%s was written', writerObj.Filename))
+%         close( writerObj );
+
     end
 else   %%%% STOCHASTIC PLOTS (only if N>1)
     
