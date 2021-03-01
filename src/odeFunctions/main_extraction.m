@@ -7,24 +7,23 @@ z_rocket = Y(3);
 u_rocket = Y(4);
 v_rocket = Y(5);
 w_rocket = Y(6);
-p_rocket = Y(7);
-q_rocket = Y(8);
-r_rocket = Y(9);
-q0_rocket = Y(10);
-q1_rocket = Y(11);
-q2_rocket = Y(12);
-q3_rocket = Y(13);
+p = Y(7);
+q = Y(8);
+r = Y(9);
+q0 = Y(10);
+q1 = Y(11);
+q2 = Y(12);
+q3 = Y(13);
 m_rocket = settings.ms - settings.para(para(1)).mass - settings.para(para(2)).mass;
 Ixx = settings.Ixxe;
 Iyy = settings.Iyye;
 Izz = settings.Izze;
 
-Q_rocket = [ q0_rocket q1_rocket q2_rocket q3_rocket];
-Q_conj_rocket = [ q0_rocket -q1_rocket -q2_rocket -q3_rocket];
-normQ_rocket = norm(Q_rocket);
+Q = [ q0 q1 q2 q3];
+normQ = norm(Q);
 
-if abs(normQ_rocket-1) > 0.1
-    Q_rocket = Q_rocket/normQ_rocket;
+if abs(normQ-1) > 0.1
+    Q = Q/normQ;
 end
 
 % first parachute state
@@ -58,37 +57,39 @@ elseif settings.wind.input
     [uw,vw,ww] = wind_input_generator(settings,z_rocket,uncert);
 end
 
-wind = quatrotate(Q_rocket,[uw vw ww]);
+dcm = quatToDcm(Q);
+wind = dcm*[uw; vw; ww];
 
 % Rocket (BODY) relative velocities (plus wind);
 ur_rocket = u_rocket - wind(1);
 vr_rocket = v_rocket - wind(2);
 wr_rocket = w_rocket - wind(3);
 
-Vels_rocket = quatrotate(Q_conj_rocket,[u_rocket v_rocket w_rocket]);
-V_norm_rocket = norm([ur_rocket vr_rocket wr_rocket]);
+% Body to Inertial velocities
+Vels_rocket = dcm'*[u_rocket; v_rocket; w_rocket];
+V_norm_rocket = norm([ur_rocket; vr_rocket; wr_rocket]);
 
 % Parachute 1 (NED) relative velocities (plus wind) 
 ur_para1 = u_para1 - uw;
 vr_para1 = v_para1 - vw;
 wr_para1 = w_para1 - ww;
 
-Vels_para1 = [u_para1 v_para1 w_para1];
-Vrel_para1 = [ur_para1 vr_para1 wr_para1];
-V_norm_para1 = norm([ur_para1 vr_para1 wr_para1]);
+Vels_para1 = [u_para1; v_para1; w_para1];
+Vrel_para1 = [ur_para1; vr_para1; wr_para1];
+V_norm_para1 = norm([ur_para1; vr_para1; wr_para1]);
 
 % Parachute 2 (NED) relative velocities (plus wind) 
 ur_para2 = u_para2 - uw;
 vr_para2 = v_para2 - vw;
 wr_para2 = w_para2 - ww;
 
-Vels_para2 = [u_para2 v_para2 w_para2];
+Vels_para2 = [u_para2; v_para2; w_para2];
 
 %% PARACHUTE REFERENCE FRAME
 % The parachutes are approximated as rectangular surfaces with the normal
 % vector perpendicular to the relative velocity
 if V_norm_para1 < 1e-3
-    t_vers = [0, 0, -1];
+    t_vers = [0; 0; -1];
 else
     t_vers = -Vrel_para1/V_norm_para1;
 end
@@ -107,31 +108,31 @@ M_value_rocket = M_rocket;
 
 %% RELATIVE POSITION AND VELOCITY VECTORS
 % (NED) positions of parachutes
-posPara1 = [x_para1 y_para1 z_para1];
-posPara2 = [x_para2 y_para2 z_para2];
+posPara1 = [x_para1; y_para1; z_para1];
+posPara2 = [x_para2; y_para2; z_para2];
 
 % (NED) relative position between parachutes
 posRel = posPara1 - posPara2;
 
 if norm(posRel) < 1e-3
-    posRel_vers = [0, 0, -1];
+    posRel_vers = [0; 0; -1];
 else
     posRel_vers = posRel/norm(posRel);
 end
 
 % (NED) velocities of parachutes
-velPara1 = [u_para1 v_para1 w_para1];
-velPara2 = [u_para2 v_para2 w_para2];
+velPara1 = [u_para1; v_para1; w_para1];
+velPara2 = [u_para2; v_para2; w_para2];
 
 % (NED) relative velocity between parachuts
 velRel = velPara1 - velPara2;
 
 % Relative velocity projected along the shock chord
-velRel_chord = velRel * posRel';
+velRel_chord = dot(velRel,posRel);
 
 %% CHORD TENSION (ELASTIC-DAMPING MODEL)
-if norm(posRel) > (settings.para(para(2)).L - settings.para(para(1)).L) 
-    T_chord = (norm(posRel) - (settings.para(para(2)).L - settings.para(para(1)).L))* settings.para(para(1)).K -...
+if norm(posRel) > settings.para(para(1)).L
+    T_chord = (norm(posRel) - settings.para(para(1)).L)* settings.para(para(1)).K +...
         velRel_chord * settings.para(para(1)).C;
 else
     T_chord = 0;
@@ -155,44 +156,44 @@ else
     SCD_para = SCD0 * (1+(settings.para(para(1)).CX-1)*exp(-2*(dt-tx)/t0));
 end
 
-D_para1 = 0.5*rho*V_norm_para1^2*SCD_para*t_vers';
+D_para1 = 0.5*rho*V_norm_para1^2*SCD_para*t_vers;
 
-Fg_para1 = [0 0 m_para1*g]';
+Fg_para1 = [0; 0; m_para1*g];
 
 Ft_chord_para1 = -T_chord * posRel_vers;
-F_para1 = D_para1 + Fg_para1 + Ft_chord_para1'; 
+F_para1 = D_para1 + Fg_para1 + Ft_chord_para1; 
 
 %% MAIN FORCES                           
-Fg_para2 = [0 0 m_para2*g]';
+Fg_para2 = [0; 0; m_para2*g];
 
 Ft_chord_para2 = T_chord * posRel_vers;
 
-F_para2 = Fg_para2 + Ft_chord_para2';
+F_para2 = Fg_para2 + Ft_chord_para2;
 
 
 %% ROCKET FORCES
 % computed in the body-frame reference system
-Fg_rocket = quatrotate(Q_rocket,[0 0 m_rocket*g])';
+Fg_rocket = dcm*[0; 0; m_rocket*g];
 F_rocket = Fg_rocket;    
 
 %% ROCKET STATE DERIVATIVES
 % velocity (BODY frame)
-du_rocket = F_rocket(1)/m_rocket-q_rocket*w_rocket+r_rocket*v_rocket;
-dv_rocket = F_rocket(2)/m_rocket-r_rocket*u_rocket+p_rocket*w_rocket;
-dw_rocket = F_rocket(3)/m_rocket-p_rocket*v_rocket+q_rocket*u_rocket;
+du_rocket = F_rocket(1)/m_rocket-q*w_rocket+r*v_rocket;
+dv_rocket = F_rocket(2)/m_rocket-r*u_rocket+p*w_rocket;
+dw_rocket = F_rocket(3)/m_rocket-p*v_rocket+q*u_rocket;
 
 % Rotation
-dp_rocket = (Iyy-Izz)/Ixx*q_rocket*r_rocket;
-dq_rocket = (Izz-Ixx)/Iyy*p_rocket*r_rocket;
-dr_rocket = (Ixx-Iyy)/Izz*p_rocket*q_rocket;
+dp_rocket = (Iyy-Izz)/Ixx*q*r;
+dq_rocket = (Izz-Ixx)/Iyy*p*r;
+dr_rocket = (Ixx-Iyy)/Izz*p*q;
 
 % Quaternion
-OM = 1/2* [ 0 -p_rocket -q_rocket -r_rocket  ;
-            p_rocket  0  r_rocket -q_rocket  ;
-            q_rocket -r_rocket  0  p_rocket  ;
-            r_rocket  q_rocket -p_rocket  0 ];
+OM = [ 0 -p -q -r  ;
+       p  0  r -q  ;
+       q -r  0  p  ;
+       r  q -p  0 ];
 
-dQQ_rocket = OM*Q_rocket';
+dQQ = 1/2*OM*Q';
 
 %% PARACHUTE STATE DERIVATIVES
 % velocity (NED frame)
@@ -214,8 +215,8 @@ dY(6) = dw_rocket;
 dY(7) = dp_rocket;
 dY(8) = dq_rocket;
 dY(9) = dr_rocket;
-dY(10:13) = dQQ_rocket;
-dY(14:16) = [p_rocket q_rocket r_rocket];
+dY(10:13) = dQQ;
+dY(14:16) = [p q r];
 dY(17:19) = Vels_para1;
 dY(20) = du_para1;
 dY(21) = dv_para1;

@@ -55,7 +55,7 @@ function [data_para, Tp, Yp] = descent_parachute6dof(Ta, Ya, settings, uw, vw, w
     
     Yp = [Yp1, NaN*ones(size(Yp1,1),6)];
     Tp = Tp1;
-
+    
     %% PHASE 2 : Main Extraction
     % Initial conditions
     posMain0 = quatrotate(quatconj(Yp1(end,10:13)),...                        % (NED) Initial main position
@@ -72,7 +72,7 @@ function [data_para, Tp, Yp] = descent_parachute6dof(Ta, Ya, settings, uw, vw, w
     para = [1, 2];
     [Tp2, Yp2] = ode113(@main_extraction, [Tp1(end), tf], Y0p,...
         settings.ode.optionspara2, settings, uw, vw, ww, para, t0p, uncert);
-
+ 
     % Saving additional data
     [data_paraf1] = RecallOdeFcn(@main_extraction, Tp2, Yp2, settings, uw, vw, ww, para, t0p, uncert);
     
@@ -113,7 +113,7 @@ function [data_para, Tp, Yp] = descent_parachute6dof(Ta, Ya, settings, uw, vw, w
     data_para{2}.forces.D       = data_paraf1.forces.D(:,2);
     data_para{2}.SCD            = data_paraf1.SCD(:,2);
     data_para{2}.accelerations.ang_acc = data_paraf1.accelerations.ang_acc;
- 
+
     %% PHASE 3 : Main descent
     % Initial conditions
     Y0p = Yp2(end,1:28);
