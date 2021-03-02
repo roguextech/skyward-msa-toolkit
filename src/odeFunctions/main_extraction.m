@@ -1,8 +1,8 @@
 function [dY, parout] = main_extraction(t, Y, settings, uw, vw, ww, para, t0p, uncert, Hour, Day)
 %% RECALLING THE STATE
 % Rocket state
-x_rocket = Y(1);
-y_rocket = Y(2);
+% x_rocket = Y(1);
+% y_rocket = Y(2);
 z_rocket = Y(3);
 u_rocket = Y(4);
 v_rocket = Y(5);
@@ -79,9 +79,9 @@ Vrel_para1 = [ur_para1; vr_para1; wr_para1];
 V_norm_para1 = norm([ur_para1; vr_para1; wr_para1]);
 
 % Parachute 2 (NED) relative velocities (plus wind) 
-ur_para2 = u_para2 - uw;
-vr_para2 = v_para2 - vw;
-wr_para2 = w_para2 - ww;
+% ur_para2 = u_para2 - uw;
+% vr_para2 = v_para2 - vw;
+% wr_para2 = w_para2 - ww;
 
 Vels_para2 = [u_para2; v_para2; w_para2];
 
@@ -96,15 +96,15 @@ end
 
 %% CONSTANTS
 % Everything related to empty condition (descent-fase)
-g = 9.80655;       
-T = 0;          
+g = settings.g0/(1 + (-z_rocket*1e-3/6371))^2;
 
 %% ATMOSPHERE DATA
 % since z_rocket is similar to z_para, atmospherical data will be computed
 % on z_rocket
-[~, a, P, rho] = atmosisa(-z_rocket+settings.z0);
-M_rocket = V_norm_rocket/a;
-M_value_rocket = M_rocket;
+absoluteAltitude = -z_rocket + settings.z0;
+[~, a, P, rho] = atmosisa(absoluteAltitude);
+M = V_norm_rocket/a;
+M_value = M;
 
 %% RELATIVE POSITION AND VELOCITY VECTORS
 % (NED) positions of parachutes
@@ -230,7 +230,7 @@ dY = dY';
 %% SAVING THE QUANTITIES FOR THE PLOTS
 parout.integration.t = t;
 
-parout.interp.M = M_value_rocket;
+parout.interp.M = M_value;
 parout.interp.alt = -z_rocket;
 
 parout.wind.NED_wind = [uw, vw, ww];

@@ -132,7 +132,7 @@ if not(settings.descent6DOF)
 
     for i = 1:settings.Npara
         para = i;
-        [Tp, Yp] = ode113(@descent_parachute, [t0p, tf], Y0p, settings.ode.optionspara1,...
+        [Tp, Yp] = ode113(@descent_parachute, [t0p, tf], Y0p, settings.ode.optionspara,...
             settings, uw, vw, ww, para, uncert);
 
         [data_para{para}] = RecallOdeFcn(@descent_parachute, Tp, Yp, settings, uw, vw, ww, para, uncert);
@@ -148,11 +148,24 @@ if not(settings.descent6DOF)
         t0p = Tp(end);
 
     end
+    
+    % Usefull values for the plots
+    bound_value = struct;
+    bound_value(1).t = Ta(end);
+    bound_value(1).X = [Ya(end, 2), Ya(end, 1), -Ya(end, 3)];
+    bound_value(1).V = quatrotate(quatconj(Ya(end, 10:13)), Ya(end, 4:6));
+
+    for i = 1:settings.Npara
+        bound_value(i+1).t = data_para{i}.state.T(end);
+        bound_value(i+1).X = [data_para{i}.state.Y(end, 2), data_para{i}.state.Y(end, 1), -data_para{i}.state.Y(end, 3)];
+        bound_value(i+1).V = [data_para{i}.state.Y(end, 4), data_para{i}.state.Y(end, 5), -data_para{i}.state.Y(end, 6)];
+    end
+
 else
     Yf = [Ya(:, 1:16), NaN*ones(size(Ya,1),12)];
     Tf = Ta;
     
-    [data_para, Tp, Yp] = descent_parachute6dof(Ta, Ya, settings, uw, vw, ww, uncert);
+    [data_para, Tp, Yp, bound_value] = descent_parachute6dof(Ta, Ya, settings, uw, vw, ww, uncert);
     
     % total state
     Yf = [Yf; Yp];
@@ -160,31 +173,3 @@ else
 end
     
 save('descent_para_plot.mat', 'data_para')
-    
-%% TIME, POSITION AND VELOCITY AT PARACHUTES DEPLOYMENT
-% Usefull values for the plots
-bound_value = struct;
-bound_value(1).t = Ta(end);
-bound_value(1).X = [Ya(end, 2), Ya(end, 1), -Ya(end, 3)];
-bound_value(1).V = quatrotate(quatconj(Ya(end, 10:13)), Ya(end, 4:6));
-
-
-if not(settings.descent6DOF)
-    for i = 1:settings.Npara
-        bound_value(i+1).t = data_para{i}.state.T(end);
-        bound_value(i+1).X = [data_para{i}.state.Y(end, 2), data_para{i}.state.Y(end, 1), -data_para{i}.state.Y(end, 3)];
-        bound_value(i+1).V = [data_para{i}.state.Y(end, 4), data_para{i}.state.Y(end, 5), data_para{i}.state.Y(end, 6)];
-    end
-else
-    bound_value(2).t = data_para{2}.state.T(1);
-    bound_value(2).X = [data_para{2}.state.Y(1, 2), data_para{2}.state.Y(1, 1), -data_para{2}.state.Y(1, 3)];
-    bound_value(2).V = quatrotate(quatconj(data_para{2}.state.Y(1, 10:13)), data_para{2}.state.Y(1, 4:6));
-    
-    bound_value(3).t = data_para{2}.state.T(end);
-    bound_value(3).X = [data_para{2}.state.Y(end, 2), data_para{2}.state.Y(end, 1), -data_para{2}.state.Y(end, 3)];
-    bound_value(3).V = quatrotate(quatconj(data_para{2}.state.Y(end, 10:13)), data_para{2}.state.Y(end, 4:6));
-    
-end
-
-
-

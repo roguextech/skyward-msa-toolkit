@@ -24,7 +24,7 @@ if settings.stoch.N == 1
     plot(data_ascent.integration.t, -data_ascent.coeff.XCPlon, '.',...
         data_ascent.integration.t, -data_ascent.coeff.XCPlat, '.'),
     title('Stability margin vs time'), grid on;
-    legend('Longitudinal', 'Lateral');
+    legend('Longitudinal', 'Lateral')
     xlabel('Time [s]'); ylabel('S.M.[/]')
     
     %%% Aero Forces
@@ -61,6 +61,7 @@ if settings.stoch.N == 1
     xlabel('Time [s]'); ylabel('Drag Coeff CD [/]')
     
     %%% Angles(body)
+   
     [yaw, pitch, roll] = dcmToAngle(data_ascent.rotations.dcm);
     
     figure('Name', 'Euler Angles - ascent Phase', 'NumberTitle', 'off');
@@ -85,8 +86,8 @@ if settings.stoch.N == 1
     xlabel('y, East [m]'), ylabel('x, North [m]'), zlabel('Altitude [m]')
     
     % randomly generation of colors:
-    Np = settings.Npara;                 
-    Colors = rand(3, Np);    
+    Np = settings.Npara;
+    Colors = rand(3, Np);
     
     % adding concentric circles
     if not(settings.terrain)
@@ -99,9 +100,9 @@ if settings.stoch.N == 1
             z_plot = zeros(length(theta_plot), 1);
             plot3(y_plot, x_plot, z_plot, '--r')
         end
-       
+        
     else
-    
+        
         % adding surf terrain map
         X_t = -6000:30:6000;
         Y_t = -6000:30:6000;
@@ -148,18 +149,16 @@ if settings.stoch.N == 1
         campitch(g, -25);
     end
     
-    %% IMPORTANT FEATURES DURING FLIGHT
-    
     %% HORIZONTAL-FRAME VELOCITIES(subplotted)
     figure('Name','Horizontal Frame Velocities - All Flight','NumberTitle','off');
     
-    % Rotate velocities 
+    % Rotate velocities
     if not(settings.ballistic) && not(settings.descent6DOF)
         Vhframe = [quatrotate(quatconj(Ya(:, 10:13)), Ya(:, 4:6)); Yf(Na + 1:end, 4:6)];
     else
         Vhframe = [quatrotate(quatconj(Ya(:, 10:13)), Ya(:, 4:6)); quatrotate(quatconj(Yf(Na + 1:end, 10:13)),Yf(Na + 1:end, 4:6))];
-    end 
-        
+    end
+    
     % x axis
     subplot(3,1,1);
     plot(Tf, Vhframe(:, 1)), hold on, grid on, xlabel('Time[s]'), ylabel('Velocity-x [m/s]');
@@ -190,7 +189,6 @@ if settings.stoch.N == 1
     plot(Tf, -Vhframe(:, 3)), hold on, grid on, xlabel('Time[s]'), ylabel('Velocity-z [m/s]');
     
     bound_value(1).V(3) = - bound_value(1).V(3);
-    bound_value(2).V(3) = - bound_value(2).V(3);
     for i = 1:Np
         
         h(i) = plot(bound_value(i).t,bound_value(i).V(3), 'o', 'MarkerSize',...
@@ -198,20 +196,9 @@ if settings.stoch.N == 1
     end
     
     %% ALTITUDE,MACH,VELOCITY,ACCELERATION(subplotted)
-    %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-    figure('Name','Altitude, Mach, Velocity-Abs, Acceleration-Abs - Ascent Phase','NumberTitle','off');
+    figure('Name','Altitude, Mach, Velocity-Abs, Acceleration-Abs - ascent Phase','NumberTitle','off');
     subplot(2,3,1:3)
-    h(1) = plot(Ta, za); grid on, xlabel('time [s]'), ylabel('altitude [m]');
-    if not(settings.ballistic)
-        for i = 1: Np
-            hold on
-            h(i+1) = plot(data_para{i}.integration.t, data_para{i}.interp.alt);
-            grid on;
-        end
-    end
-    if not(settings.ballistic)
-        legend(h(:), {'Ascent', 'Parachute 1', 'Parachute 2'}, 'Location', 'southeast');
-    end
+    plot(Ta, za), grid on, xlabel('time [s]'), ylabel('altitude [m]');
     
     subplot(2,3,4)
     plot(data_ascent.integration.t(1:end-1), data_ascent.interp.M(1:end-1)), grid on;
@@ -222,10 +209,10 @@ if settings.stoch.N == 1
     plot(Ta, abs_V), grid on;
     xlabel('time [s]'), ylabel('|V| [m/s]');
     
+    
     subplot(2,3,6)
     plot(Ta, abs_A/9.80665), grid on;
     xlabel('time [s]'), ylabel('|A| [g]');
-    
     
     
     %% TRAJECTORY PROJECTIONS(subplotted)
@@ -246,8 +233,8 @@ if settings.stoch.N == 1
     h(Np+2) = plot(Yf(end,2), Yf(end,1), 'rx','markersize',7);
     
     if not(settings.ballistic)
-            legend(h(:), {'Apogee', strcat('parachute ',  " " , string(2:Np), " ", 'opening'), 'Launch point',...
-        'Landing point'}, 'Location', 'southeast');
+        legend(h(:), {'Apogee', strcat('parachute ',  " " , string(2:Np), " ", 'opening'), 'Launch point',...
+            'Landing point'}, 'Location', 'southeast');
     else
         legend(h(:), {'Apogee','Launch point', 'Landing point'}, 'Location', 'southeast');
     end
@@ -280,97 +267,57 @@ if settings.stoch.N == 1
     
     delete('ascent_plot.mat')
     
+    %% DESCENT 6 DOF PLOT
     if not(settings.ballistic) && settings.descent6DOF
-        %% Parachute chord tension
-         figure('Name', 'Parachute chord tension - Descent Phase', 'NumberTitle', 'off')
-
-         h = zeros(Np, 1);
-         for i = 1:Np
-            hold on
-            h(i) = plot(data_para{i}.integration.t, data_para{i}.forces.T_chord); grid on;
-            xlabel('Time [s]'); ylabel('Chord tension [N]'); title('Chord tension');
-         end
-         legend(h(:), strcat('chord tension parachute ',  " " , string(1)), strcat('chord tension parachute ',  " " , string(2)), 'Location', 'best');
+        figure('Name', 'Parachute chord tension - Descent Phase', 'NumberTitle', 'off')
          
-%          for i = 1 : length(data_para{1}.state.T)
-%              if (data_para{1}.state.T(i) >= data_para{2}.state.T(1))
-%                  i1 = i;
-%                  break;
-%              end
-%          end
-%          myMovie = struct('cdata',[],'colormap',[]);
-%          fps = 24;
-%          myFig = figure('Name', 'Parachute chord tension - Descent Phase', 'NumberTitle', 'off');
-%          plot3([-10,10],[-10,-10],[-5,-5],'--'); hold on; grid on;
-%          plot3([-10,10],[10,10],[15,15],'--');
-%          myMovie(1) = getframe(myFig);
-%          i=1;
-%          while data_para{1}.state.T(i) < data_para{2}.state.T(1)
-%              punta = quatrotate(quatconj(data_para{1}.state.Y(i,10:13)),[1.5, 0, 0]);
-%              coda = quatrotate(quatconj(data_para{1}.state.Y(i,10:13)),[-1.5, 0, 0]);
-%              drogue = data_para{1}.state.Y(i,17:19) - data_para{1}.state.Y(i,1:3);
-%              [x,y,z] = sphere(100);
-%              x = x(50:end,:) + drogue(1);
-%              y = y(50:end,:) + drogue(2);
-%              z = z(50:end,:) - drogue(3);
-%              r = sqrt(3/pi);
-%              P1 = plot3(r.*x,r.*y,r.*z,'g');
-%              P2 = plot3([punta(1) coda(1)],[punta(2) coda(2)],[-punta(3), -coda(3)],'k-','LineWidth',2.5);
-%              P3 = plot3([punta(1) drogue(1)],[punta(2) drogue(2)],[-punta(3), -drogue(3)],'k-','LineWidth',0.1);
-%              myMovie(end+1) = getframe(myFig);
-%              drawnow;
-%              title("t = ", num2str(data_para{1}.state.T(i)- data_para{1}.state.T(1),'%.2f'));
-%              delete(P1);
-%              delete(P2);
-%              delete(P3);
-%              i = i+5;
-%          end
-%         i1 = i;
-%         
-%         for i=1:5:length(data_para{2}.state.T)
-%              punta = quatrotate(quatconj(data_para{2}.state.Y(i,10:13)),[1.5, 0, 0]);
-%              coda = quatrotate(quatconj(data_para{2}.state.Y(i,10:13)),[-1.5, 0, 0]);
-%              drogue = data_para{1}.state.Y(i+i1,17:19) - data_para{1}.state.Y(i+i1,1:3);
-%              main = data_para{2}.state.Y(i,17:19) - data_para{2}.state.Y(i,1:3);
-%              [x,y,z] = sphere(100);
-%              x = x(50:end,:) + drogue(1);
-%              y = y(50:end,:) + drogue(2);
-%              z = z(50:end,:) - drogue(3);
-%              r = sqrt(3/pi);
-%              P1 = plot3(r.*x,r.*y,r.*z,'g');
-%              [x,y,z] = sphere(100);
-%              x = x(50:end,:) + main(1);
-%              y = y(50:end,:) + main(2);
-%              z = z(50:end,:) - main(3);
-%              r = sqrt(3/pi);
-%              P2 = plot3(r.*x,r.*y,r.*z,'y');
-%              P3 = plot3([punta(1) coda(1)],[punta(2) coda(2)],[-punta(3), -coda(3)],'k-','LineWidth',2.5);
-%              P4 = plot3([punta(1) drogue(1)],[punta(2) drogue(2)],[-punta(3), -drogue(3)],'k-','LineWidth',0.1);
-%              P5 = plot3([punta(1) main(1)],[punta(2) main(2)],[-punta(3), -main(3)],'k-','LineWidth',0.1);
-%              myMovie(end+1) = getframe(myFig);
-%              drawnow;
-%              title("t = ", num2str(data_para{1}.state.T(i+i1)- data_para{1}.state.T(1),'%.2f'));
-%              delete(P1);
-%              delete(P2);
-%              delete(P3);
-%              delete(P4);
-%              delete(P5);
-%         end
-%         
-%         writerObj = VideoWriter( 'descent_mp4', 'MPEG-4');
-%         writerObj.Quality = 100;
-%         writerObj.FrameRate = fps;
-%         
-%         open( writerObj );        
-%    
-%         writeVideo( writerObj, myMovie );
-%         disp(sprintf('%s was written', writerObj.Filename))
-%         close( writerObj );
-
+        subplot(2,2,1)
+        h = zeros(Np, 1);
+        for i = 1:Np
+           hold on
+           h(i) = plot(data_para{i}.integration.t, data_para{i}.forces.T_chord); grid on;
+           xlabel('Time [s]'); ylabel('T [N]'); title('Chord tension');
+        end
+        legend(h(:), 'drogue', 'main');
+         
+        subplot(2,2,2)
+        h = zeros(Np, 1);
+        for i = 1:Np
+           hold on
+           h(i) = plot(data_para{i}.integration.t, data_para{i}.forces.D); grid on;
+           xlabel('Time [s]'); ylabel('D [N]'); title('Drag Force');
+        end
+        legend(h(:), 'drogue', 'main');
+        
+        subplot(2,2,3)
+        h = zeros(Np, 1);
+        for i = 1:Np
+           hold on
+           h(i) = plot(data_para{i}.integration.t, data_para{i}.SCD); grid on;
+           xlabel('Time [s]'); ylabel('SCd/S_0Cd_0'); title('SCd');
+        end
+        legend(h(:), 'drogue', 'main');
+        
+        subplot(2,2,4)
+        h = zeros(Np, 1);
+        for i = 1:Np
+           hold on
+           posPara = data_para{i}.state.Y(:,17:19);
+           posRocket = data_para{i}.state.Y(:,1:3);
+           posDepl = posRocket + quatrotate(quatconj(data_para{i}.state.Y(:,10:13)),[(settings.xcg-settings.Lnose) 0 0]);
+           val = vecnorm((posPara - posDepl)');
+           h(i) = plot(data_para{i}.integration.t, val); grid on;
+           xlabel('Time [s]'); ylabel('L [m]'); title('Chord Elongation');
+        end
+        legend(h(:), 'drogue', 'main');
+        
+         
     end
+
+    
 else   %%%% STOCHASTIC PLOTS (only if N>1)
     
-    %% LANDING POINTS 2DCHo
+    %% LANDING POINTS 2D
     % Position Scaled map in background
     figure('Name', 'Landing Points', 'NumberTitle','off')
     if settings.landing_map
@@ -387,9 +334,9 @@ else   %%%% STOCHASTIC PLOTS (only if N>1)
     xlabel('m')
     ylabel('m')
     end
-    if settings.ballistic 
+    if settings.ballistic
         title('Landing Points in ballistic');
-    else   
+    else
         title('Landing Points with 2nd drouge');
     end
     
@@ -432,3 +379,4 @@ else   %%%% STOCHASTIC PLOTS (only if N>1)
     end
     
 end
+

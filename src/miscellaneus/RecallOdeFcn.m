@@ -38,8 +38,7 @@ for i = 1:NT
     
     all_steps.accelerations.body_acc(i, 1:3) = single_step.accelerations.body_acc;
     
-    if not(isequal(fun_info.function, 'descent_parachute')) && not(isequal(fun_info.function, 'drogue_descent'))...
-            && not(isequal(fun_info.function, 'main_extraction')) && not(isequal(fun_info.function, 'main_descent'))
+    if isequal(fun_info.function, 'ascent') || isequal(fun_info.function, 'descent_ballistic')
         
         all_steps.interp.M(i) = single_step.interp.M;
         all_steps.interp.alpha(i) = single_step.interp.alpha;

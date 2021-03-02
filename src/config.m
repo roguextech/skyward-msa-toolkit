@@ -146,7 +146,7 @@ settings.para(2).CL = 0;      % [/] Parachute Lift Coefficient
 settings.para(2).z_cut = 0;   % [m] Final altitude of the parachute
 
 %% DESCENT PHASE MODEL
-settings.descent6DOF = true;
+settings.descent6DOF = false;
 % set to true in order to start a 6DOF parachute descent phase
 
 % only if setting.descent6DOF == true
@@ -184,9 +184,13 @@ settings.ode.final_time =  2000;                                    % [s] Final 
 
 settings.ode.optionsasc1 = odeset('Events', @event_apogee, 'InitialStep', 1);       %ODE options for ascend
 settings.ode.optionsasc2 = odeset('InitialStep', 1);                                %ODE options for due to the opening delay of the parachute
-settings.ode.optionspara1 = odeset('Events', @event_para_cut,'AbsTol',1e-5,'RelTol',1e-5);                      %ODE options for the parachutes
-settings.ode.optionspara2 = odeset('Events', @event_main_exit,'AbsTol',1e-5,'RelTol',1e-5);                     %ODE options for due to the extraction of the main parachute
-settings.ode.optionsdesc = odeset('Events', @event_landing,'AbsTol',1e-5,'RelTol',1e-5);                        %ODE options for ballistic descent
+settings.ode.optionspara = odeset('Events', @event_para_cut);                       %ODE options for the parachutes
+settings.ode.optionsdesc = odeset('Events', @event_landing);                        %ODE options for ballistic descent
+
+% Settings for descent 6dof simulation
+settings.ode.optionsDrogue6DOF = odeset('Events', @event_para_cut,'AbsTol',1e-6,'RelTol',1e-6);         %ODE options for due to the extraction of the main parachute
+settings.ode.optionsMainExt6DOF = odeset('Events', @event_main_exit,'AbsTol',1e-6,'RelTol',1e-6);       %ODE options for due to the extraction of the main parachute
+settings.ode.optionsMain6DOF = odeset('Events', @event_landing,'AbsTol',1e-6,'RelTol',1e-6);            %ODE options for due to the extraction of the main parachute
 
 %% WIND DETAILS
 % select which model you want to use:
@@ -226,8 +230,8 @@ settings.wind.MagMin = 5;           % [m/s] Minimum Magnitude
 settings.wind.MagMax = 5;           % [m/s] Maximum Magnitude
 settings.wind.ElMin = 0*pi/180;     % [rad] Minimum Elevation, user input in degrees (ex. 0)
 settings.wind.ElMax = 0*pi/180;     % [rad] Maximum Elevation, user input in degrees (ex. 0) (Max == 90 Deg)
-settings.wind.AzMin = (180)*pi/180; % [rad] Minimum Azimuth, user input in degrees (ex. 90)
-settings.wind.AzMax = (180)*pi/180; % [rad] Maximum Azimuth, user input in degrees (ex. 90)
+settings.wind.AzMin = (90)*pi/180; % [rad] Minimum Azimuth, user input in degrees (ex. 90)
+settings.wind.AzMax = (90)*pi/180; % [rad] Maximum Azimuth, user input in degrees (ex. 90)
 
 % NOTE: wind azimuth angle indications (wind directed towards):
 % 0 deg (use 360 instead of 0)  -> North
