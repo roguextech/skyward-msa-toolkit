@@ -269,7 +269,7 @@ if settings.stoch.N == 1
     
     %% DESCENT 6 DOF PLOT
     if not(settings.ballistic) && settings.descent6DOF
-        figure('Name', 'Parachute chord tension - Descent Phase', 'NumberTitle', 'off')
+        figure('Name', 'Parachute data - Descent Phase', 'NumberTitle', 'off')
          
         subplot(2,2,1)
         h = zeros(Np, 1);

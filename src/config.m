@@ -146,7 +146,7 @@ settings.para(2).CL = 0;      % [/] Parachute Lift Coefficient
 settings.para(2).z_cut = 0;   % [m] Final altitude of the parachute
 
 %% DESCENT PHASE MODEL
-settings.descent6DOF = false;
+settings.descent6DOF = true;
 % set to true in order to start a 6DOF parachute descent phase
 
 % only if setting.descent6DOF == true

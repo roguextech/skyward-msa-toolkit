@@ -128,7 +128,7 @@ velPara2 = [u_para2; v_para2; w_para2];
 velRel = velPara1 - velPara2;
 
 % Relative velocity projected along the shock chord
-velRel_chord = dot(velRel,posRel);
+velRel_chord = dot(velRel,posRel_vers);
 
 %% CHORD TENSION (ELASTIC-DAMPING MODEL)
 if norm(posRel) > settings.para(para(1)).L

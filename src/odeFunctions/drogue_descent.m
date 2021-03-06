@@ -117,7 +117,7 @@ velDepl = velRocket + dcm'*cross([p; q; r],[(settings.xcg-settings.Lnose); 0; 0]
 velRel = velPara - velDepl;
 
 % Relative velocity projected along the shock chord
-velRel_chord = dot(velRel,posRel);
+velRel_chord = dot(velRel,posRel_vers);
 
 %% CHORD TENSION (ELASTIC-DAMPING MODEL)
 if norm(posRel) > settings.para(para).L  
