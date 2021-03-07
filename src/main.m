@@ -30,11 +30,6 @@ end
 % Y = State = ( x y z | u v w | p q r | q0 q1 q2 q3 | thetax thetay thetaz | ) also for Ya,Yf corresponding to T
 
 tic
-
-% Checking if ballistic or 6dof parachute descent phase needed
-if settings.ballistic && settings.descent6DOF
-    error('Both ballistic and descent6DOF are true, select just one of them')
-end
     
 % Checking if stochastic or standard simulation needed
 if settings.ballistic

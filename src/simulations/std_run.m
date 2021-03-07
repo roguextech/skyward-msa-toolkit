@@ -44,6 +44,7 @@ if settings.para(settings.Npara).z_cut ~= 0
     error('The landing will be not achived, check the final altitude of the last parachute in config.m')
 end
 
+
 %% WIND GENERATION
 if settings.wind.model || settings.wind.input   % will be computed inside the integrations
     uw = 0; vw = 0; ww = 0;

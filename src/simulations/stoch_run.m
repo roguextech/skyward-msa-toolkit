@@ -30,6 +30,10 @@ if settings.wind.model && settings.wind.input
     error('Both wind model and input wind are true, select just one of them')
 end
 
+if settings.descent6DOF
+    error('You can''t use descent 6 dof simulation for stochastic purpose');
+end
+
 if settings.OMEGAmin == settings.OMEGAmax && settings.PHImin == settings.PHImax
     if not(settings.wind.model) && not(settings.wind.input)
         
