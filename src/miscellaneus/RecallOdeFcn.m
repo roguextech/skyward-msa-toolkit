@@ -38,7 +38,7 @@ for i = 1:NT
     
     all_steps.accelerations.body_acc(i, 1:3) = single_step.accelerations.body_acc;
     
-    if not(isequal(fun_info.function, 'descent_parachute'))
+    if isequal(fun_info.function, 'ascent') || isequal(fun_info.function, 'descent_ballistic')
         
         all_steps.interp.M(i) = single_step.interp.M;
         all_steps.interp.alpha(i) = single_step.interp.alpha;
@@ -67,5 +67,18 @@ for i = 1:NT
             all_steps.coeff.XCPlon(i) = single_step.coeff.XCPlon;
             all_steps.coeff.XCPlat(i) = single_step.coeff.XCPlat;
         end
+        
+    elseif isequal(fun_info.function, 'drogue_descent') || isequal(fun_info.function, 'main_extraction')...
+            || isequal(fun_info.function, 'main_descent')
+        
+        all_steps.interp.M(i) = single_step.interp.M;
+        
+        all_steps.forces.T_chord(i,1:2) = single_step.forces.T_chord;
+        all_steps.forces.D(i,1:2) = single_step.forces.D;
+        
+        all_steps.SCD(i,1:2) = single_step.SCD;
+        
+        all_steps.accelerations.ang_acc(i, 1:3) = single_step.accelerations.ang_acc;
+        
     end
 end

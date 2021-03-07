@@ -145,6 +145,32 @@ settings.para(2).CD = 0.7;    % [/] Parachute Drag Coefficient
 settings.para(2).CL = 0;      % [/] Parachute Lift Coefficient
 settings.para(2).z_cut = 0;   % [m] Final altitude of the parachute
 
+%% DESCENT PHASE MODEL
+settings.descent6DOF = false;
+% set to true in order to start a 6DOF parachute descent phase
+
+% only if setting.descent6DOF == true
+% additional geometry details needed
+settings.xcg = 1.33;          % [m] CG postion (empty)
+settings.Lnose = 0.28;        % [m] Nosecone Length
+
+% parachute 1
+settings.para(1).CX = 1.4;    % [/] Parachute Longitudinal Drag Coefficient
+settings.para(1).L = 4;       % [m] Shock Chord Length
+settings.para(1).K = 1000;    % [N/m^2] Shock Chord Elastic Constant
+settings.para(1).C = 0;       % [Ns/m] Shock Chord Dynamic Coefficient
+settings.para(1).m = 1;       % [m^2/s] Coefficient of the surface vs. time opening model
+settings.para(1).nf = 12;     % [/] Adimensional Opening Time
+settings.para(1).Vexit = 5;   % [m/s] Expulsion Speed
+
+% parachute 2
+settings.para(2).CX = 1.2;    % [/] Parachute Longitudinal Drag Coefficient
+settings.para(2).L = 6;       % [m] Shock Chord Length
+settings.para(2).K = 2000;    % [N/m^2] Shock Chord Elastic Constant
+settings.para(2).C = 0;       % [Ns/m] Shock Chord Dynamic Coefficient
+settings.para(2).m = 1;       % [m^2/s] Coefficient of the surface vs. time opening model
+settings.para(2).nf = 8.7;    % [/] Adimensional Opening Time
+
 %% INTEGRATION OPTIONS
 settings.ode.final_time =  2000;                                    % [s] Final integration time
 
@@ -161,6 +187,10 @@ settings.ode.optionsasc2 = odeset('InitialStep', 1);                            
 settings.ode.optionspara = odeset('Events', @event_para_cut);                       %ODE options for the parachutes
 settings.ode.optionsdesc = odeset('Events', @event_landing);                        %ODE options for ballistic descent
 
+% Settings for descent 6dof simulation
+settings.ode.optionsDrogue6DOF = odeset('Events', @event_para_cut,'AbsTol',1e-6,'RelTol',1e-6);         %ODE options for due to cutting of the drogue chute
+settings.ode.optionsMainExt6DOF = odeset('Events', @event_main_exit,'AbsTol',1e-6,'RelTol',1e-6);       %ODE options for due to the extraction of the main chute
+settings.ode.optionsMain6DOF = odeset('Events', @event_landing,'AbsTol',1e-6,'RelTol',1e-6);            %ODE options to terminate descent phase
 
 %% WIND DETAILS
 % select which model you want to use:

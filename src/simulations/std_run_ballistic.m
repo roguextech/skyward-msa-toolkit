@@ -40,6 +40,10 @@ if settings.OMEGAmin ~= settings.OMEGAmax || settings.PHImin ~= settings.PHImax
     error('In a single simulation the launchpad configuration has to be unique, check config.m')
 end
 
+if settings.ballistic && settings.descent6DOF
+    error('Both ballistic and descent6DOF are true, select just one of them')
+end
+
 %% STARTING CONDITIONS
 % Attitude
 settings.OMEGA = settings.OMEGAmin;

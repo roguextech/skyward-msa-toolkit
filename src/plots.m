@@ -153,7 +153,7 @@ if settings.stoch.N == 1
     figure('Name','Horizontal Frame Velocities - All Flight','NumberTitle','off');
     
     % Rotate velocities
-    if not(settings.ballistic)
+    if not(settings.ballistic) && not(settings.descent6DOF)
         Vhframe = [quatrotate(quatconj(Ya(:, 10:13)), Ya(:, 4:6)); Yf(Na + 1:end, 4:6)];
     else
         Vhframe = [quatrotate(quatconj(Ya(:, 10:13)), Ya(:, 4:6)); quatrotate(quatconj(Yf(Na + 1:end, 10:13)),Yf(Na + 1:end, 4:6))];
@@ -266,6 +266,52 @@ if settings.stoch.N == 1
     plot(Yf(end, 2), -Yf(end, 3), 'rx','markersize',7);
     
     delete('ascent_plot.mat')
+    
+    %% DESCENT 6 DOF PLOT
+    if not(settings.ballistic) && settings.descent6DOF
+        figure('Name', 'Parachute data - Descent Phase', 'NumberTitle', 'off')
+         
+        subplot(2,2,1)
+        h = zeros(Np, 1);
+        for i = 1:Np
+           hold on
+           h(i) = plot(data_para{i}.integration.t, data_para{i}.forces.T_chord); grid on;
+           xlabel('Time [s]'); ylabel('T [N]'); title('Chord tension');
+        end
+        legend(h(:), 'drogue', 'main');
+         
+        subplot(2,2,2)
+        h = zeros(Np, 1);
+        for i = 1:Np
+           hold on
+           h(i) = plot(data_para{i}.integration.t, data_para{i}.forces.D); grid on;
+           xlabel('Time [s]'); ylabel('D [N]'); title('Drag Force');
+        end
+        legend(h(:), 'drogue', 'main');
+        
+        subplot(2,2,3)
+        h = zeros(Np, 1);
+        for i = 1:Np
+           hold on
+           h(i) = plot(data_para{i}.integration.t, data_para{i}.SCD); grid on;
+           xlabel('Time [s]'); ylabel('SCd/S_0Cd_0'); title('SCd');
+        end
+        legend(h(:), 'drogue', 'main');
+        
+        subplot(2,2,4)
+        h = zeros(Np, 1);
+        for i = 1:Np
+           hold on
+           posPara = data_para{i}.state.Y(:,17:19);
+           posRocket = data_para{i}.state.Y(:,1:3);
+           posDepl = posRocket + quatrotate(quatconj(data_para{i}.state.Y(:,10:13)),[(settings.xcg-settings.Lnose) 0 0]);
+           val = vecnorm((posPara - posDepl)');
+           h(i) = plot(data_para{i}.integration.t, val); grid on;
+           xlabel('Time [s]'); ylabel('L [m]'); title('Chord Elongation');
+        end
+        legend(h(:), 'drogue', 'main');
+   
+    end
     
 else   %%%% STOCHASTIC PLOTS (only if N>1)
     
