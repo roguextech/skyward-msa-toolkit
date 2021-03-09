@@ -34,7 +34,8 @@ if settings.descent6DOF
     error('You can''t use descent 6 dof simulation for stochastic purpose');
 end
 
-if settings.OMEGAmin == settings.OMEGAmax && settings.PHImin == settings.PHImax
+if settings.OMEGAmin == settings.OMEGAmax && settings.PHImin == settings.PHImax...
+        && settings.PHIsigma == 0
     if not(settings.wind.model) && not(settings.wind.input)
         
         if settings.wind.MagMin == settings.wind.MagMax && settings.wind.AzMin == settings.wind.AzMax
@@ -151,8 +152,6 @@ parfor i = 1:N
             
         end
     end
-    
-    
     
     Q0 = angleToQuat(PHI, OMEGA, 0*pi/180)';
     Y0a = [X0; V0; W0; Q0; settings.Ixxf; settings.Iyyf; settings.Izzf];

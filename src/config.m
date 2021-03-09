@@ -42,8 +42,8 @@ settings.OMEGAmin = 84*pi/180; % [rad] Minimum Elevation Angle, user input in de
 settings.OMEGAmax = 84*pi/180; % [rad] Maximum Elevation Angle, user input in degrees (ex. 80)
 settings.PHImin = 0*pi/180;    % [rad] Minimum Azimuth Angle from North Direction, user input in degrees (ex. 90)
 settings.PHImax = 0*pi/180;    % [rad] Maximum Azimuth Angle from North Direction, user input in degrees (ex. 90)
-settings.upwind = false;       % If true, phi is selected according to wind direction (constant wind model only)
-settings.PHIsigma = 0*pi/180;  % Stocasthic simulation only
+settings.upwind = true;       % If true, phi is selected according to wind direction (constant wind model only)
+settings.PHIsigma = 20*pi/180;  % Stocasthic simulation only
 
 %% ENGINE DETAILS
 % load motors data 
@@ -226,8 +226,8 @@ settings.wind.input_uncertainty = [1, 1];
 
 % Wind is generated randomly from the minimum to the maximum parameters which defines the wind.
 % Setting the same values for min and max will fix the parameters of the wind.
-settings.wind.MagMin = 0;           % [m/s] Minimum Magnitude
-settings.wind.MagMax = 9;           % [m/s] Maximum Magnitude
+settings.wind.MagMin = 1;           % [m/s] Minimum Magnitude
+settings.wind.MagMax = 1;           % [m/s] Maximum Magnitude
 settings.wind.ElMin = 0*pi/180;     % [rad] Minimum Elevation, user input in degrees (ex. 0)
 settings.wind.ElMax = 0*pi/180;     % [rad] Maximum Elevation, user input in degrees (ex. 0) (Max == 90 Deg)
 settings.wind.AzMin = (360)*pi/180; % [rad] Minimum Azimuth, user input in degrees (ex. 90)
