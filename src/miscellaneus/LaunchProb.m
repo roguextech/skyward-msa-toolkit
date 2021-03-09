@@ -38,6 +38,7 @@ Release date: 16/11/2018
 
 N_simul = settings.stoch.N;
 V_lim = settings.stoch.prob.V_lim;
+XCP_lim = settings.stoch.prob.XCP_lim;
 
 % pre-allocation
 flag = zeros(N_simul,1);
@@ -64,7 +65,7 @@ F2_hat = R*F2';                             % [m] second rotated focii
 
 for i = 1:N_simul
     
-    flag_XCP = all(-data_ascent{i}.coeff.XCP(not(isnan(data_ascent{i}.coeff.XCP))) > 0.6);
+    flag_XCP = all(-data_ascent{i}.coeff.XCPlon(not(isnan(data_ascent{i}.coeff.XCPlon))) > XCP_lim);
     
     P = LP(:,[2,1]);
     dist(i) = norm(P(i,:) - F1_hat') + norm(P(i,:) - F2_hat');
