@@ -71,9 +71,7 @@ Izz = Y(16);
 Q = [q0 q1 q2 q3];
 normQ = norm(Q);
 
-if abs(normQ-1) > 0.1
-    Q = Q/normQ;
-end
+Q = Q/normQ;
 
 %% ADDING WIND (supposed to be added in NED axes);
 if settings.wind.model

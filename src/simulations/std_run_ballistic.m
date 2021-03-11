@@ -54,7 +54,7 @@ if settings.upwind
 end
 
 % Attitude
-Q0 = angle2quat(settings.PHI, settings.OMEGA, 0*pi/180, 'ZYX')';
+Q0 = angleToQuat(settings.PHI, settings.OMEGA, 0*pi/180)';
 
 % State
 X0 = [0 0 0]';
