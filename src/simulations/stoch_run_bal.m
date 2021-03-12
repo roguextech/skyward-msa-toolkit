@@ -105,7 +105,7 @@ parfor i = 1:settings.stoch.N
             end
             uw = 0; vw = 0; ww = 0;
         else
-            [uw, vw, ww, ~] = wind_const_generator(settings.wind.AzMin, settings.wind.AzMax,...
+            [uw, vw, ww, Azw] = wind_const_generator(settings.wind.AzMin, settings.wind.AzMax,...
                 settings.wind.ElMin, settings.wind.ElMax, settings.wind.MagMin, settings.wind.MagMax);
             uncert = [0; 0];
         end
@@ -116,12 +116,36 @@ parfor i = 1:settings.stoch.N
         uw = 0; vw = 0; ww = 0; uncert = [0; 0];
     end
     
-    %% ASCENT 
-    
+    %% ASCENT
+    % ascent phase computation
     OMEGA = settings.OMEGAmin + rand*(settings.OMEGAmax - settings.OMEGAmin);
-    PHI = settings.PHImin + rand*(settings.PHImax - settings.PHImin);
-
+    
     % Attitude
+    if settings.wind.input || settings.wind.model
+        PHI = settings.PHImin + rand*(settings.PHImax - settings.PHImin);
+    else
+        
+        if settings.upwind
+            PHI = mod(Azw + pi, 2*pi);
+            signn = randi([1, 2]); % 4 sign cases
+            
+            if signn == 1
+                
+                PHIsigma = settings.PHIsigma;
+                
+            else
+                
+                PHIsigma = -settings.PHIsigma;
+                
+            end
+            
+            PHI = PHI + PHIsigma*rand;
+        else
+            PHI = settings.PHImin + rand*(settings.PHImax - settings.PHImin);
+            
+        end
+    end
+    
     Q0 = angleToQuat(PHI, OMEGA, 0*pi/180)';
     Y0a = [X0; V0; W0; Q0; settings.Ixxf; settings.Iyyf; settings.Izzf];
     [Ta,Ya] = ode113(@ascent, [0, tf], Y0a, settings.ode.optionsasc1, settings, uw, vw, ww, uncert, Hour, Day, OMEGA);
