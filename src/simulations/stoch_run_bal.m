@@ -49,7 +49,7 @@ if settings.OMEGAmin == settings.OMEGAmax && settings.PHImin == settings.PHImax
         
     end
     
-    if settings.wind.input && settings.wind.input_uncertainty == 0
+    if settings.wind.input && all(settings.wind.input_uncertainty == 0)
         error('In stochastic simulations the wind input model, the uncertainty must be different to 0, check config.m')
     end
     
