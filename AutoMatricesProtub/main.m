@@ -15,7 +15,7 @@ datcom.Mach = 0.05:0.05:1;
 datcom.Alpha = [-22 -15 -10 -7.5 -5 -2.5 -1 -0.5 -0.1 0 0.1 0.5 1 2.5 5 7.5 10 15 22];
 datcom.Beta = [-5 -2.5 -0.1 0 0.1 2.5 5];
 Alt0 = 109;                                     % [m] local altitude
-datcom.Alt = Alt0 + 0:400:4000;
+datcom.Alt = Alt0 + (0:400:4000);
 
 %% Design Parameters
 datcom.Chord1 = 0.35; 
@@ -26,7 +26,7 @@ datcom.shape = 'rect';
 %% Fixed Parameters
 vars.xcg = [1.49, 1.33];                        % [m] CG position [full, empty]
 datcom.D = 0.15;                                % [m] rocket diameter
-datcom.Lnose = 0.28;                            % [m] nose length
+datcom.Lnose = 0.26;                            % [m] nose length
 Ltotal = 2.495;                                 % [m] rocket length
 datcom.Lcenter = Ltotal - datcom.Lnose;         % [m] Centerbody length
 datcom.Npanel = 3;                              % [m] number of fins
