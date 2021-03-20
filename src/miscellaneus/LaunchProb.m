@@ -1,6 +1,6 @@
-function [p, flag, ind_Pin, ind_Pout, LPOP] = LaunchProb(settings, data_ascent, data_descent, LP)
+function [p, flag, ind_Pin, ind_Pout, LPOP] = launchProb(settings, data_ascent, data_descent, LP)
 %{
-LaunchProb - This function allows to compute the probability of launch
+launchProb - This function allows to compute the probability of launch
 subject to the constraints specified in config.m:
 
                 - Stability Margin                                                     #1

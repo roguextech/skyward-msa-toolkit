@@ -86,7 +86,7 @@ if settings.stoch.N == 1
     
     abs_X = vecnorm(Xa');
     abs_V = vecnorm(Va');
-    abs_A = vecnorm(Aa');
+    abs_A = vecnorm(Aa);
     
     [max_dist, imax_dist] = max(abs_X);
     [max_v, imax_v] = max(abs_V);
@@ -150,7 +150,7 @@ else
     
     if not(settings.ballistic)
         
-        [p, flag, ind_Pin, ind_Pout, LPOP] = LaunchProb(settings, data_ascent, data_para, LP);
+        [p, flag, ind_Pin, ind_Pout, LPOP] = launchProb(settings, data_ascent, data_para, LP);
         LPin = LP(ind_Pin, :);
         LPout = LP(ind_Pout, :);
         LPOPin = LPOP(ind_Pin, :);

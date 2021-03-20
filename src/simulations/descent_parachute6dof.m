@@ -49,13 +49,13 @@ function [data_para, Tp, Yp, bound_value] = descent_parachute6dof(Ta, Ya, settin
         settings, uw, vw, ww, para, t0p, uncert);
 
     % Saving additional data
-    [data_para{1}] = RecallOdeFcn(@drogue_descent, Tp1, Yp1, settings, uw, vw, ww, para, t0p, uncert);
+    [data_para{1}] = recallOdeFcn(@drogue_descent, Tp1, Yp1, settings, uw, vw, ww, para, t0p, uncert);
     data_para{1}.state.Y = Yp1;
     data_para{1}.state.T = Tp1;
     
-    data_para{1}.SCD = data_para{1}.SCD(:,1);
-    data_para{1}.forces.T_chord = data_para{1}.forces.T_chord(:,1); 
-    data_para{1}.forces.D = data_para{1}.forces.D(:,1);
+    data_para{1}.SCD = data_para{1}.SCD(1,:);
+    data_para{1}.forces.T_chord = data_para{1}.forces.T_chord(1,:); 
+    data_para{1}.forces.D = data_para{1}.forces.D(1,:);
     
     Yp = [Yp1, NaN*ones(size(Yp1,1),6)];
     Tp = Tp1;
@@ -78,7 +78,7 @@ function [data_para, Tp, Yp, bound_value] = descent_parachute6dof(Ta, Ya, settin
         settings.ode.optionsMainExt6DOF, settings, uw, vw, ww, para, t0p, uncert);
  
     % Saving additional data
-    [data_paraf1] = RecallOdeFcn(@main_extraction, Tp2, Yp2, settings, uw, vw, ww, para, t0p, uncert);
+    [data_paraf1] = recallOdeFcn(@main_extraction, Tp2, Yp2, settings, uw, vw, ww, para, t0p, uncert);
     
     Yp = [Yp; Yp2];
     Tp = [Tp; Tp2];
@@ -91,15 +91,15 @@ function [data_para, Tp, Yp, bound_value] = descent_parachute6dof(Ta, Ya, settin
     data_para{1}.interp.alt     = [data_para{1}.interp.alt, data_paraf1.interp.alt];
     data_para{1}.wind.body_wind = [data_para{1}.wind.body_wind, data_paraf1.wind.body_wind];
     data_para{1}.wind.NED_wind  = [data_para{1}.wind.NED_wind, data_paraf1.wind.NED_wind];
-    data_para{1}.velocities     = [data_para{1}.velocities; data_paraf1.velocities];
+    data_para{1}.velocities     = [data_para{1}.velocities, data_paraf1.velocities];
     data_para{1}.air.rho        = [data_para{1}.air.rho, data_paraf1.air.rho];
     data_para{1}.air.P          = [data_para{1}.air.P, data_paraf1.air.P];
-    data_para{1}.accelerations.body_acc = [data_para{1}.accelerations.body_acc; data_paraf1.accelerations.body_acc];
+    data_para{1}.accelerations.body_acc = [data_para{1}.accelerations.body_acc, data_paraf1.accelerations.body_acc];
     data_para{1}.interp.M       = [data_para{1}.interp.M, data_paraf1.interp.M];
-    data_para{1}.forces.T_chord = [data_para{1}.forces.T_chord; data_paraf1.forces.T_chord(:,1)];
-    data_para{1}.forces.D       = [data_para{1}.forces.D; data_paraf1.forces.D(:,1)];
-    data_para{1}.SCD            = [data_para{1}.SCD; data_paraf1.SCD(:,1)];
-    data_para{1}.accelerations.ang_acc = [data_para{1}.accelerations.ang_acc; data_paraf1.accelerations.ang_acc];
+    data_para{1}.forces.T_chord = [data_para{1}.forces.T_chord, data_paraf1.forces.T_chord(1,:)];
+    data_para{1}.forces.D       = [data_para{1}.forces.D, data_paraf1.forces.D(1,:)];
+    data_para{1}.SCD            = [data_para{1}.SCD, data_paraf1.SCD(1,:)];
+    data_para{1}.accelerations.ang_acc = [data_para{1}.accelerations.ang_acc, data_paraf1.accelerations.ang_acc];
 
     % Main
     data_para{2}.state.Y        = [Yp2(:,1:16) Yp2(:,23:28)];
@@ -113,9 +113,9 @@ function [data_para, Tp, Yp, bound_value] = descent_parachute6dof(Ta, Ya, settin
     data_para{2}.air.P          = data_paraf1.air.P;
     data_para{2}.accelerations.body_acc = data_paraf1.accelerations.body_acc;
     data_para{2}.interp.M       = data_paraf1.interp.M;
-    data_para{2}.forces.T_chord = data_paraf1.forces.T_chord(:,2);
-    data_para{2}.forces.D       = [data_paraf1.forces.D(:,2)];
-    data_para{2}.SCD            = data_paraf1.SCD(:,2);
+    data_para{2}.forces.T_chord = data_paraf1.forces.T_chord(2,:);
+    data_para{2}.forces.D       = data_paraf1.forces.D(2,:);
+    data_para{2}.SCD            = data_paraf1.SCD(2,:);
     data_para{2}.accelerations.ang_acc = data_paraf1.accelerations.ang_acc;
 
     %% PHASE 3 : Main descent
@@ -128,7 +128,7 @@ function [data_para, Tp, Yp, bound_value] = descent_parachute6dof(Ta, Ya, settin
         settings.ode.optionsMain6DOF, settings, uw, vw, ww, para, t0p, uncert);
     
     % Saving additional data
-    [data_paraf2] = RecallOdeFcn(@main_descent, Tp3, Yp3, settings, uw, vw, ww, para, t0p, uncert);
+    [data_paraf2] = recallOdeFcn(@main_descent, Tp3, Yp3, settings, uw, vw, ww, para, t0p, uncert);
     
     Yp = [Yp; Yp3];
     Tp = [Tp; Tp3];
@@ -141,15 +141,15 @@ function [data_para, Tp, Yp, bound_value] = descent_parachute6dof(Ta, Ya, settin
     data_para{1}.interp.alt     = [data_para{1}.interp.alt, data_paraf2.interp.alt];
     data_para{1}.wind.body_wind = [data_para{1}.wind.body_wind, data_paraf2.wind.body_wind];
     data_para{1}.wind.NED_wind  = [data_para{1}.wind.NED_wind, data_paraf2.wind.NED_wind];
-    data_para{1}.velocities     = [data_para{1}.velocities; data_paraf2.velocities];
+    data_para{1}.velocities     = [data_para{1}.velocities, data_paraf2.velocities];
     data_para{1}.air.rho        = [data_para{1}.air.rho, data_paraf2.air.rho];
     data_para{1}.air.P          = [data_para{1}.air.P, data_paraf2.air.P];
-    data_para{1}.accelerations.body_acc = [data_para{1}.accelerations.body_acc; data_paraf2.accelerations.body_acc];
+    data_para{1}.accelerations.body_acc = [data_para{1}.accelerations.body_acc, data_paraf2.accelerations.body_acc];
     data_para{1}.interp.M       = [data_para{1}.interp.M, data_paraf2.interp.M];
-    data_para{1}.forces.T_chord = [data_para{1}.forces.T_chord; data_paraf2.forces.T_chord(:,1)];
-    data_para{1}.forces.D       = [data_para{1}.forces.D; data_paraf2.forces.D(:,1)];
-    data_para{1}.SCD            = [data_para{1}.SCD; data_paraf2.SCD(:,1)];
-    data_para{1}.accelerations.ang_acc = [data_para{1}.accelerations.ang_acc; data_paraf2.accelerations.ang_acc];
+    data_para{1}.forces.T_chord = [data_para{1}.forces.T_chord, data_paraf2.forces.T_chord(1,:)];
+    data_para{1}.forces.D       = [data_para{1}.forces.D, data_paraf2.forces.D(1,:)];
+    data_para{1}.SCD            = [data_para{1}.SCD, data_paraf2.SCD(1,:)];
+    data_para{1}.accelerations.ang_acc = [data_para{1}.accelerations.ang_acc, data_paraf2.accelerations.ang_acc];
 
     % Main
     data_para{2}.state.Y        = [data_para{2}.state.Y; Yp3(:,1:16) Yp3(:,23:28)];
@@ -158,15 +158,15 @@ function [data_para, Tp, Yp, bound_value] = descent_parachute6dof(Ta, Ya, settin
     data_para{2}.interp.alt     = [data_para{2}.interp.alt, data_paraf2.interp.alt];
     data_para{2}.wind.body_wind = [data_para{2}.wind.body_wind, data_paraf2.wind.body_wind];
     data_para{2}.wind.NED_wind  = [data_para{2}.wind.NED_wind, data_paraf2.wind.NED_wind];
-    data_para{2}.velocities     = [data_para{2}.velocities; data_paraf2.velocities];
+    data_para{2}.velocities     = [data_para{2}.velocities, data_paraf2.velocities];
     data_para{2}.air.rho        = [data_para{2}.air.rho, data_paraf2.air.rho];
     data_para{2}.air.P          = [data_para{2}.air.P, data_paraf2.air.P];
-    data_para{2}.accelerations.body_acc = [data_para{2}.accelerations.body_acc; data_paraf2.accelerations.body_acc];
+    data_para{2}.accelerations.body_acc = [data_para{2}.accelerations.body_acc, data_paraf2.accelerations.body_acc];
     data_para{2}.interp.M       = [data_para{2}.interp.M, data_paraf2.interp.M];
-    data_para{2}.forces.T_chord = [data_para{2}.forces.T_chord; data_paraf2.forces.T_chord(:,2)];
-    data_para{2}.forces.D       = [data_para{2}.forces.D; data_paraf2.forces.D(:,2)];
-    data_para{2}.SCD            = [data_para{2}.SCD; data_paraf2.SCD(:,2)];
-    data_para{2}.accelerations.ang_acc = [data_para{2}.accelerations.ang_acc; data_paraf2.accelerations.ang_acc];
+    data_para{2}.forces.T_chord = [data_para{2}.forces.T_chord, data_paraf2.forces.T_chord(2,:)];
+    data_para{2}.forces.D       = [data_para{2}.forces.D, data_paraf2.forces.D(2,:)];
+    data_para{2}.SCD            = [data_para{2}.SCD, data_paraf2.SCD(2,:)];
+    data_para{2}.accelerations.ang_acc = [data_para{2}.accelerations.ang_acc, data_paraf2.accelerations.ang_acc];
     
     bound_value(2).t = data_para{2}.state.T(1);
     bound_value(2).X = [data_para{2}.state.Y(1, 2), data_para{2}.state.Y(1, 1), -data_para{2}.state.Y(1, 3)];

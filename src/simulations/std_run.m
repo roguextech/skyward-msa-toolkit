@@ -115,7 +115,7 @@ if settings.para(1).delay ~= 0 % checking if the actuation delay is different fr
     Ya = [Ya; Ya2(2:end, :)];
 end
 
-[data_ascent] = RecallOdeFcn(@ascent, Ta, Ya, settings, uw, vw, ww, uncert);
+[data_ascent] = recallOdeFcn(@ascent, Ta, Ya, settings, uw, vw, ww, uncert);
 data_ascent.state.Y = Ya;
 data_ascent.state.T = Ta;
 save('ascent_plot.mat', 'data_ascent');
@@ -135,7 +135,7 @@ if not(settings.descent6DOF)
         [Tp, Yp] = ode113(@descent_parachute, [t0p, tf], Y0p, settings.ode.optionspara,...
             settings, uw, vw, ww, para, uncert);
 
-        [data_para{para}] = RecallOdeFcn(@descent_parachute, Tp, Yp, settings, uw, vw, ww, para, uncert);
+        [data_para{para}] = recallOdeFcn(@descent_parachute, Tp, Yp, settings, uw, vw, ww, para, uncert);
         data_para{para}.state.Y = Yp;
         data_para{para}.state.T = Tp;
 
@@ -173,19 +173,3 @@ else
 end
     
 save('descent_para_plot.mat', 'data_para')
-    
-%% TIME, POSITION AND VELOCITY AT PARACHUTES DEPLOYMENT
-% Usefull values for the plots
-bound_value = struct;
-bound_value(1).t = Ta(end);
-bound_value(1).X = [Ya(end, 2), Ya(end, 1), -Ya(end, 3)];
-bound_value(1).V = quatrotate(quatconj(Ya(end, 10:13)), Ya(end, 4:6));
-
-for i = 1:settings.Npara
-    bound_value(i+1).t = data_para{i}.state.T(end);
-    bound_value(i+1).X = [data_para{i}.state.Y(end, 2), data_para{i}.state.Y(end, 1), -data_para{i}.state.Y(end, 3)];
-    bound_value(i+1).V = [data_para{i}.state.Y(end, 4), data_para{i}.state.Y(end, 5), -data_para{i}.state.Y(end, 6)];
-end
-
-
-

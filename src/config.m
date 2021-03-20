@@ -35,7 +35,7 @@ settings.PHImin = 0*pi/180;                                 % [rad] Minimum Azim
 settings.PHImax = 0*pi/180;                                 % [rad] Maximum Azimuth Angle from North Direction, user input in degrees (ex. 90)
 
 % !! ATTENTION !! The following 2 work just for the stochastichs simulations with constant wind model only
-settings.upwind = true;                                     % If true, phi is selected opposite to the wind direction
+settings.upwind = false;                                     % If true, phi is selected opposite to the wind direction
 settings.PHIsigma = 20*pi/180;                              % [deg] If upwind is true, you can select a variance for the direction
 
 settings.satellite3D = false;
@@ -148,7 +148,7 @@ settings.para(2).z_cut = 0;     % [m] Final altitude of the parachute
 
 %% DESCENT PHASE MODEL
 
-settings.descent6DOF = false;   % set to true in order to start a 6DOF parachute descent phase
+settings.descent6DOF = true;   % set to true in order to start a 6DOF parachute descent phase
 
 settings.xcg = 1.33;            % [m] CG postion (empty)
 settings.Lnose = 0.28;          % [m] Nosecone Length
@@ -246,7 +246,7 @@ settings.ballistic = false;
 %% STOCHASTIC DETAILS
 % If N > 1 the stochastic routine is started
 
-settings.stoch.N = 10;                              % Number of cases
+settings.stoch.N = 1;                              % Number of cases
 
 %%% launch probability details
 settings.stoch.prob.x_lim = 2e3;                    % Max ovest displacement [m]

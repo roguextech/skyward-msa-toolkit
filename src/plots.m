@@ -34,15 +34,15 @@ if settings.stoch.N == 1
     xlabel('Time [s]'); ylabel('Thrust [N]');
     
     subplot(2,2,2)
-    plot(data_ascent.integration.t, data_ascent.forces.AeroDyn_Forces(:,1)),grid on;
+    plot(data_ascent.integration.t, data_ascent.forces.AeroDyn_Forces(1,:)),grid on;
     xlabel('Time [s]'); ylabel('X-body force [N]')
     
     subplot(2,2,3)
-    plot(data_ascent.integration.t, data_ascent.forces.AeroDyn_Forces(:,2)), grid on;
+    plot(data_ascent.integration.t, data_ascent.forces.AeroDyn_Forces(2,:)), grid on;
     xlabel('Time [s]'); ylabel('Y-body force [N]')
     
     subplot(2,2,4)
-    plot(data_ascent.integration.t, data_ascent.forces.AeroDyn_Forces(:,3)), grid on;
+    plot(data_ascent.integration.t, data_ascent.forces.AeroDyn_Forces(3,:)), grid on;
     xlabel('Time [s]'); ylabel('Z-body force [N]')
     
     %%% Aerodynamics Angles
@@ -55,10 +55,10 @@ if settings.stoch.N == 1
     plot(data_ascent.integration.t, data_ascent.interp.beta*180/pi), grid on;
     xlabel('Time [s]'); ylabel('beta [deg]')
     
-    %%% Cd
-    figure('Name','Drag Coefficient - ascent Phase','NumberTitle','off');
-    plot(data_ascent.integration.t, data_ascent.coeff.CA), title('Drag Coefficient vs time'), grid on;
-    xlabel('Time [s]'); ylabel('Drag Coeff CD [/]')
+    %%% CA
+    figure('Name','Axial Force Coefficient - Ascent Phase','NumberTitle','off');
+    plot(data_ascent.integration.t, data_ascent.coeff.CA), title('Axial Force Coefficient vs Time'), grid on;
+    xlabel('Time [s]'); ylabel('CA [/]')
     
     %%% Angles(body)
    

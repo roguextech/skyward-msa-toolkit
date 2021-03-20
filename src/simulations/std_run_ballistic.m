@@ -101,7 +101,7 @@ tf = settings.ode.final_time;
 %% ASCENT
 % ascent phase computation
 [Ta, Ya] = ode113(@ascent, [0, tf], Y0a, settings.ode.optionsasc1, settings, uw, vw, ww, uncert);
-[data_ascent] = RecallOdeFcn(@ascent, Ta, Ya, settings, uw, vw, ww, uncert);
+[data_ascent] = recallOdeFcn(@ascent, Ta, Ya, settings, uw, vw, ww, uncert);
 data_ascent.state.Y = Ya;
 data_ascent.state.T = Ta;
 save('ascent_plot.mat', 'data_ascent');
@@ -109,7 +109,7 @@ save('ascent_plot.mat', 'data_ascent');
 %% DESCEND 
 % Initial Condition are the last from ascent
 [Td, Yd] = ode113(@descent_ballistic, [Ta(end), tf], Ya(end, 1:13), settings.ode.optionsdesc, settings, uw, vw, ww, uncert);
-[data_bal] = RecallOdeFcn(@descent_ballistic, Td, Yd, settings, uw, vw, ww, uncert);
+[data_bal] = recallOdeFcn(@descent_ballistic, Td, Yd, settings, uw, vw, ww, uncert);
 data_bal.state.Y = Yd;
 data_bal.state.T = Td;
 save('descent_plot.mat', 'data_bal');

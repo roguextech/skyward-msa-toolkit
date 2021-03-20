@@ -165,7 +165,7 @@ parfor i = 1:N
         Ya = [Ya; Ya2(2:end, :)];
     end
     
-    [data_ascent{i}] = RecallOdeFcn(@ascent, Ta, Ya, settings, uw, vw, ww, uncert, Hour, Day, OMEGA);
+    [data_ascent{i}] = recallOdeFcn(@ascent, Ta, Ya, settings, uw, vw, ww, uncert, Hour, Day, OMEGA);
     data_ascent{i}.state.Y = Ya;
     data_ascent{i}.state.T = Ta;
     
@@ -183,7 +183,7 @@ parfor i = 1:N
         [Tp, Yp] = ode113(@descent_parachute, [t0p, tf], Y0p, settings.ode.optionspara,...
             settings, uw, vw, ww, para, uncert);
         
-        ParoutDesc = RecallOdeFcn(@descent_parachute, Tp, Yp, settings, uw, vw, ww, para, uncert);
+        ParoutDesc = recallOdeFcn(@descent_parachute, Tp, Yp, settings, uw, vw, ww, para, uncert);
         ParoutDesc.state.Y = Yp;
         ParoutDesc.state.T = Tp;
         

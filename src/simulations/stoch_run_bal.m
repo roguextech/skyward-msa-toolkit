@@ -149,14 +149,14 @@ parfor i = 1:settings.stoch.N
     Q0 = angleToQuat(PHI, OMEGA, 0*pi/180)';
     Y0a = [X0; V0; W0; Q0; settings.Ixxf; settings.Iyyf; settings.Izzf];
     [Ta,Ya] = ode113(@ascent, [0, tf], Y0a, settings.ode.optionsasc1, settings, uw, vw, ww, uncert, Hour, Day, OMEGA);
-    [data_ascent{i}] = RecallOdeFcn(@ascent, Ta, Ya, settings, uw, vw, ww, uncert, Hour, Day, OMEGA);
+    [data_ascent{i}] = recallOdeFcn(@ascent, Ta, Ya, settings, uw, vw, ww, uncert, Hour, Day, OMEGA);
     data_ascent{i}.state.Y = Ya;
     data_ascent{i}.state.T = Ta;
     
     %% DESCEND
     [Tb, Yb] = ode113(@descent_ballistic, [Ta(end), tf], Ya(end, 1:13), settings.ode.optionsdesc,...
         settings, uw, vw, ww, uncert, Hour, Day);
-    [data_bal{i}] = RecallOdeFcn(@descent_ballistic, Tb, Yb, settings, uw, vw, ww, uncert, Hour, Day);
+    [data_bal{i}] = recallOdeFcn(@descent_ballistic, Tb, Yb, settings, uw, vw, ww, uncert, Hour, Day);
     data_bal{i}.state.Y = Yb;
     data_bal{i}.state.T = Tb;
     
