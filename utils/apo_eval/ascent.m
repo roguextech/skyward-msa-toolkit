@@ -18,9 +18,15 @@ INPUTS:
             - uw, wind component along x;
             - vw, wind component along y;
             - ww, wind component along z;
+            - uncert, wind uncertanties;
+            - Hour, hour of the day of the needed simulation;
+            - Day, day of the month of the needed simulation;
+            - OMEGA, launchpad azimuth angle;
 
 OUTPUTS:
             - dY, state derivatives;
+            - parout, interesting fligth quantities structure (aerodyn coefficients, forces and so on..).
+
 
 NOTE: To get the NED velocities the body-frame must be multiplied for the
 conjugated of the current attitude quaternion
@@ -140,8 +146,12 @@ else
     alpha_tot = 0;
 end
 
-%% Condition aerobrake 
-c = 1; % c = 1 0%, closed 
+%% Condition aerobrake
+if M < 0.7 && t > tb
+    c = settings.control;
+else
+    c = 1;
+end
 
 %% INTERPOLATE AERODYNAMIC COEFFICIENTS:
 [coeffsValues, angle0] = interpCoeffs(t,alpha,M,beta,absoluteAltitude,...

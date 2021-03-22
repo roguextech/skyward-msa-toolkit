@@ -1,16 +1,21 @@
 function [apogee, max_a]=start_simulation(settings)
 %{
-INPUTS
-settings: struct with all the settings of simulation
 
-OUTPUT
-apogee: z max of simualtion [m]
-max_a: max acceleration [g]
+START_SIMULATION - This function runs the ascent phase simulation using the
+ode function "ascent".
 
-% Author: Matteo Pozzoli
-% Skyward Experimental Rocketry | CRD Dept | crd@skywarder.eu
-% email: matteo.pozzoli@skywarder.eu
-% Release date: 16/04/2016
+INPUTS:
+            - settings, settings struct built in config.m
+
+OUTPUTS:
+            - apogee, apogee reached by the simulation;
+            - max_a, max acceleration reached by the simulation.
+
+Author: Matteo Pozzoli
+Skyward Experimental Rocketry | AFD Dept
+email: matteo.pozzoli@skywarder.eu
+Release date: 23/11/2020
+
 %}
 
 %% STARTING CONDITIONS
@@ -26,9 +31,9 @@ X0a = [X0;V0;W0;Q0;settings.Ixxf;settings.Iyyf;settings.Izzf];
 
 %% WIND GENERATION
 
-[uw,vw,ww,~] = wind_const_generator(settings.wind.AzMin,settings.wind.AzMax,...
-    settings.wind.ElMin,settings.wind.ElMax,settings.wind.MagMin,...
-    settings.wind.MagMax);
+[uw,vw,ww,~] = wind_const_generator(settings.wind.Az,settings.wind.Az,...
+    settings.wind.El,settings.wind.El,settings.wind.Mag,...
+    settings.wind.Mag);
 
 tf = settings.ode.final_time;
 
