@@ -13,11 +13,17 @@ close all
 clear 
 clc
 
-path = genpath(pwd);
-addpath(path);
+filePath = fileparts(mfilename('fullpath'));
+currentPath = genpath(pwd);
+if not(strcmp(filePath, currentPath))
+    cd (filePath);
+    currentPath = filePath;
+end
+
+addpath(currentPath);
 
 %% LOAD DATA
-config;
+configSimulator;
 
 if not(settings.ballistic)
     settings.Npara = length(settings.para);
