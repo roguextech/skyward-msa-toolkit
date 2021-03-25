@@ -39,7 +39,7 @@ tf = settings.ode.final_time;
 
 %% ASCENT
 
-[Ta,Ya] = ode113(@ascent,[0,tf],X0a,settings.ode.optionsasc,...
+[Ta,Ya] = ode113(@ascent,[0,tf],X0a,settings.ode.optionsasc1,...
     settings,uw,vw,ww);
 
 %% FINAL STATE ASSEMBLING

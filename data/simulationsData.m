@@ -29,12 +29,13 @@ iMotor = [Motors.MotorName] == name;
 settings.motor.exp_time = Motors(iMotor).t;
 settings.motor.exp_thrust = Motors(iMotor).T;
 settings.motor.exp_m = Motors(iMotor).m;
-settings.mp = Motors(iMotor).mp;                    % [kg]   Propellant Mass                                                
-settings.tb = Motors(iMotor).t(end) ;               % [s]    Burning time
-mm = Motors(iMotor).mm;                             % [kg]   Total Mass of the Motor 
-settings.ms = 17.873 + mm - settings.mp;            % [kg]   Structural Mass
-settings.m0 = settings.ms + settings.mp;            % [kg]   Total Mass
-settings.mnc = 0.400;                               % [kg]   Nosecone Mass
+settings.mp = Motors(iMotor).mp;                  % [kg]   Propellant Mass                                                
+settings.tb = Motors(iMotor).t(end) ;             % [s]    Burning time
+mm = Motors(iMotor).mm;                           % [kg]   Total Mass of the Motor 
+settings.mNoMot = 17.873;
+settings.ms = settings.mNoMot + mm - settings.mp; % [kg]   Structural Mass
+settings.m0 = settings.ms + settings.mp;          % [kg]   Total Mass
+settings.mnc = 0.400;                             % [kg]   Nosecone Mass
 
 %% GEOMETRY DETAILS
 % This parameters should be the same parameters set up in MISSILE DATCOM

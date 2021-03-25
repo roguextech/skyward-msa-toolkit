@@ -12,20 +12,41 @@ Release date: 23/11/2020
 
 %}
 
-clear 
 close all
-clc 
+clear 
+clc
 
-path = genpath(pwd);
-addpath(path);
+filePath = fileparts(mfilename('fullpath'));
+currentPath = pwd;
+if not(strcmp(filePath, currentPath))
+    cd (filePath);
+    currentPath = filePath;
+end
 
-%% DATA
-% Main data 
-run config.m
+addpath(genpath(currentPath));
 
-% Data of the analyis 
-ms = vars.ms;
-nMass = length(ms);
+%% LOAD DATA
+dataPath = '../data/';
+addpath(dataPath);
+simulationsData;
+configApogee;
+
+ms = linspace( (settings.mNoMot - vars.msDeviation), (settings.mNoMot + vars.msDeviation), vars.nMass );
+nMass = vars.nMass;
+
+clear settings.motor
+
+%% MOTOR DATA
+% save in settings the acceptable motors 
+j = 1;
+for i=1:size(Motors,2)
+    
+    if Motors(i).Itot > vars.Itot_range(1) && Motors(i).Itot < vars.Itot_range(2)
+        settings.motors(j) = Motors(i);
+        j = j + 1;
+    end
+  
+end
 nMotors = size(settings.motors,2);
 
 %% RUN 
@@ -92,7 +113,7 @@ for i = 1:2
         title(tit)
         
         % Apogee plot
-        if settings.flag_a
+        if settings.accelerationPlot
             subplot(1,3,1:2)
         end
         hold on, grid on;
@@ -109,7 +130,7 @@ for i = 1:2
         ylabel('apogee [m]')
         
         % Max acceleration plot
-        if settings.flag_a
+        if settings.accelerationPlot
             subplot(1,3,3)
             hold on, grid on;
 
