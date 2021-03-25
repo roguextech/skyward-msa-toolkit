@@ -22,6 +22,11 @@ vars.Itot_range = [9170 9190];                  %[Ns] toal impulse range for the
 % set to false if you don't want the acceleration plot
 settings.accelerationPlot = true;
 
+% Launchpad exit velocity
+% set to false if you don't want the launchpad exit velocity plot
+settings.launchpadVelPlot = true;
+
+
 %% LAUNCH SETUP
 settings.OMEGA = 84*pi/180;               %[rad] Minimum Elevation Angle, user input in degrees (ex. 80)
 settings.PHI = 0*pi/180;                  %[rad] Maximum Azimuth Angle from North Direction, user input in degrees (ex. 90)

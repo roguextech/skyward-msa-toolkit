@@ -1,4 +1,4 @@
-function [value,isterminal,direction] = event_apogee(t,Y,settings,varargin)
+function [value,isterminal,direction] = eventApogee(t,Y,settings,varargin)
 % Event function to stop simulation at apogee
 
 % Author: Ruben Di Battista

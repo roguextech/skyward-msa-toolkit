@@ -1,4 +1,4 @@
-function [apogee, max_a]=start_simulation(settings)
+function [apogee, max_a, vExit]=start_simulation(settings)
 %{
 
 START_SIMULATION - This function runs the ascent phase simulation using the
@@ -63,7 +63,7 @@ apogee = max(-Y(:,3)); % position, index of position at apogee
 u = Y(:,4);
 v = Y(:,5);
 w = -Y(:,6);
-
+V = [u, v, w];
 % ACCELERATIONS
 
 % main derivatives
@@ -82,5 +82,13 @@ A = [ax, ay, az];
 abs_A = vecnorm(A');
 max_a = max(abs_A);
 max_a=max_a/9.80665;
+
+% LAUNCHPAD EXIT VELOCITY
+abs_V = vecnorm(V');
+X = Y(:,1:3);
+abs_X = vecnorm(X');
+iexit = find(abs_X <= settings.lrampa);  % checking where the missile is undocked from the hook of the launch pad
+iexit = iexit(end);
+vExit = abs_V(iexit);
 
 

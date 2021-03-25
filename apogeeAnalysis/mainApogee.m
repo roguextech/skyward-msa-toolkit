@@ -89,7 +89,7 @@ for i = 1:2
                 settings.ms=ms(l) + settings.mm - settings.mp;
                 settings.m0=ms(l) + settings.mm;
 
-                [apogee(l,k,j,i), max_a(l,k,j,i)] = start_simulation(settings);
+                [apogee(l,k,j,i), max_a(l,k,j,i), vExit(l,k,j,i)] = start_simulation(settings);
             end
         end
     end
@@ -114,7 +114,7 @@ for i = 1:2
         
         % Apogee plot
         if settings.accelerationPlot
-            subplot(1,3,1:2)
+            subplot(1,4,1:2)
         end
         hold on, grid on;
        
@@ -131,7 +131,7 @@ for i = 1:2
         
         % Max acceleration plot
         if settings.accelerationPlot
-            subplot(1,3,3)
+            subplot(1,4,3)
             hold on, grid on;
 
             % Motors loop
@@ -143,6 +143,21 @@ for i = 1:2
             legend(labels)
             xlabel('structural mass [kg]')
             ylabel('max |a| [g]')
+        end
+        if settings.launchpadVelPlot
+            subplot(1,4,4)
+            hold on, grid on;
+
+            % Motors loop
+            for k = 1:nMotors
+                plot(ms,vExit(:,k,j,i),'o-')
+                labels{1,k} = settings.motors(k).MotorName;
+            end
+            
+            plot(ms,20.*ones(1,nMass),'--r','Linewidth',2)
+            legend(labels)
+            xlabel('structural mass [kg]')
+            ylabel('launchpad exit velocity [m/s]')
         end
     end
 end
