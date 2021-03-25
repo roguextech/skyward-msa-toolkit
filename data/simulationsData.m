@@ -18,36 +18,28 @@ settings.lon0 = -8.138368;                                  % Launchpad longitud
 % settings.lon0 = 14.052546;                                % Launchpad longitude
 
 settings.g0 = gravitywgs84(settings.z0, settings.lat0);     % Gravity costant at launch latitude and altitude
-                                 
+
+%% ROCCARASO TERRAIN
 if settings.terrain  
-     settings.funZ = funZ_gen('zdata.mat', settings.lat0, settings.lon0, true, 'xy');       % Altitude map computation
+     settings.funZ = funZ_gen('zdata.mat', settings.lat0, settings.lon0, true, 'xy');
 end
 
 %% ENGINE DETAILS
 % load motors data 
-DATA_PATH = '../data/';
-filename = strcat(DATA_PATH,'Motors.mat');
-Motors = load(filename);
-Motors = [Motors.Cesaroni, Motors.Aerotech];
+filename = strcat(dataPath,'Motors.mat');
+Motors = load(filename); Motors = [Motors.Cesaroni, Motors.Aerotech];
 
-% name = 'M2020';
-% name = 'M1890';
-% name = 'M1800';
 name = 'M2000Rbis';
-%name = 'L1365M';
-
-n_name = [Motors.MotorName] == name;
-settings.motor.exp_time = Motors(n_name).t;
-settings.motor.exp_thrust = Motors(n_name).T;
-settings.motor.exp_m = Motors(n_name).m;
-settings.mp = Motors(n_name).mp;                    % [kg]   Propellant Mass                                                
-settings.tb = Motors(n_name).t(end) ;               % [s]    Burning time
-mm = Motors(n_name).mm;                             % [kg]   Total Mass of the Motor 
+iMotor = [Motors.MotorName] == name;
+settings.motor.exp_time = Motors(iMotor).t;
+settings.motor.exp_thrust = Motors(iMotor).T;
+settings.motor.exp_m = Motors(iMotor).m;
+settings.mp = Motors(iMotor).mp;                    % [kg]   Propellant Mass                                                
+settings.tb = Motors(iMotor).t(end) ;               % [s]    Burning time
+mm = Motors(iMotor).mm;                             % [kg]   Total Mass of the Motor 
 settings.ms = 17.873 + mm - settings.mp;            % [kg]   Structural Mass
 settings.m0 = settings.ms + settings.mp;            % [kg]   Total Mass
 settings.mnc = 0.400;                               % [kg]   Nosecone Mass
-
-clear ('Motors','name')
 
 %% GEOMETRY DETAILS
 % This parameters should be the same parameters set up in MISSILE DATCOM
@@ -55,6 +47,8 @@ clear ('Motors','name')
 
 settings.C = 0.15;                          % [m]      Caliber (Fuselage Diameter)
 settings.S = pi*settings.C^2/4;             % [m^2]    Cross-sectional Surface
+settings.xcg = 1.33;                        % [m] CG postion (empty)
+settings.Lnose = 0.28;                      % [m] Nosecone Length
 
 %% MASS GEOMERTY DETAILS
 % x-axis: along the fuselage
@@ -87,13 +81,13 @@ settings.Izze = 10.06;                      % [kg*m^2] Inertia to z-axis
 % DATA_PATH = '../data/';
 
 % Coefficients in full configuration
-filename_full = strcat(DATA_PATH, 'full.mat');
+filename_full = strcat(dataPath, 'full.mat');
 CoeffsF = load(filename_full, 'Coeffs');
 settings.CoeffsF = CoeffsF.Coeffs;
 clear('CoeffsF');
 
 % Coefficients in empty configuration
-filename_empty = strcat(DATA_PATH, 'empty.mat');
+filename_empty = strcat(dataPath, 'empty.mat');
 CoeffsE = load(filename_empty, 'Coeffs');
 settings.CoeffsE = CoeffsE.Coeffs;
 clear('CoeffsE');
@@ -104,8 +98,6 @@ settings.Betas = s.State.Betas';
 settings.Altitudes = s.State.Altitudes';
 settings.Machs = s.State.Machs';
 clear('s');
-
-settings.control = '0%';        % aerobrakes 0%, 50% or 100% opened
 
 %% PARACHUTES DETAILS
 % parachute 1
@@ -122,13 +114,6 @@ settings.para(2).mass = 1.5;    % [kg]   Parachute Mass
 settings.para(2).CD = 0.7;      % [/] Parachute Drag Coefficient
 settings.para(2).CL = 0;        % [/] Parachute Lift Coefficient
 settings.para(2).z_cut = 0;     % [m] Final altitude of the parachute
-
-%% DESCENT PHASE MODEL
-
-settings.descent6DOF = true;   % set to true in order to start a 6DOF parachute descent phase
-
-settings.xcg = 1.33;            % [m] CG postion (empty)
-settings.Lnose = 0.28;          % [m] Nosecone Length
 
 % parachute 1
 settings.para(1).CX = 1.4;      % [/] Parachute Longitudinal Drag Coefficient
@@ -168,63 +153,7 @@ settings.ode.optionsDrogue6DOF = odeset('Events', @event_para_cut,'AbsTol',1e-6,
 settings.ode.optionsMainExt6DOF = odeset('Events', @event_main_exit,'AbsTol',1e-6,'RelTol',1e-6);       %ODE options for due to the extraction of the main chute
 settings.ode.optionsMain6DOF = odeset('Events', @event_landing,'AbsTol',1e-6,'RelTol',1e-6);            %ODE options to terminate descent phase
 
-%% WIND DETAILS
-% select which model you want to use:
-
-%%%%% Matlab Wind Model
-settings.wind.model = false;
-% matlab hswm model, wind model on altitude based on historical data
-
-% input Day and Hour as arrays to run stochastic simulations
-settings.wind.DayMin = 105;                                 % [d] Minimum Day of the launch
-settings.wind.DayMax = 105;                                 % [d] Maximum Day of the launch
-settings.wind.HourMin = 4;                                  % [h] Minimum Hour of the day
-settings.wind.HourMax = 4;                                  % [h] Maximum Hour of the day
-settings.wind.ww = 0;                                       % [m/s] Vertical wind speed
-
-%%%%% Input wind
-settings.wind.input = false;
-% Wind is generated for every altitude interpolating with the coefficient defined below
-
-settings.wind.input_ground = 7;                             % wind magnitude at the ground [m/s]
-settings.wind.input_alt = [0 100 600 750 900 1500 4000];    % altitude vector [m]
-settings.wind.input_mult = [0 0 10 15 20 30 30];            % percentage of increasing magnitude at each altitude
-settings.wind.input_azimut = [30 30 30 30 30 30 30];        % wind azimut angle at each altitude (toward wind incoming direction) [deg]
-
-
-settings.wind.input_uncertainty = [1, 1];
-% settings.wind.input_uncertainty = [a,b];      wind uncertanties:
-% - a, wind magnitude percentage uncertanty: magn = magn *(1 +- a)
-% - b, wind direction band uncertanty: dir = dir 1 +- b
-
-%%%%% Random wind model
-% if both the model above are false
-
-% Wind is generated randomly from the minimum to the maximum parameters which defines the wind.
-% Setting the same values for min and max will fix the parameters of the wind.
-settings.wind.MagMin = 1;                                   % [m/s] Minimum Magnitude
-settings.wind.MagMax = 1;                                   % [m/s] Maximum Magnitude
-settings.wind.ElMin = 0*pi/180;                             % [rad] Minimum Elevation, user input in degrees (ex. 0)
-settings.wind.ElMax = 0*pi/180;                             % [rad] Maximum Elevation, user input in degrees (ex. 0) (Max == 90 Deg)
-settings.wind.AzMin = (360)*pi/180;                         % [rad] Minimum Azimuth, user input in degrees (ex. 90)
-settings.wind.AzMax = (360)*pi/180;                         % [rad] Maximum Azimuth, user input in degrees (ex. 90)
-
-% NOTE: wind azimuth angle indications (wind directed towards):
-% 0 deg (use 360 instead of 0)  -> North
-% 90 deg                        -> East
-% 180 deg                       -> South
-% 270 deg                       -> West
-
-%% BALLISTIC SIMULATION
-% Set to True to run a ballistic (without drogues) simulation
-
-settings.ballistic = false;
-
 %% STOCHASTIC DETAILS
-% If N > 1 the stochastic routine is started
-
-settings.stoch.N = 1;                              % Number of cases
-
 %%% launch probability details
 settings.stoch.prob.x_lim = 2e3;                    % Max ovest displacement [m]
 settings.stoch.prob.V_lim = 50;                     % Max drogue velocity [Pa]
@@ -242,8 +171,6 @@ settings.plots = true;
 
 %% LANDING POINTS
 % satellite maps of the landing zone 
-settings.landing_map = false;
-
 % delta limit on the coordinates (for the landing map)
 settings.lim_lat = 0.04; 
 settings.lim_lon = 0.025;

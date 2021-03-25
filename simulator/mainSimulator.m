@@ -14,26 +14,29 @@ clear
 clc
 
 filePath = fileparts(mfilename('fullpath'));
-currentPath = genpath(pwd);
+currentPath = pwd;
 if not(strcmp(filePath, currentPath))
     cd (filePath);
     currentPath = filePath;
 end
 
-addpath(currentPath);
+addpath(genpath(currentPath));
 
 %% LOAD DATA
 configSimulator;
+dataPath = '../data/';
+addpath(dataPath);
+simulationsData;
+
+%% START THE CHOSEN SIMULATION
+% T = vector of time used by ODE, [s] also for Tf Ta
+% Y = State = ( x y z | u v w | p q r | q0 q1 q2 q3 | thetax thetay thetaz | ) also for Ya,Yf corresponding to T
 
 if not(settings.ballistic)
     settings.Npara = length(settings.para);
 else
     settings.Npara = 1;
 end
-
-%% START THE CHOSEN SIMULATION
-% T = vector of time used by ODE, [s] also for Tf Ta
-% Y = State = ( x y z | u v w | p q r | q0 q1 q2 q3 | thetax thetay thetaz | ) also for Ya,Yf corresponding to T
 
 tic
     
