@@ -41,7 +41,7 @@ datcom.Alt = settings.z0;
 %%%
 xcg = datcom.xcg;
 datcom.xcg = xcg(1) + datcom.Lnose;
-createFor006(datcom);
+createFor006(datcom, settings);
 [Coeffs0, ~] = datcomParser5();
 
 %% LAUNCHPAD DYNAMICS
@@ -83,11 +83,11 @@ for i = 1:8
     datcom.Beta = betaExit;
     
     datcom.xcg = xcg(1) + datcom.Lnose;
-    createFor006(datcom);
+    createFor006(datcom, settings);
     [CoeffsF, ~] = datcomParser5();
     %%%
     datcom.xcg = xcg(2) + datcom.Lnose;
-    createFor006(datcom);
+    createFor006(datcom, settings);
     [CoeffsE, ~] = datcomParser5();
 
     XCPfullLon = -CoeffsF.X_C_P(indexAlpha);

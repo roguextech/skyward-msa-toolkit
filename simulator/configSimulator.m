@@ -22,8 +22,12 @@ settings.PHImax = 0*pi/180;                                 % [rad] Maximum Azim
 settings.upwind = false;                                    % If true, phi is selected opposite to the wind direction
 settings.PHIsigma = 0*pi/180;                               % [deg] If upwind is true, you can select a variance for the direction
 
+%% ROCCARASO TERRAIN
 % !! ATTENTION !!  the following works only at Roccaraso
-settings.terrain = false;    
+settings.terrain = false; 
+if settings.terrain  
+     settings.funZ = funZ_gen('zdata.mat', settings.lat0, settings.lon0, true, 'xy');
+end
 
 %% AEROBRAKES SETTINGS
 settings.control = '0%';                                    % aerobrakes 0%, 50% or 100% opened

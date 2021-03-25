@@ -19,11 +19,6 @@ settings.lon0 = -8.138368;                                  % Launchpad longitud
 
 settings.g0 = gravitywgs84(settings.z0, settings.lat0);     % Gravity costant at launch latitude and altitude
 
-%% ROCCARASO TERRAIN
-if settings.terrain  
-     settings.funZ = funZ_gen('zdata.mat', settings.lat0, settings.lon0, true, 'xy');
-end
-
 %% ENGINE DETAILS
 % load motors data 
 filename = strcat(dataPath,'Motors.mat');
@@ -45,10 +40,16 @@ settings.mnc = 0.400;                               % [kg]   Nosecone Mass
 % This parameters should be the same parameters set up in MISSILE DATCOM
 % simulation.
 
-settings.C = 0.15;                          % [m]      Caliber (Fuselage Diameter)
-settings.S = pi*settings.C^2/4;             % [m^2]    Cross-sectional Surface
-settings.xcg = 1.33;                        % [m] CG postion (empty)
-settings.Lnose = 0.28;                      % [m] Nosecone Length
+settings.C = 0.15;              % [m]      Caliber (Fuselage Diameter)
+settings.S = pi*settings.C^2/4; % [m^2]    Cross-sectional Surface
+settings.xcg = [1.49, 1.33];    % [m] CG postion [full, empty]
+settings.Lnose = 0.26;          % [m] Nosecone Length
+settings.rocketLength = 2.495;  % [m] Rocket Length
+settings.Npanel = 3;            % [m] number of fins
+settings.Ler = 0.003;           % [deg] Leading edge radius
+settings.d = 0;                 % [m] rocket tip-fin distance
+settings.zup_raw = 0.0015;      % [m] fin semi-thickness 
+settings.Lmaxu_raw = 0.0015;    % [m] Fraction of chord from leading edge to max thickness
 
 %% MASS GEOMERTY DETAILS
 % x-axis: along the fuselage
@@ -143,15 +144,17 @@ settings.ode.final_time =  2000;    % [s] Final integration time
 % - stopped (it has to be created)
 % - InitialStep is the highest value tried by the solver
 
-settings.ode.optionsasc1 = odeset('Events', @event_apogee, 'InitialStep', 1);       %ODE options for ascend
+settings.ode.optionsasc1 = odeset('Events', @eventApogee, 'InitialStep', 1);       %ODE options for ascend
 settings.ode.optionsasc2 = odeset('InitialStep', 1);                                %ODE options for due to the opening delay of the parachute
 settings.ode.optionspara = odeset('Events', @event_para_cut);                       %ODE options for the parachutes
 settings.ode.optionsdesc = odeset('Events', @event_landing);                        %ODE options for ballistic descent
+settings.ode.optionspad = odeset('Events', @EventPad);                              %ODE options for the launchpad phase
 
 % Settings for descent 6dof simulation
 settings.ode.optionsDrogue6DOF = odeset('Events', @event_para_cut,'AbsTol',1e-6,'RelTol',1e-6);         %ODE options for due to cutting of the drogue chute
 settings.ode.optionsMainExt6DOF = odeset('Events', @event_main_exit,'AbsTol',1e-6,'RelTol',1e-6);       %ODE options for due to the extraction of the main chute
 settings.ode.optionsMain6DOF = odeset('Events', @event_landing,'AbsTol',1e-6,'RelTol',1e-6);            %ODE options to terminate descent phase
+
 
 %% STOCHASTIC DETAILS
 %%% launch probability details

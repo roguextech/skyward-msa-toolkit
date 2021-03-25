@@ -38,11 +38,11 @@ settings.Machs = datcom.Mach;
 %%%
 xcg = datcom.xcg;
 datcom.xcg = xcg(1) + datcom.Lnose;
-createFor006(datcom);
+createFor006(datcom, settings);
 [settings.CoeffsF, ~] = datcomParser5();
 %%%
 datcom.xcg = xcg(2) + datcom.Lnose;
-createFor006(datcom);
+createFor006(datcom, settings);
 [settings.CoeffsE, ~] = datcomParser5();
 %%%
 settings.wind.Az = (360)*pi/180;

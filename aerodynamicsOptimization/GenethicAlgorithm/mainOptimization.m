@@ -9,43 +9,23 @@ clear
 close all
 clc 
 
-path = genpath(pwd);
-addpath(path);
+filePath = fileparts(mfilename('fullpath'));
+currentPath = pwd;
+if not(strcmp(filePath, currentPath))
+    cd (filePath);
+    currentPath = filePath;
+end
 
-%% RETRIVING GEOMETRICAL DATA
-run Config.m
+addpath(genpath(currentPath));
 
-%% RETRIVING DATCOM CONFIG DATA
-run ConfigDatcom.m
+%% LOAD DATA
+dataPath = '../../data/';
+addpath(dataPath);
+simulationsData;
+configOptmization;
 
+%% OPTIMIZATION
 tic
-
-%% VARIABLES BOUNDARIES
-%%% Lower boundary
-lb(1) = 35;     % 1 --> chord1         [cm]
-lb(2) = 10;     % 2 --> chord2         [cm]
-lb(3) = 10;     % 3 --> heigth         [cm]
-lb(4) = 2;      % 4 --> Fin type       [/]
-lb(5) = 28;     % 5 --> Ogive Length   [cm]
-lb(6) = 1;      % 6 --> Ogive Type     [/]
-
-%%% Upper boundary
-ub(1) = 35;     % 1 --> chord1         [cm]
-ub(2) = 20;     % 2 --> chord2         [cm]
-ub(3) = 40;     % 3 --> heigth         [cm]
-ub(4) = 2;      % 4 --> Fin type       [/]
-ub(5) = 28;     % 5 --> Ogive Length   [cm]
-ub(6) = 1;      % 6 --> Ogive Type     [/]
-
-%%% Inequality constraint (A*x < b)
-% imposing the fixed chord, x(1), to be greater than the free chord x(2)
-% so -x(1) + x(2) < 0
-% imposing the fixed chord, x(1), to be greater than the heigth x(3) to
-% reduce the flessibility, so -x(1) + x(3) < 0
-% 
-A = [-1 1 0 0 0 0
-     -1 0 1 0 0 0 ];
-b = [0; 0];
 
 IntCon = 1:6;
 options = optimoptions('ga', 'MaxStallGenerations', 15, 'FunctionTolerance', ...

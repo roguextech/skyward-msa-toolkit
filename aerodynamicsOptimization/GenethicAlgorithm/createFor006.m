@@ -1,4 +1,4 @@
-function createFor006(datcom)
+function createFor006(datcom, settings)
 %{ 
 
 CREATEFOR006 - function to create the 'for006.dat' file.
@@ -31,17 +31,17 @@ C2 = datcom.Chord2;
 shape = datcom.shape;
 
 xcg = datcom.xcg;
-D = datcom.D;
+D = settings.C;
 r = D/2;
 S = pi*D^2/4;
-Lnose = datcom.Lnose;
+Lnose = settings.Lnose;
 OgType = datcom.OgType;
 Lcenter = datcom.Lcenter;
-Npanel = datcom.Npanel;
-Ler = datcom.Ler;
-d = datcom.d;
-zup_raw = datcom.zup_raw;
-Lmaxu_raw = datcom.Lmaxu_raw;
+Npanel = settings.Npanel;
+Ler = settings.Ler;
+d = settings.d;
+zup_raw = settings.zup_raw;
+Lmaxu_raw = settings.Lmaxu_raw;
 H = datcom.Height;
 
 if Npanel == 3
