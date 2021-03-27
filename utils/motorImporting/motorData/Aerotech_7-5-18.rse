@@ -3429,7 +3429,7 @@ avgThrust="251.105" peakThrust="320.655" throatDia="0." exitDia="0."
 Itot="231.017" burn-time="0.92" massFrac="0." Isp="0." tDiv="10" tStep="-1."
 tFix="1" FDiv="10" FStep="-1." FFix="1" mDiv="10" mStep="-1." mFix="1" cgDiv="10"
 cgStep="-1." cgFix="1">
-<comments>By Tobin Yehle, 
+<comments>By Tobin Yehle,
 11/11/07.</comments>
 <data>
 <eng-data  t="0." f="0." m="0." cg="0."/>
@@ -8485,7 +8485,7 @@ tFix="1" FDiv="10" FStep="-1." FFix="1" mDiv="10" mStep="-1." mFix="1" cgDiv="10
 cgStep="-1." cgFix="1">
 <data>
 <eng-data  t="0." f="0." m="3990." cg="298.5"/>
-<eng-data  t="0." f="0.22" m="3990." cg="298.5"/>
+<eng-data  t="0.001" f="0.22" m="3990." cg="298.5"/>
 <eng-data  t="0.1" f="1307.13" m="3955.6" cg="298.5"/>
 <eng-data  t="0.2" f="1218.53" m="3889.15" cg="298.5"/>
 <eng-data  t="1.4" f="1373.59" m="3070.77" cg="298.5"/>
@@ -9004,3 +9004,39 @@ provided by ThrustCurve.org (www.thrustcurve.org)
 </engine>
 </engine-list>
 </engine-database>
+</data>
+</engine>
+<engine  mfg="Aerotech" code="M2000Rbis" Type="reloadable" dia="98." len="732."
+initWt="8908." propWt="5368." delays="1000" auto-calc-mass="1" auto-calc-cg="1"
+avgThrust="1953.41" peakThrust="2316.16" throatDia="0." exitDia="0."
+Itot="9181.04" burn-time="4.7" massFrac="62.96" Isp="163.42" tDiv="10"
+tStep="-1." tFix="1" FDiv="10" FStep="-1." FFix="1" mDiv="10" mStep="-1."
+mFix="1" cgDiv="10" cgStep="-1." cgFix="1">
+<data>
+<eng-data t="0.000" f="0.00" m="5368.00000" cg="600.5/>" 
+<eng-data t="0.090" f="1530.96" m="5327.71892" cg="600.5/>" 
+<eng-data t="0.280" f="2186.27" m="5121.24441" cg="600.5/>" 
+<eng-data t="0.470" f="2166.70" m="4879.46421" cg="600.5/>" 
+<eng-data t="0.660" f="2187.24" m="4637.61843" cg="600.5/>" 
+<eng-data t="0.840" f="2219.07" m="4405.75157" cg="600.5/>" 
+<eng-data t="1.030" f="2248.07" m="4157.62797" cg="600.5/>" 
+<eng-data t="1.220" f="2273.74" m="3906.46854" cg="600.5/>" 
+<eng-data t="1.410" f="2298.31" m="3652.50751" cg="600.5/>" 
+<eng-data t="1.600" f="2309.75" m="3396.56007" cg="600.5/>" 
+<eng-data t="1.780" f="2315.71" m="3153.15889" cg="600.5/>" 
+<eng-data t="1.970" f="2316.16" m="2895.88093" cg="600.5/>" 
+<eng-data t="2.160" f="2306.31" m="2639.12768" cg="600.5/>" 
+<eng-data t="2.350" f="2282.23" m="2384.25778" cg="600.5/>" 
+<eng-data t="2.540" f="2252.10" m="2132.39560" cg="600.5/>" 
+<eng-data t="2.730" f="2209.64" m="1884.57184" cg="600.5/>" 
+<eng-data t="2.920" f="2168.80" m="1641.36743" cg="600.5/>" 
+<eng-data t="3.100" f="2117.18" m="1415.83460" cg="600.5/>" 
+<eng-data t="3.290" f="2067.53" m="1183.39617" cg="600.5/>" 
+<eng-data t="3.480" f="2004.51" m="957.21681" cg="600.5/>" 
+<eng-data t="3.670" f="1934.44" m="738.42841" cg="600.5/>" 
+<eng-data t="3.860" f="1831.48" m="529.25069" cg="600.5/>" 
+<eng-data t="4.040" f="1745.63" m="341.01839" cg="600.5/>" 
+<eng-data t="4.230" f="1504.27" m="160.50311" cg="600.5/>" 
+<eng-data t="4.420" f="649.80" m="40.85546" cg="600.5/>" 
+<eng-data t="4.610" f="58.18" m="1.53076" cg="600.5/>" 
+<eng-data t="4.700" f="0.00" m="0.00000" cg="600.5/>" 
