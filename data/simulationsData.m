@@ -4,20 +4,20 @@
 
 %% LAUNCH SETUP
 % launchpad - pont the sor
-settings.z0 = 109;                                          %[m] Launchpad Altitude
-settings.lpin = 1.150;                                      %[m] Distance from base of second pin
-settings.lrampa = 5.9 - settings.lpin;                      %[m] LaunchPad route (total available route)
-settings.lat0 = 39.201778;                                  % Launchpad latitude
-settings.lon0 = -8.138368;                                  % Launchpad longitude
+settings.z0 = 109;                                      % [m] Launchpad Altitude
+settings.lpin = 1.150;                                  % [m] Distance from base of second pin
+settings.lrampa = 5.9 - settings.lpin;                  % [m] LaunchPad route (total available route)
+settings.lat0 = 39.201778;                              % Launchpad latitude
+settings.lon0 = -8.138368;                              % Launchpad longitude
 
 % launchpad - roccaraso
-% settings.z0 = 1416;                                       %[m] Launchpad Altitude
-% settings.lpin = 1.150;                                    %[m] Distance from base of second pin
-% settings.lrampa = 5.9 - settings.lpin;                    %[m] LaunchPad route (total available route)
-% settings.lat0 = 41.810093;                                % Launchpad latitude
-% settings.lon0 = 14.052546;                                % Launchpad longitude
+% settings.z0 = 1416;                                     % [m] Launchpad Altitude
+% settings.lpin = 1.150;                                  % [m] Distance from base of second pin
+% settings.lrampa = 5.9 - settings.lpin;                  % [m] LaunchPad route (total available route)
+% settings.lat0 = 41.810093;                              % Launchpad latitude
+% settings.lon0 = 14.052546;                              % Launchpad longitude
 
-settings.g0 = gravitywgs84(settings.z0, settings.lat0);     % Gravity costant at launch latitude and altitude
+settings.g0 = gravitywgs84(settings.z0, settings.lat0); % Gravity costant at launch latitude and altitude
 
 %% ENGINE DETAILS
 % load motors data 
@@ -25,17 +25,18 @@ filename = strcat(dataPath,'Motors.mat');
 Motors = load(filename); Motors = [Motors.Cesaroni, Motors.Aerotech];
 
 name = 'M2000Rbis';
+% name = 'L1350';
 iMotor = [Motors.MotorName] == name;
 settings.motor.exp_time = Motors(iMotor).t;
 settings.motor.exp_thrust = Motors(iMotor).T;
 settings.motor.exp_m = Motors(iMotor).m;
-settings.mp = Motors(iMotor).mp;                  % [kg]   Propellant Mass                                                
-settings.tb = Motors(iMotor).t(end) ;             % [s]    Burning time
-mm = Motors(iMotor).mm;                           % [kg]   Total Mass of the Motor 
+settings.mp = Motors(iMotor).mp;                        % [kg]   Propellant Mass                                                
+settings.tb = Motors(iMotor).t(end) ;                   % [s]    Burning time
+mm = Motors(iMotor).mm;                                 % [kg]   Total Mass of the Motor 
 settings.mNoMot = 17.873;
-settings.ms = settings.mNoMot + mm - settings.mp; % [kg]   Structural Mass
-settings.m0 = settings.ms + settings.mp;          % [kg]   Total Mass
-settings.mnc = 0.400;                             % [kg]   Nosecone Mass
+settings.ms = settings.mNoMot + mm - settings.mp;       % [kg]   Structural Mass
+settings.m0 = settings.ms + settings.mp;                % [kg]   Total Mass
+settings.mnc = 0.400;                                   % [kg]   Nosecone Mass
 
 %% GEOMETRY DETAILS
 % This parameters should be the same parameters set up in MISSILE DATCOM

@@ -20,14 +20,14 @@ Release date: 18/10/2019
 %}
 
 %% LAUNCH SETUP
-settings.OMEGA = 84*pi/180;         %[rad] Minimum Elevation Angle, user input in degrees (ex. 80)       
-settings.PHI = 0*pi/180;            %[rad] Maximum Azimuth Angle from North Direction, user input in degrees (ex. 90)
+settings.OMEGA = 84*pi/180; % [rad] Minimum Elevation Angle, user input in degrees (ex. 80)       
+settings.PHI = 0*pi/180;    % [rad] Maximum Azimuth Angle from North Direction, user input in degrees (ex. 90)
 
 %% wind
-settings.wind.Mag = 9;                     % [m/s] Maximum wind-magnitude allowed
+settings.wind.Mag = 9;      % [m/s] Maximum wind-magnitude allowed
 
 %% Optimization Choice
-settings.cal_min = 1.5;                    % minum stability margin required
+settings.cal_min = 1.5;     % minum stability margin required
 
 %% States
 % State values in which the aerodynamic coefficients will be computed

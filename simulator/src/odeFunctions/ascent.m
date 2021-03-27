@@ -289,6 +289,7 @@ parout.interp.M = M_value;
 parout.interp.alpha = alpha_value;
 parout.interp.beta = beta_value;
 parout.interp.alt = -z;
+parout.interp.mass = m;
 
 parout.wind.NED_wind = [uw, vw, ww];
 parout.wind.body_wind = wind;

@@ -1,4 +1,4 @@
-function [Coeffs, State] = datcomParser5(varargin)
+function [Coeffs, State] = datcomParser2(varargin)
 %{ 
 
 DATCOMPARSER - function to parse the 'for006.dat' file and to generate the
@@ -26,16 +26,6 @@ State that can be loaded into the workspace in any future moment using the
 command MATLAB function 'load'. Note that the file 'for006.dat' that has to
 be parsed must be in the Current Folder.
 
-Author: Giulio Pacifici
-Skyward Experimental Rocketry | CRD Dept | crd@skywarder.eu
-email: giulio.pacifici@skywarder.eu
-Release date: 14/10/2019
-
-Author: Adriano Filippo Inno
-Skyward Experimental Rocketry | CRD Dept | crd@skywarder.eu
-email: adriano.filippo.inno@skywarder.eu
-Update date: 21/10/20
-
 %}
 
 if not(isempty(varargin))
@@ -62,12 +52,11 @@ end
 %% length check
 pattern = '*** END OF JOB ***';
 if not(contains(linestring, pattern))
-    error('Datcom didn''t complete the computations, probably the for005 contains too many cases')
+    error('Datcom didn''t complete the computations, probably the for005 contains too many cases (more than 97)')
 end
 
 %% get_coeffs_name
 pattern =  ' *\<ALPHA\> *([\w -/]*)';
-pattern1 = '[\./-]';
 names = cell(26, 1);
 index = 1;
 
@@ -80,73 +69,52 @@ for i = 1:4
         token{k} = char(token{k});
     end
     
-    dummy = split(join(token(:)));
-    correct = dummy;
+    dummy = strjoin(token);
+    dummy = split(dummy);
     
+    % replaceBadChars
+    correct = dummy;
+    pattern1 = '[\./-]';
     for j = 1:length(dummy)
         name = dummy{j};
         a = regexprep(name(1:end-1), pattern1, '_');
         b = regexprep(name(end), pattern1, '');
         correct{j} = [a, b];
     end
+    
     names(index:index+length(correct)-1) = correct;
     index = index+length(correct);
 end
-NL = length(names);
 
-%% get the aerodynamic states
+%% get_data
 pattern1 = ' *\<MACH NO\> *= * (-*[\d]+.[\d]*)';
 pattern2 = ' *\<ALTITUDE\> *= * (-*[\d]+.[\d]*)';
 pattern3 = ' *\<SIDESLIP\> *= * (-*[\d]+.[\d]*)';
 
-Nb = length(blocks);
-NM = min([21, Nb/4]);                                % initial guess
-M = zeros(1, NM);
-for i = 1:NM
-    jj = (i - 1)*4 + 1;
-    block = blocks{jj};
+Mm = cell(1, length(blocks)/4);
+A = cell(1, length(blocks)/4);
+B = cell(1, length(blocks)/4);
+
+for i = 1:length(blocks)/4
+    block = blocks{(i-1)*4+1};
     mach = regexp(block, pattern1, 'tokens');
-    M(i) = sscanf(char(mach{1}), '%f');
-    if i > 1 && M(i) == M(1)
-        M = M(1:i-1);
-        break;
-    end
-end
-NM = length(M);
-
-NB = min([97, Nb/4/NM]);              % initial guess
-B = zeros(1, NB);
-for i = 1:NB
-    jj = (i - 1)*4*NM + 1;
-    block = blocks{jj};
+    Mm{i} = char(mach{1});
     sslip = regexp(block, pattern3, 'tokens');
-    B(i) = sscanf(char(sslip{1}), '%f');
-    if i > 1 && B(i) == B(1)
-        B = B(1:i-1);
-        break;
-    end
-end
-NB = length(B);
-    
-NA = Nb/4/NM/NB; 
-A = zeros(1, NA);
-for i = 1:NA
-    jj = (i - 1)*4*NM*NB + 1;
-    block = blocks{jj};
+    B{i} = char(sslip{1});
     alt = regexp(block, pattern2, 'tokens');
-    A(i) = sscanf(char(alt{1}), '%f');
+    A{i} = char(alt{1});
 end
-A = A(1:i);
 
-Mrep = repmat(M, 1, NB*NA);
-Brep = repmat(repelem(B, 1, NM), 1, NA);
-Arep = repelem(A, 1, NM*NB);
+M = str2double(Mm);
+A = str2double(A);
+B = str2double(B);
 
-%% get alphas
+%% get_alpha
 pattern = '^[-\d](?=[\d\.])';
+pattern2 = '\n\t?';
 
 block = blocks{2};
-lines = splitlines(block);
+lines = regexp(block, pattern2, 'split');
 index = 0;
 new_1 = cell(200, 1);
 
@@ -167,78 +135,108 @@ for j = 1:index
     row = new_1{j};
     alpha(j) = row(1);
 end
-Na = length(alpha);
 
-%% get the aerodynamic data
-raw_data = zeros(Na, Nb*NL/4);
-ll = 1;
-for i = 1:Nb
+%% get_rawdata
+raw_data = cell(1, length(blocks));
+
+for i = 1:length(blocks)
     block = blocks{i};
-    lines = splitlines(block);
+    lines = regexp(block, pattern2, 'split');
+    index = 0;
+    new_1 = cell(200, 1);
     
-    j = 1;
-    line = [];
-    while isempty(line) || not(all(not(isletter(line))))
-        line = strtrim(lines{j});
-        j = j + 1;
-    end
-    
-    lineScan = sscanf(line, '%f');
-    Nls = length(lineScan) - 1;
-    raw_data(1, ll:ll+Nls-1) = lineScan(2:end)';
-    charMatr = join(lines(j:j+Na-1));
-    Matr = sscanf(charMatr{1}, '%f', [Nls+1, Na-1]);
-    raw_data(2:end, ll:ll+Nls-1) = Matr(2:end, :)';
-    j = j + Na - 1;
-    
-    if not(all(not(contains(lines(j:end), 'ALPHA'))))
-        line = [];
-        while isempty(line) ||not(all(not(isletter(line))))
-            line = strtrim(lines{j});
-            j = j + 1;
+    for j = 1:length(lines)
+        line = lines{j};
+        line = strtrim(line);
+        
+        if regexp(line, pattern, 'once')
+            index = index + 1;
+            new_1{index} = sscanf(line, '%f');
         end
         
-        lineScan = sscanf(line, '%f');
-        Nls2 = length(lineScan) - 1;
-        raw_data(1, ll+Nls:ll+Nls+Nls2-1) = lineScan(2:end)';
-        
-        charMatr = join(lines(j:j+Na-1));
-        Matr = sscanf(charMatr{1}, '%f', [Nls2+1, Na-1]);
-        raw_data(2:end, ll+Nls:ll+Nls+Nls2-1) = Matr(2:end, :)';
-    else
-        Nls2 = 0;
     end
-    ll = ll + Nls + Nls2;
+    
+    new_1_1 = cell(1, index);
+    
+    for j = 1:index
+        row = new_1{j};
+        new_1_1{j} = row(2:end);
+    end
+    
+    new_1 = new_1_1;
+    l = length(new_1{1});
+    
+    for j = 1:length(new_1_1)
+        row = new_1_1{j};
+        if length(row)~=l
+            new_1{j-length(new_1_1)/2} = [ new_1{j-length(new_1_1)/2}; new_1_1{j}];
+            new_1{j} = {};
+        else
+            index = j;
+        end
+    end
+    
+    new_1 = transpose(cell2mat(new_1(1:index)));
+    
+    raw_data{i} = new_1;
     
 end
+
+
+raw_data = cell2mat(raw_data);
 
 %% savemat
-CC = cell(NL, 1);
-for j = 1:NL
-    CC{j} =  zeros(Na, NM, NB, NA);
-end
+realM = [M(1), NaN(1, 200)];
+realA = [A(1), NaN(1, 200)];
+realB = [B(1), NaN(1, 200)];
 
-for i = 1:Nb/4
-    iA = A==Arep(i);
-    iB = B==Brep(i);
-    iM = M==Mrep(i);
-    
-    for j = 1:NL
-        CC{j}(:, iM, iB, iA) = raw_data(:, NL*(i-1)+j);
+iM = 1;
+iA = 1;
+iB = 1;
+
+for i = 2:length(M)
+    if not(any(realM == M(i)))
+        iM = iM + 1;
+        realM(iM) = M(i);
+    end
+    if not(any(realA == A(i)))
+        iA = iA + 1;
+        realA(iA) = A(i);
+    end
+    if not(any(realB == B(i)))
+        iB = iB + 1;
+        realB(iB) = B(i);
     end
 end
 
-for j = 1:NL
-    Coeffs.(names{j}) = CC{j};
+realM = realM(1:iM);
+realA = realA(1:iA);
+realB = realB(1:iB);
+
+for j = 1:length(names)
+    Coeffs.(names{j}) = zeros(length(alpha), iM, iB, iA);
 end
 
-State.Machs = M;
+for i = 1:length(blocks)/4
+    index = i;
+    iA = realA==A(index);
+    iB = realB==B(index);
+    iM = realM==M(index);
+    
+    for j = 1:length(names)
+        Coeffs.(names{j})(:, iM, iB, iA) = raw_data(:, length(names)*(i-1)+j);
+    end
+    
+    
+end
+
+State.Machs = realM;
 State.Alphas = alpha;
-State.Betas = B;
-State.Altitudes = A;
+State.Betas = realB;
+State.Altitudes = realA;
 
 if savemat
-    Geometry = varargin{2};
-    save(mat_name, 'State', 'Coeffs', 'Geometry'); 
+    save(mat_name, 'State', 'Coeffs');
 end
+
 
