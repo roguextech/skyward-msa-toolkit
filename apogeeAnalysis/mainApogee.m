@@ -55,10 +55,14 @@ tic
 % preallocation 
 apogee = zeros(nMass,nMotors);
 max_a = zeros(nMass,nMotors);
-Vexit = zeros(nMass,nMotors);
+vExit = zeros(nMass,nMotors);
+
+% number of iterations
+iTOT = (length(vars.control{1}) + length(vars.control{2}))*nMotors;
 
 % SIMULATION RUNS
 % worst/best cases loop
+nIT = 0;
 for i = 1:2
     % setting wind data
     settings.wind.Mag = vars.wind.Mag(i);
@@ -75,7 +79,6 @@ for i = 1:2
         
         % motors loop
         for k = 1:nMotors
-
             settings.motor.exp_time = settings.motors(k).t;
             settings.motor.exp_thrust = settings.motors(k).T;
             settings.motor.exp_m = settings.motors(k).m;
@@ -85,22 +88,31 @@ for i = 1:2
             settings.mfr = settings.mp/settings.tb;                             % [kg/s] Mass Flow Rate
 
             for l = 1:nMass
-
                 settings.ms=ms(l) + settings.mm - settings.mp;
                 settings.m0=ms(l) + settings.mm;
 
                 [apogee(l,k,j,i), max_a(l,k,j,i), vExit(l,k,j,i)] = start_simulation(settings);
             end
+            clc
+            nIT = nIT + 1;
+            fprintf('Simulation progress:  %d %%\n',floor(nIT/iTOT*100));
         end
     end
 end
-
 toc
 
 %% PLOT
 
 figTitles = ["UPWIND", "DOWNWIND"];
 labels = cell(1,nMotors);
+iCol = zeros(nMotors);
+
+% color line
+colorMap = turbo(nMotors+1);
+
+% sorting for a better plot visualization
+[~, indexesApo] = sort(apogee(1,:,1,1),'descend');
+
 
 % plot worst/best case
 for i = 1:2
@@ -119,12 +131,16 @@ for i = 1:2
         hold on, grid on;
        
         % Motors loop
-        for k = 1:nMotors
-            plot(ms,apogee(:,k,j,i),'o-')
-            labels{1,k} = settings.motors(k).MotorName;
+        iCol(indexesApo) = 1:1:nMotors;
+        
+        iLab = 1;
+        for k = indexesApo
+            plot(ms,apogee(:,k,j,i),'o-','color',colorMap(iCol(k),:),'LineWidth',1)
+            labels{1,iLab} = settings.motors(k).MotorName;
+            iLab = iLab + 1;
         end
         
-        plot(ms,3000.*ones(1,nMass),'--r','Linewidth',2)
+        plot(ms,3000.*ones(1,nMass),'--r','Linewidth',2.5)
         legend(labels)
         xlabel('structural mass [kg]')
         ylabel('apogee [m]')
@@ -133,29 +149,33 @@ for i = 1:2
         if settings.accelerationPlot
             subplot(1,4,3)
             hold on, grid on;
+            
+            % sorting for a better plot visualization
+            [~, indexesAcc] = sort(max_a(1,:,j,i),'descend');
 
             % Motors loop
-            for k = 1:nMotors
-                plot(ms,max_a(:,k,j,i),'o-')
-                labels{1,k} = settings.motors(k).MotorName;
+            for k = indexesAcc
+                plot(ms,max_a(:,k,j,i),'o-','color',colorMap(iCol(k),:),'LineWidth',1)
             end
-
-            legend(labels)
+            
             xlabel('structural mass [kg]')
             ylabel('max |a| [g]')
         end
+        
+        % Launchpad exit velocity plot
         if settings.launchpadVelPlot
             subplot(1,4,4)
             hold on, grid on;
+            
+            % sorting for a better plot visualization
+            [~, indexesVexit] = sort(vExit(1,:,j,i),'descend');
 
             % Motors loop
-            for k = 1:nMotors
-                plot(ms,vExit(:,k,j,i),'o-')
-                labels{1,k} = settings.motors(k).MotorName;
+            for k = indexesVexit
+                plot(ms,vExit(:,k,j,i),'o-','color',colorMap(iCol(k),:),'LineWidth',1)
             end
             
-            plot(ms,20.*ones(1,nMass),'--r','Linewidth',2)
-            legend(labels)
+            plot(ms,20.*ones(1,nMass),'--r','Linewidth',2.5)
             xlabel('structural mass [kg]')
             ylabel('launchpad exit velocity [m/s]')
         end
@@ -163,10 +183,3 @@ for i = 1:2
 end
 
 clearvars -except settings vars Motors DATA_PATH
-
-
-
-
-
-
-
