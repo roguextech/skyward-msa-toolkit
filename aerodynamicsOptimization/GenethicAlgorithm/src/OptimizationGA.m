@@ -36,7 +36,7 @@ settings.Betas = datcom.Beta;
 settings.Altitudes = datcom.Alt;
 settings.Machs = datcom.Mach;
 %%%
-xcg = datcom.xcg;
+xcg = settings.xcg - settings.Lnose;
 datcom.xcg = xcg(1) + datcom.Lnose;
 createFor006(datcom, settings);
 [settings.CoeffsF, ~] = datcomParser5();

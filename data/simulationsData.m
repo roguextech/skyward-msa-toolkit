@@ -38,20 +38,35 @@ settings.ms = settings.mNoMot + mm - settings.mp;       % [kg]   Structural Mass
 settings.m0 = settings.ms + settings.mp;                % [kg]   Total Mass
 settings.mnc = 0.400;                                   % [kg]   Nosecone Mass
 
-%% GEOMETRY DETAILS
+%% GEOMETRY/DATCOM DETAILS
 % This parameters should be the same parameters set up in MISSILE DATCOM
 % simulation.
 
-settings.C = 0.15;              % [m]      Caliber (Fuselage Diameter)
-settings.S = pi*settings.C^2/4; % [m^2]    Cross-sectional Surface
-settings.xcg = [1.49, 1.33];    % [m] CG postion [full, empty]
-settings.Lnose = 0.26;          % [m] Nosecone Length
-settings.rocketLength = 2.495;  % [m] Rocket Length
-settings.Npanel = 3;            % [m] number of fins
-settings.Ler = 0.003;           % [deg] Leading edge radius
-settings.d = 0;                 % [m] rocket tip-fin distance
-settings.zup_raw = 0.0015;      % [m] fin semi-thickness 
-settings.Lmaxu_raw = 0.0015;    % [m] Fraction of chord from leading edge to max thickness
+settings.C = 0.15;                                                % [m] Caliber (Fuselage Diameter)
+settings.S = pi*settings.C^2/4;                                   % [m^2] Cross-sectional Surface
+settings.xcg = [1.49, 1.33];                                      % [m] CG postion [full, empty]
+settings.Lnose = 0.26;                                            % [m] Nosecone Length
+settings.OgType = 'KARMAN';
+settings.rocketLength = 2.495;                                    % [m] Rocket Length
+settings.Lcenter = settings.rocketLength - settings.Lnose;        % [m] fuselage length
+
+%%% finset
+settings.Chord1 = 0.35;                                           % [m] attached chord length
+settings.Chord2 = 0.12;                                           % [m] free chord length
+settings.Height = 0.12;                                           % [m] fin heigth     
+settings.shape = 'rect';                                          % [/] fin shape
+settings.Npanel = 3;                                              % [m] number of fins
+settings.Ler = 0.003;                                             % [deg] Leading edge radius
+settings.d = 0;                                                   % [m] rocket tip-fin distance
+settings.zup_raw = 0.0015;                                        % [m] fin semi-thickness 
+settings.Lmaxu_raw = 0.0015;                                      % [m] Fraction of chord from leading edge to max thickness
+
+%%% protub data
+settings.protub.xprot = settings.Lcenter + settings.Lnose - 0.85; % axial position 
+settings.protub.nloc = 3;                                         % number of brakes
+settings.protub.lprot = 0.005;                                    % brakes thickness
+settings.protub.wprot = 0.088;                                    % brakes width
+settings.protub.hprot = linspace(0, 0.0387, 30);                  % brakes length, first entry must be always 0!
 
 %% MASS GEOMERTY DETAILS
 % x-axis: along the fuselage

@@ -34,9 +34,9 @@ xcg = datcom.xcg;
 D = settings.C;
 r = D/2;
 S = pi*D^2/4;
-Lnose = datcom.Lnose;
+Lnose = settings.Lnose;
 OgType = datcom.OgType;
-Lcenter = datcom.Lcenter;
+Lcenter = settings.Lcenter;
 Npanel = settings.Npanel;
 Ler = settings.Ler;
 d = settings.d;
@@ -56,13 +56,13 @@ Nb = length(Beta);
 Nalt = length(Alt);
 
 %% protuberance data
-if isfield(datcom,'xprot') && datcom.hprot ~= 0 
+if isfield(datcom, 'xprot') && datcom.hprot ~= 0 
     protub_flag = 1;
     % constants
-    xprot = datcom.xprot;
-    nloc = datcom.nloc;
-    lprot = datcom.lprot;
-    wprot = datcom.wprot;
+    xprot = settings.protub.xprot;
+    nloc = settings.protub.nloc;
+    lprot = settings.protub.lprot;
+    wprot = settings.protub.wprot;
     % variables
     hprot = datcom.hprot;
 else

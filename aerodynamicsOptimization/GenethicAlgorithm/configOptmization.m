@@ -36,11 +36,6 @@ datcom.Alpha = [-20 -15 -10 -7.5 -5 -2.5 -1 -0.1 0 0.1 1 2.5 5 7.5 10 15 20];
 datcom.Beta = 0;
 datcom.Alt = settings.z0 + 0:1000:4000; 
 
-%% Fixed Parameters
-noseLenghtCad = 0.28;                                      % [m] current nose length from the CAD
-datcom.xcg = settings.xcg - noseLenghtCad;                 % [m] CG position from the end of Lcenter [full, empty]
-datcom.Lcenter = settings.rocketLength - noseLenghtCad;    % [m] Lcenter : Centerbody length
-
 %% VARIABLES BOUNDARIES
 %%% Lower boundary
 lb(1) = 35;     % 1 --> chord1         [cm]

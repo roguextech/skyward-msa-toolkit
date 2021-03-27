@@ -39,7 +39,7 @@ datcom.Alt = settings.z0;
 
 %%
 %%%
-xcg = datcom.xcg;
+xcg = settings.xcg - settings.Lnose;
 datcom.xcg = xcg(1) + datcom.Lnose;
 createFor006(datcom, settings);
 [Coeffs0, ~] = datcomParser5();
