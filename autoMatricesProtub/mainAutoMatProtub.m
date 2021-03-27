@@ -41,11 +41,11 @@ datcom.shape = settings.shape;
 datcom.OgType = settings.OgType;
 
 %% datcom
-n_hprot = length(settings.protub.hprot);
+n_hprot = length(vars.hprot);
 for k = 1:2
     datcom.xcg = settings.xcg(k);
     if k == 1
-        datcom.hprot = settings.protub.hprot(1);
+        datcom.hprot = vars.hprot(1);
         clc
         fprintf('----------------- Aerobrakes Aerodynamics Prediction ----------------- \n')
         createFor006(datcom, settings);
@@ -54,7 +54,7 @@ for k = 1:2
         perc = round(100/(n_hprot + 1)) ;
         fprintf('----------------- Aerobrakes Aerodynamics Prediction ----------------- \n')
         fprintf(' Progress %d %% \n', perc);
-        State.hprot = settings.protub.hprot;
+        State.hprot = datcom.hprot;
         CoeffsE = struct();
         fn = fieldnames(CoeffsF);
         for f = 1:numel(fn)
@@ -62,7 +62,7 @@ for k = 1:2
         end
     else
         for n = 1:n_hprot
-            datcom.hprot = settings.protub.hprot(n);
+            datcom.hprot = vars.hprot(n);
             createFor006(datcom, settings);
             clc
             perc = round((n)/(n_hprot+1)*(100)) ;

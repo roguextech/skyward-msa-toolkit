@@ -56,13 +56,13 @@ Nb = length(Beta);
 Nalt = length(Alt);
 
 %% protuberance data
-if isfield(datcom, 'xprot') && datcom.hprot ~= 0 
+if isfield(datcom, 'hprot') && datcom.hprot ~= 0 
     protub_flag = 1;
     % constants
-    xprot = settings.protub.xprot;
-    nloc = settings.protub.nloc;
-    lprot = settings.protub.lprot;
-    wprot = settings.protub.wprot;
+    xprot = settings.xprot;
+    nloc = settings.nloc;
+    lprot = settings.lprot;
+    wprot = settings.wprot;
     % variables
     hprot = datcom.hprot;
 else

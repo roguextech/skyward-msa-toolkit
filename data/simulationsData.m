@@ -62,11 +62,10 @@ settings.zup_raw = 0.0015;                                        % [m] fin semi
 settings.Lmaxu_raw = 0.0015;                                      % [m] Fraction of chord from leading edge to max thickness
 
 %%% protub data
-settings.protub.xprot = settings.Lcenter + settings.Lnose - 0.85; % axial position 
-settings.protub.nloc = 3;                                         % number of brakes
-settings.protub.lprot = 0.005;                                    % brakes thickness
-settings.protub.wprot = 0.088;                                    % brakes width
-settings.protub.hprot = linspace(0, 0.0387, 30);                  % brakes length, first entry must be always 0!
+settings.xprot = settings.Lcenter + settings.Lnose - 0.85; % axial position 
+settings.nloc = 3;                                         % number of brakes
+settings.lprot = 0.005;                                    % brakes thickness
+settings.wprot = 0.088;                                    % brakes width
 
 %% MASS GEOMERTY DETAILS
 % x-axis: along the fuselage
