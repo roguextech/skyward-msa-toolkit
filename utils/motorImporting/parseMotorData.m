@@ -4,6 +4,8 @@ Aerotech = parseRSE("motorData/Aerotech_7-5-18.rse");
 
 Cesaroni = parseRSE("motorData/cesaroni_11-27-14.rse");
 
+save Motors Aerotech Cesaroni
+
 %% Functions:
 function  out = parseRSE(filename)
 
@@ -31,24 +33,11 @@ for k = 1:NBlocks
     out(k).D = str2double(extractBetween(blocks(k),'dia="','"'));
     out(k).L = str2double(extractBetween(blocks(k),'len="','"'));
     out(k).Itot = str2double(extractBetween(blocks(k),'Itot="','"'));
-    out(k).MotorName = convertCharsToStrings(extractName(...
-        extractBetween(blocks(k),'code="','"')));
+    out(k).MotorName = extractBetween(blocks(k),'code="','"');
     
     if nt == 0
         out(k) = [];
     end
-end
-
-end
-
-function name = extractName(str)
-
-name = str;
-
-temp = split(str,{'_','-','.'});
-
-if numel(name) ~= 0
-    name = temp{1};
 end
 
 end

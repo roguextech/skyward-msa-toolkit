@@ -9002,10 +9002,6 @@ provided by ThrustCurve.org (www.thrustcurve.org)
 <eng-data  t="5.206" f="0." m="0." cg="600.5"/>
 </data>
 </engine>
-</engine-list>
-</engine-database>
-</data>
-</engine>
 <engine  mfg="Aerotech" code="M2000Rbis" Type="reloadable" dia="98." len="732."
 initWt="8908." propWt="5368." delays="1000" auto-calc-mass="1" auto-calc-cg="1"
 avgThrust="1953.41" peakThrust="2316.16" throatDia="0." exitDia="0."
@@ -9040,3 +9036,5 @@ mFix="1" cgDiv="10" cgStep="-1." cgFix="1">
 <eng-data t="4.420" f="649.80" m="40.85546" cg="600.5/>" 
 <eng-data t="4.610" f="58.18" m="1.53076" cg="600.5/>" 
 <eng-data t="4.700" f="0.00" m="0.00000" cg="600.5/>" 
+</engine-list>
+</engine-database>
