@@ -79,27 +79,34 @@ parfor i = 1:settings.stoch.N
     %% WIND GENERATION
     
     if not(settings.wind.model)
+        
         Day = 0; Hour = 0;
         
         if settings.wind.input
-            signn = randi([1, 4]); % 4 sign cases
-            unc = settings.wind.input_uncertainty;
-            
-            switch signn
-                case 1
-                    %                       unc = unc;
-                case 2
-                    unc(1) = - unc(1);
-                case 3
-                    unc(2) = - unc(2);
-                case 4
-                    unc = - unc;
+            if settings.wind.input_uncertainty == 0
+                uncert = [0, 0];
+            else
+                
+                signn = randi([1, 4]); % 4 sign cases
+                unc = settings.wind.input_uncertainty;
+                
+                switch signn
+                    case 1
+%                       unc = unc;
+                    case 2
+                        unc(1) = - unc(1);
+                    case 3
+                        unc(2) = - unc(2);
+                    case 4
+                        unc = - unc;
+                end
+                
+                uncert = rand(1, 2).*unc;
             end
-            
-            uncert = rand(1, 2).*unc;
             uw = 0; vw = 0; ww = 0;
         else
-            [uw, vw, ww, Azw] = wind_const_generator(settings.wind);
+            [uw, vw, ww, Azw] = wind_const_generator(settings.wind.AzMin, settings.wind.AzMax,...
+                settings.wind.ElMin, settings.wind.ElMax, settings.wind.MagMin, settings.wind.MagMax);
             uncert = [0; 0];
         end
         
