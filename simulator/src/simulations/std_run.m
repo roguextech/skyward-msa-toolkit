@@ -44,11 +44,34 @@ if settings.para(settings.Npara).z_cut ~= 0
     error('The landing will be not achived, check the final altitude of the last parachute in config.m')
 end
 
+if settings.upwind
+    error('Upwind is available just in stochastich simulations, check config.m');
+end
+
+if settings.wind.input && all(settings.wind.input_uncertainty ~= 0)
+    error('settings.wind.input_uncertainty is available just in stochastich simulations, set it null')
+end
+
+%% STARTING CONDITIONS
+%%% Launchpad
+settings.OMEGA = settings.OMEGAmin;
+settings.PHI = settings.PHImin;
+
+%%% Attitude
+Q0 = angleToQuat(settings.PHI, settings.OMEGA, 0*pi/180)';
+
+%%% State
+X0 = [0 0 0]';
+V0 = [0 0 0]';
+W0 = [0 0 0]';
+
+Y0a = [X0; V0; W0; Q0; settings.Ixxf; settings.Iyyf; settings.Izzf];
+
 %% WIND GENERATION
 if settings.wind.model || settings.wind.input   % will be computed inside the integrations
     uw = 0; vw = 0; ww = 0;
 else
-    [uw, vw, ww, Azw] = wind_const_generator(settings.wind.AzMin, settings.wind.AzMax,...
+    [uw, vw, ww, ~] = wind_const_generator(settings.wind.AzMin, settings.wind.AzMax,...
         settings.wind.ElMin, settings.wind.ElMax, settings.wind.MagMin, settings.wind.MagMax);
     
     if ww ~= 0
@@ -57,54 +80,10 @@ else
     
 end
 
-if settings.wind.input && all(settings.wind.input_uncertainty ~= 0)
-    signn = randi([1,4]); % 4 sign cases
-    unc = settings.wind.input_uncertainty;
-    
-    switch signn
-        case 1
-            %                       unc = unc;
-        case 2
-            unc(1) = - unc(1);
-        case 3
-            unc(2) = - unc(2);
-        case 4
-            unc = - unc;
-    end
-    
-    uncert = rand(1, 2).*unc;
-else
-    uncert = [0,0];
-end
-
 tf = settings.ode.final_time;
-
-
-%% STARTING CONDITIONS
-% State
-X0 = [0 0 0]';
-V0 = [0 0 0]';
-W0 = [0 0 0]';
-
-settings.OMEGA = settings.OMEGAmin;
-
-% Attitude
-if settings.wind.input || settings.wind.model
-    settings.PHI = settings.PHImin;
-else
-    
-    if settings.upwind
-        settings.PHI = mod(Azw + pi, 2*pi);
-    else
-        settings.PHI = settings.PHImin + rand*(settings.PHImax - settings.PHImin);
-    end
-    
-end
-Q0 = angleToQuat(settings.PHI, settings.OMEGA, 0*pi/180)';
 
 %% ASCENT
 % ascent phase computation
-Y0a = [X0; V0; W0; Q0; settings.Ixxf; settings.Iyyf; settings.Izzf];
 [Ta, Ya] = ode113(@ascent, [0, tf], Y0a, settings.ode.optionsasc1, settings, uw, vw, ww, uncert); % till the apogee
 
 if settings.para(1).delay ~= 0 % checking if the actuation delay is different from zero

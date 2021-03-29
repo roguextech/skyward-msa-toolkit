@@ -44,14 +44,18 @@ if settings.ballistic && settings.descent6DOF
     error('Both ballistic and descent6DOF are true, select just one of them')
 end
 
+if settings.upwind
+    error('Upwind is available just in stochastich simulations, check config.m');
+end
+
+if settings.wind.input && all(settings.wind.input_uncertainty ~= 0)
+    error('settings.wind.input_uncertainty is available just in stochastich simulations, set it null')
+end
+
 %% STARTING CONDITIONS
-% Attitude
+%%% Launchpad
 settings.OMEGA = settings.OMEGAmin;
 settings.PHI = settings.PHImin;
-
-if settings.upwind
-    settings.PHI = mod(Azw + pi, 2*pi);
-end
 
 % Attitude
 Q0 = angleToQuat(settings.PHI, settings.OMEGA, 0*pi/180)';
@@ -60,10 +64,10 @@ Q0 = angleToQuat(settings.PHI, settings.OMEGA, 0*pi/180)';
 X0 = [0 0 0]';
 V0 = [0 0 0]';
 W0 = [0 0 0]';
+
 Y0a = [X0; V0; W0; Q0; settings.Ixxf; settings.Iyyf; settings.Izzf];
 
 %% WIND GENERATION
-
 if settings.wind.model || settings.wind.input   % will be computed inside the integrations
     uw = 0; vw = 0; ww = 0;
 else 
@@ -74,26 +78,6 @@ else
         warning('Pay attention using vertical wind, there might be computational errors')
     end
     
-end
-
-if settings.wind.input && all(settings.wind.input_uncertainty ~= 0)
-    signn = randi([1, 4]); % 4 sign cases
-    unc = settings.wind.input_uncertainty;
-    
-    switch signn
-        case 1
-%                       unc = unc;
-        case 2
-            unc(1) = - unc(1);
-        case 3
-            unc(2) = - unc(2);
-        case 4
-            unc = - unc;
-    end
-
-    uncert = rand(1,2).*unc;
-else
-    uncert = [0,0];
 end
 
 tf = settings.ode.final_time;

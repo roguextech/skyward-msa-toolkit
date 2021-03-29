@@ -50,7 +50,7 @@ settings.wind.HourMax = 4;                                  % [h] Maximum Hour o
 settings.wind.ww = 0;                                       % [m/s] Vertical wind speed
 
 %%%%% Input wind
-settings.wind.input = false;
+settings.wind.input = true;
 % Wind is generated for every altitude interpolating with the coefficient defined below
 
 settings.wind.input_ground = 7;                             % wind magnitude at the ground [m/s]
@@ -59,7 +59,7 @@ settings.wind.input_mult = [0 0 10 15 20 30 30];            % percentage of incr
 settings.wind.input_azimut = [30 30 30 30 30 30 30];        % wind azimut angle at each altitude (toward wind incoming direction) [deg]
 
 
-settings.wind.input_uncertainty = [1, 1];
+settings.wind.input_uncertainty = [0, 0];
 % settings.wind.input_uncertainty = [a,b];      wind uncertanties:
 % - a, wind magnitude percentage uncertanty: magn = magn *(1 +- a)
 % - b, wind direction band uncertanty: dir = dir 1 +- b
