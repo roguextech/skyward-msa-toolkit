@@ -69,21 +69,19 @@ Izz = Y(16);
 
 %% QUATERION ATTITUDE
 Q = [q0 q1 q2 q3];
-normQ = norm(Q);
-
-Q = Q/normQ;
+Q = Q/norm(Q);
 
 %% ADDING WIND (supposed to be added in NED axes);
 if settings.wind.model
     
     if settings.stoch.N > 1
-        [uw,vw,ww] = wind_matlab_generator(settings,z,t,Hour,Day);
+        [uw, vw, ww] = wind_matlab_generator(settings, z, t, Hour, Day);
     else
-        [uw,vw,ww] = wind_matlab_generator(settings,z,t);
+        [uw, vw, ww] = wind_matlab_generator(settings, z, t);
     end
     
 elseif settings.wind.input
-    [uw,vw,ww] = wind_input_generator(settings,z,uncert);
+    [uw, vw, ww] = wind_input_generator(settings, z, uncert);
 end
 dcm = quatToDcm(Q);
 wind = dcm*[uw; vw; ww];
@@ -196,10 +194,10 @@ Cn0 = coeffsValues(13); Cnr = coeffsValues(14); Cnp = coeffsValues(15);
 % compute CN,CY,Cm,Cn (linearized with respect to alpha and beta):
 alpha0 = angle0(1); beta0 = angle0(2);
 
-CN = (CN0 + CNA*(alpha-alpha0));
-CY = (CY0 + CYB*(beta-beta0));
-Cm = (Cm0 + Cma*(alpha-alpha0));
-Cn = (Cn0 + Cnb*(beta-beta0));
+CN = (CN0 + CNA*(alpha - alpha0));
+CY = (CY0 + CYB*(beta - beta0));
+Cm = (Cm0 + Cma*(alpha - alpha0));
+Cn = (Cn0 + Cnb*(beta - beta0));
 
 XCPlon = Cm/CN;
 XCPlat = Cn/CY;
@@ -244,13 +242,13 @@ else
     Z = qdyn*S*CN;                      % [N] z-body component of the aerodynamics force
     Fg = dcm*[0; 0; m*g];               % [N] force due to the gravity in body frame
     
-    F = Fg +[-X+T, Y, -Z]';             % [N] total forces vector
+    F = Fg + [-X+T, Y, -Z]';             % [N] total forces vector
     
 %% STATE DERIVATIVES
     % velocity
-    du = F(1)/m-q*w+r*v;
-    dv = F(2)/m-r*u+p*w;
-    dw = F(3)/m-p*v+q*u;
+    du = F(1)/m - q*w + r*v;
+    dv = F(2)/m - r*u + p*w;
+    dw = F(3)/m - p*v + q*u;
     
     % Rotation
     dp = (Iyy - Izz)/Ixx*q*r + qdynL_V/Ixx*(V_norm*Cl+Clp*p*C/2) - Ixxdot*p/Ixx;

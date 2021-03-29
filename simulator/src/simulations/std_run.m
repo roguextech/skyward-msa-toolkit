@@ -69,10 +69,9 @@ Y0a = [X0; V0; W0; Q0; settings.Ixxf; settings.Iyyf; settings.Izzf];
 
 %% WIND GENERATION
 if settings.wind.model || settings.wind.input   % will be computed inside the integrations
-    uw = 0; vw = 0; ww = 0;
+    uw = 0; vw = 0; ww = 0; uncert = [0,0];
 else
-    [uw, vw, ww, ~] = wind_const_generator(settings.wind.AzMin, settings.wind.AzMax,...
-        settings.wind.ElMin, settings.wind.ElMax, settings.wind.MagMin, settings.wind.MagMax);
+    [uw, vw, ww, ~] = wind_const_generator(settings.wind);
     
     if ww ~= 0
         warning('Pay attention using vertical wind, there might be computational errors')
