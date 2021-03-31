@@ -50,14 +50,13 @@ settings.wind.HourMax = 4;                                  % [h] Maximum Hour o
 settings.wind.ww = 0;                                       % [m/s] Vertical wind speed
 
 %%%%% Input wind
-settings.wind.input = true;
+settings.wind.input = false;
 % Wind is generated for every altitude interpolating with the coefficient defined below
 
-settings.wind.input_ground = 7;                             % wind magnitude at the ground [m/s]
+settings.wind.input_ground = 9;                            % wind magnitude at the ground [m/s]
 settings.wind.input_alt = [0 100 600 750 900 1500 4000];    % altitude vector [m]
 settings.wind.input_mult = [0 0 10 15 20 30 30];            % percentage of increasing magnitude at each altitude
 settings.wind.input_azimut = [30 30 30 30 30 30 30];        % wind azimut angle at each altitude (toward wind incoming direction) [deg]
-
 
 settings.wind.input_uncertainty = [0, 0];
 % settings.wind.input_uncertainty = [a,b];      wind uncertanties:
@@ -69,8 +68,8 @@ settings.wind.input_uncertainty = [0, 0];
 
 % Wind is generated randomly from the minimum to the maximum parameters which defines the wind.
 % Setting the same values for min and max will fix the parameters of the wind.
-settings.wind.MagMin = 6;                                   % [m/s] Minimum Magnitude
-settings.wind.MagMax = 6;                                   % [m/s] Maximum Magnitude
+settings.wind.MagMin = 9;                                   % [m/s] Minimum Magnitude
+settings.wind.MagMax = 9;                                   % [m/s] Maximum Magnitude
 settings.wind.ElMin = 0*pi/180;                             % [rad] Minimum Elevation, user input in degrees (ex. 0)
 settings.wind.ElMax = 0*pi/180;                             % [rad] Maximum Elevation, user input in degrees (ex. 0) (Max == 90 Deg)
 settings.wind.AzMin = (360)*pi/180;                         % [rad] Minimum Azimuth, user input in degrees (ex. 90)

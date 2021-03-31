@@ -49,7 +49,7 @@ for k = 1:2
         clc
         fprintf('----------------- Aerobrakes Aerodynamics Prediction ----------------- \n')
         createFor006(datcom, settings);
-        [CoeffsF, State] = datcomParser5('full',Geometry);
+        [CoeffsF, State] = datcomParser5('full', Geometry);
         clc
         perc = round(100/(n_hprot + 1)) ;
         fprintf('----------------- Aerobrakes Aerodynamics Prediction ----------------- \n')
@@ -58,7 +58,7 @@ for k = 1:2
         CoeffsE = struct();
         fn = fieldnames(CoeffsF);
         for f = 1:numel(fn)
-            CoeffsE.(fn{f}) = zeros([size(CoeffsF.(fn{f})),n_hprot]);
+            CoeffsE.(fn{f}) = zeros([size(CoeffsF.(fn{f})), n_hprot]);
         end
     else
         for n = 1:n_hprot
@@ -84,7 +84,7 @@ fprintf(' Progress %d %% \n', 100);
 %% Save joined empty .mat file
 Coeffs = CoeffsE;
 Geometry.xcg = datcom.xcg;
-save('empty','State','Coeffs','Geometry');
+save('empty', 'State', 'Coeffs', 'Geometry');
 
 %%
 

@@ -278,13 +278,13 @@ end
 fclose(fid);
 
 if ismac
-    [~,~] = system('./datcom for005.dat' );
+    [~, ~] = system('./datcom for005.dat');
 else
-    [~,~] = system('datcom.exe for005.dat' );
+    [~, ~] = system('datcom.exe for005.dat');
 end
 
 value = 0;
 while value == 0
-    value = exist('for006.dat','file');
+    value = exist('for006.dat', 'file');
     pause(0.01);
 end

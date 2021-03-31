@@ -1,4 +1,4 @@
-function [dY, parout] = ascent(t, Y, settings, uw, vw, ww, uncert, Hour, Day, OMEGA)
+function [dY, parout] = ascent(t, Y, settings)
 %{
 
 ASCENT - ode function of the 6DOF Rigid Rocket Model
@@ -67,6 +67,34 @@ Ixx = Y(14);
 Iyy = Y(15);
 Izz = Y(16);
 
+%% CONSTANTS
+S = settings.S;                         % [m^2]   cross surface
+C = settings.C;                         % [m]     caliber
+g = settings.g0/(1 + (-z*1e-3/6371))^2; % [N/kg]  module of gravitational field 
+tb = settings.tb;                       % [s]     Burning Time
+
+if settings.stoch.N > 1
+    OMEGA = settings.stoch.OMEGA;
+    uncert = settings.stoch.uncert;
+    Day = settings.stoch.Day;
+    Hour = settings.stoch.Hour;
+    uw = settings.stoch.uw; vw = settings.stoch.vw; ww = settings.stoch.ww;
+else
+    OMEGA = settings.OMEGA;            
+    uncert = settings.wind.input_uncertainty;
+    uw = settings.constWind(1); vw = settings.constWind(2); ww = settings.constWind(3);
+end
+
+% inertias for full configuration (with all the propellant embarqued) obtained with CAD's
+Ixxf = settings.Ixxf;        % [kg*m^2] Inertia to x-axis
+Iyyf = settings.Iyyf;        % [kg*m^2] Inertia to y-axis
+Izzf = settings.Izzf;        % [kg*m^2] Inertia to z-axis
+
+% inertias for empty configuration (all the propellant consumed) obtained with CAD's
+Ixxe = settings.Ixxe;        % [kg*m^2] Inertia to x-axis
+Iyye = settings.Iyye;        % [kg*m^2] Inertia to y-axis
+Izze = settings.Izze;        % [kg*m^2] Inertia to z-axis
+
 %% QUATERION ATTITUDE
 Q = [q0 q1 q2 q3];
 Q = Q/norm(Q);
@@ -83,9 +111,9 @@ if settings.wind.model
 elseif settings.wind.input
     [uw, vw, ww] = wind_input_generator(settings, z, uncert);
 end
+
 dcm = quatToDcm(Q);
 wind = dcm*[uw; vw; ww];
-% wind = quatrotate(Q, [uw vw ww]);
 
 % Relative velocities (plus wind);
 ur = u - wind(1);
@@ -94,7 +122,6 @@ wr = w - wind(3);
 
 % Body to Inertial velocities
 Vels = dcm'*[u; v; w];
-% Vels = quatrotate(Q_conj,[u v w]);
 V_norm = norm([ur vr wr]);
 
 %% ATMOSPHERE DATA
@@ -107,30 +134,10 @@ absoluteAltitude = -z + settings.z0;
 M = V_norm/a;
 M_value = M;
 
-%% CONSTANTS
-S = settings.S;                         % [m^2]   cross surface
-C = settings.C;                         % [m]     caliber
-g = settings.g0/(1 + (-z*1e-3/6371))^2; % [N/kg]  module of gravitational field 
-tb = settings.tb;                       % [s]     Burning Time
-
-if settings.stoch.N == 1
-    OMEGA = settings.OMEGA;             % [rad] Elevation Angle in the launch pad
-end
-
-% inertias for full configuration (with all the propellant embarqued) obtained with CAD's
-Ixxf = settings.Ixxf;        % [kg*m^2] Inertia to x-axis
-Iyyf = settings.Iyyf;        % [kg*m^2] Inertia to y-axis
-Izzf = settings.Izzf;        % [kg*m^2] Inertia to z-axis
-
-% inertias for empty configuration (all the propellant consumed) obtained with CAD's
-Ixxe = settings.Ixxe;        % [kg*m^2] Inertia to x-axis
-Iyye = settings.Iyye;        % [kg*m^2] Inertia to y-axis
-Izze = settings.Izze;        % [kg*m^2] Inertia to z-axis
-
 %% TIME-DEPENDENTS VARIABLES
-dI = 1/tb*([Ixxf Iyyf Izzf]'-[Ixxe Iyye Izze]');
+dI = 1/tb*([Ixxf Iyyf Izzf]' - [Ixxe Iyye Izze]');
 
-if t<tb
+if t < tb
     m = settings.ms + interp1(settings.motor.exp_time, settings.motor.exp_m, t);
     Ixxdot = -dI(1);
     Iyydot = -dI(2);
@@ -180,8 +187,8 @@ else
 end
 
 %% INTERPOLATE AERODYNAMIC COEFFICIENTS:
-[coeffsValues, angle0] = interpCoeffs(t,alpha,M,beta,absoluteAltitude,...
-    c,alpha_tot,settings);
+[coeffsValues, angle0] = interpCoeffs(t, alpha, M, beta, absoluteAltitude,...
+    c, alpha_tot, settings);
 
 % Retrieve Coefficients
 CA = coeffsValues(1); CYB = coeffsValues(2); CY0 = coeffsValues(3);

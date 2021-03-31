@@ -1,4 +1,4 @@
-function [dY, parout] = descent_parachute(t, Y, settings, uw, vw, ww, para, uncert, Hour, Day)
+function [dY, parout] = descent_parachute(t, Y, settings, stochInputs)
 %{ 
 
 ASCENT - ode function of the 6DOF Rigid Rocket Model
@@ -47,32 +47,19 @@ u = Y(4);
 v = Y(5);
 w = Y(6);
 
-%% ADDING WIND (supposed to be added in NED axes);
-
-if settings.wind.model
-    
-    if settings.stoch.N > 1
-        [uw,vw,ww] = wind_matlab_generator(settings,z,t,Hour,Day);
-    else
-        [uw,vw,ww] = wind_matlab_generator(settings,z,t);
-    end
-    
-elseif settings.wind.input
-    
-    [uw,vw,ww] = wind_input_generator(settings,z,uncert);
-    
+%% CONSTANTS
+if settings.stoch.N > 1
+    uncert = settings.stoch.uncert;
+    Day = settings.stoch.Day;
+    Hour = settings.stoch.Hour;
+    uw = settings.stoch.uw; vw = settings.stoch.vw; ww = settings.stoch.ww;
+    para = settings.stoch.para;
+else        
+    uncert = settings.wind.input_uncertainty;
+    uw = settings.constWind(1); vw = settings.constWind(2); ww = settings.constWind(3);
+    para = settings.paraNumber;
 end
 
-wind = [uw vw ww];
-
-% Relative velocities (plus wind);
-ur = u - wind(1);
-vr = v - wind(2);
-wr = w - wind(3);
-
-V_norm = norm([ur vr wr]);
-
-%% CONSTANTS
 S = settings.para(para).S;                                               % [m^2]   Surface
 CD = settings.para(para).CD;                                             % [/] Parachute Drag Coefficient
 CL = settings.para(para).CL;                                             % [/] Parachute Lift Coefficient
@@ -85,19 +72,39 @@ end
 g = 9.80655;                                                             % [N/kg] magnitude of the gravitational field at zero
 m = settings.ms - pmass;                                                 % [kg] descend mass
 
-%% ATMOSPHERE DATA
+%% ADDING WIND (supposed to be added in NED axes);
+if settings.wind.model
+    
+    if settings.stoch.N > 1
+        [uw, vw, ww] = wind_matlab_generator(settings, z, t, Hour, Day);
+    else
+        [uw, vw, ww] = wind_matlab_generator(settings, z, t);
+    end
+    
+elseif settings.wind.input
+    [uw, vw, ww] = wind_input_generator(settings, z, uncert);
+end
 
-if -z < 0
+wind = [uw vw ww];
+
+% Relative velocities (plus wind);
+ur = u - wind(1);
+vr = v - wind(2);
+wr = w - wind(3);
+
+V_norm = norm([ur vr wr]);
+
+%% ATMOSPHERE DATA
+if -z < 0        % z is directed as the gravity vector
     z = 0;
 end
 
-[~, ~, P, rho] = atmosisa(-z+settings.z0);
-
+absoluteAltitude = -z + settings.z0;
+[~, ~, P, rho] = atmosisa(absoluteAltitude);
 
 %% REFERENCE FRAME
 % The parachutes are approximated as rectangular surfaces with the normal
 % vector perpendicular to the relative velocity
-
 t_vect = [ur vr wr];                     % Tangenzial vector
 h_vect = [-vr ur 0];                     % horizontal vector    
 
@@ -117,21 +124,18 @@ if (n_vers(3) > 0)                       % If the normal vector is downward dire
 end
 
 %% FORCES
-
 D = 0.5*rho*V_norm^2*S*CD*t_vers';       % [N] Drag vector
 L = 0.5*rho*V_norm^2*S*CL*n_vers';       % [N] Lift vector
 Fg = m*g*[0 0 1]';                       % [N] Gravitational Force vector
-F = -D+L+Fg;                             % [N] total forces vector
+F = L + Fg - D;                          % [N] total forces vector
 
 %% STATE DERIVATIVES
-
 % velocity
 du = F(1)/m;
 dv = F(2)/m;
 dw = F(3)/m;
 
 %% FINAL DERIVATIVE STATE ASSEMBLING
-
 dY(1:3) = [u v w]';
 dY(4) = du;
 dY(5) = dv;
@@ -140,7 +144,6 @@ dY(6) = dw;
 dY = dY';
 
 %% SAVING THE QUANTITIES FOR THE PLOTS
-
 if settings.plots
     
     parout.integration.t = t;

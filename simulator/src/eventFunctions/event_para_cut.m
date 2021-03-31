@@ -1,4 +1,4 @@
-function [value, isterminal, direction] = event_para_cut(~, Y, settings, varargin)
+function [value, isterminal, direction] = event_para_cut(~, Y, settings)
 %{
 
 EVENT_PARA_CUT - Event function to stop simulation at the chosen altitude to cut the 
@@ -40,7 +40,11 @@ x = Y(1);
 y = Y(2);
 z = -Y(3);
 
-para = varargin{4};
+if settings.stoch.N == 1
+    para = settings.paraNumber;
+else
+    para = settings.stoch.para;
+end
 
 if settings.terrain
     zloc = -settings.funZ(x,y);

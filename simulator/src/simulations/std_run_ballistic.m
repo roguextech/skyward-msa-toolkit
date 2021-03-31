@@ -32,7 +32,7 @@ if settings.wind.model && settings.wind.input
     error('Both wind model and input wind are true, select just one of them')
 end
 
-if settings.wind.HourMin ~= settings.wind.HourMax || settings.wind.HourMin ~= settings.wind.HourMax
+if settings.wind.HourMin ~= settings.wind.HourMax || settings.wind.DayMin ~= settings.wind.DayMax
     error('In standard simulations with the wind model the day and the hour of launch must be unique, check config.m')
 end
 
@@ -48,7 +48,7 @@ if settings.upwind
     error('Upwind is available just in stochastich simulations, check config.m');
 end
 
-if settings.wind.input && all(settings.wind.input_uncertainty ~= 0)
+if settings.wind.input && not(all(settings.wind.input_uncertainty == 0))
     error('settings.wind.input_uncertainty is available just in stochastich simulations, set it null')
 end
 
@@ -68,11 +68,9 @@ W0 = [0 0 0]';
 Y0a = [X0; V0; W0; Q0; settings.Ixxf; settings.Iyyf; settings.Izzf];
 
 %% WIND GENERATION
-if settings.wind.model || settings.wind.input   % will be computed inside the integrations
-    uw = 0; vw = 0; ww = 0; uncert = [0,0];
-else 
+if not(settings.wind.model) && not(settings.wind.input)
     [uw, vw, ww, ~] = wind_const_generator(settings.wind);
-
+    settings.constWind = [uw, vw, ww];
     if ww ~= 0
         warning('Pay attention using vertical wind, there might be computational errors')
     end
@@ -83,16 +81,16 @@ tf = settings.ode.final_time;
 
 %% ASCENT
 % ascent phase computation
-[Ta, Ya] = ode113(@ascent, [0, tf], Y0a, settings.ode.optionsasc1, settings, uw, vw, ww, uncert);
-[data_ascent] = recallOdeFcn(@ascent, Ta, Ya, settings, uw, vw, ww, uncert);
+[Ta, Ya] = ode113(@ascent, [0, tf], Y0a, settings.ode.optionsasc1, settings);
+[data_ascent] = recallOdeFcn(@ascent, Ta, Ya, settings);
 data_ascent.state.Y = Ya;
 data_ascent.state.T = Ta;
 save('ascent_plot.mat', 'data_ascent');
 
 %% DESCEND 
 % Initial Condition are the last from ascent
-[Td, Yd] = ode113(@descent_ballistic, [Ta(end), tf], Ya(end, 1:13), settings.ode.optionsdesc, settings, uw, vw, ww, uncert);
-[data_bal] = recallOdeFcn(@descent_ballistic, Td, Yd, settings, uw, vw, ww, uncert);
+[Td, Yd] = ode113(@descent_ballistic, [Ta(end), tf], Ya(end, 1:13), settings.ode.optionsdesc, settings);
+[data_bal] = recallOdeFcn(@descent_ballistic, Td, Yd, settings);
 data_bal.state.Y = Yd;
 data_bal.state.T = Td;
 save('descent_plot.mat', 'data_bal');

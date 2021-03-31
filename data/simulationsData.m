@@ -25,7 +25,7 @@ filename = strcat(dataPath,'Motors.mat');
 Motors = load(filename); Motors = [Motors.Cesaroni, Motors.Aerotech];
 
 name = 'M2000Rbis';
-% name = 'L1350';
+% name = 'L1350-CS';
 iMotor = [Motors.MotorName] == name;
 settings.motor.exp_time = Motors(iMotor).t;
 settings.motor.exp_thrust = Motors(iMotor).T;
@@ -42,24 +42,24 @@ settings.mnc = 0.400;                                   % [kg]   Nosecone Mass
 % This parameters should be the same parameters set up in MISSILE DATCOM
 % simulation.
 
-settings.C = 0.15;                                                % [m] Caliber (Fuselage Diameter)
-settings.S = pi*settings.C^2/4;                                   % [m^2] Cross-sectional Surface
-settings.xcg = [1.49, 1.33];                                      % [m] CG postion [full, empty]
-settings.Lnose = 0.26;                                            % [m] Nosecone Length
+settings.C = 0.15;                                         % [m] Caliber (Fuselage Diameter)
+settings.S = pi*settings.C^2/4;                            % [m^2] Cross-sectional Surface
+settings.xcg = [1.49, 1.33];                               % [m] CG postion [full, empty]
+settings.Lnose = 0.26;                                     % [m] Nosecone Length
 settings.OgType = 'KARMAN';
-settings.rocketLength = 2.495;                                    % [m] Rocket Length
-settings.Lcenter = settings.rocketLength - settings.Lnose;        % [m] fuselage length
+settings.rocketLength = 2.495;                             % [m] Rocket Length
+settings.Lcenter = settings.rocketLength - settings.Lnose; % [m] fuselage length
 
 %%% finset
-settings.Chord1 = 0.35;                                           % [m] attached chord length
-settings.Chord2 = 0.12;                                           % [m] free chord length
-settings.Height = 0.12;                                           % [m] fin heigth     
-settings.shape = 'rect';                                          % [/] fin shape
-settings.Npanel = 3;                                              % [m] number of fins
-settings.Ler = 0.003;                                             % [deg] Leading edge radius
-settings.d = 0;                                                   % [m] rocket tip-fin distance
-settings.zup_raw = 0.0015;                                        % [m] fin semi-thickness 
-settings.Lmaxu_raw = 0.0015;                                      % [m] Fraction of chord from leading edge to max thickness
+settings.Chord1 = 0.35;                                    % [m] attached chord length
+settings.Chord2 = 0.12;                                    % [m] free chord length
+settings.Height = 0.12;                                    % [m] fin heigth     
+settings.shape = 'rect';                                   % [/] fin shape
+settings.Npanel = 3;                                       % [m] number of fins
+settings.Ler = 0.003;                                      % [deg] Leading edge radius
+settings.d = 0;                                            % [m] rocket tip-fin distance
+settings.zup_raw = 0.0015;                                 % [m] fin semi-thickness 
+settings.Lmaxu_raw = 0.0015;                               % [m] Fraction of chord from leading edge to max thickness
 
 %%% protub data
 settings.xprot = settings.Lcenter + settings.Lnose - 0.85; % axial position 
@@ -167,9 +167,9 @@ settings.ode.optionsdesc = odeset('Events', @event_landing);                    
 settings.ode.optionspad = odeset('Events', @EventPad);                              %ODE options for the launchpad phase
 
 % Settings for descent 6dof simulation
-settings.ode.optionsDrogue6DOF = odeset('Events', @event_para_cut,'AbsTol',1e-6,'RelTol',1e-6);         %ODE options for due to cutting of the drogue chute
-settings.ode.optionsMainExt6DOF = odeset('Events', @event_main_exit,'AbsTol',1e-6,'RelTol',1e-6);       %ODE options for due to the extraction of the main chute
-settings.ode.optionsMain6DOF = odeset('Events', @event_landing,'AbsTol',1e-6,'RelTol',1e-6);            %ODE options to terminate descent phase
+settings.ode.optionsDrogue6DOF = odeset('Events', @event_para_cut, 'AbsTol', 1e-6,'RelTol', 1e-6);         %ODE options for due to cutting of the drogue chute
+settings.ode.optionsMainExt6DOF = odeset('Events', @event_main_exit, 'AbsTol', 1e-6,'RelTol', 1e-6);       %ODE options for due to the extraction of the main chute
+settings.ode.optionsMain6DOF = odeset('Events', @event_landing, 'AbsTol', 1e-6,'RelTol', 1e-6);            %ODE options to terminate descent phase
 
 
 %% STOCHASTIC DETAILS

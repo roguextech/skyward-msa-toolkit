@@ -60,122 +60,122 @@ if settings.para(settings.Npara).z_cut ~= 0
 end
 
 %% STARTING CONDITIONS
-
 % State
 X0 = [0 0 0]';
 V0 = [0 0 0]';
 W0 = [0 0 0]';
 
 %PreAllocation
-LP = zeros(settings.stoch.N, 3);
-X = zeros(settings.stoch.N, 3);
-ApoTime = zeros(settings.stoch.N, 1);
-data_para = cell(settings.stoch.N, settings.Npara);
+N = settings.stoch.N;
+Np = settings.Npara;
+LP = zeros(N, 3);
+X = zeros(N, 3);
+ApoTime = zeros(N, 1);
+data_para = cell(N, Np);
 
 tf = settings.ode.final_time;
-Np = settings.Npara;
-N = settings.stoch.N;
+
+
+%% STOCHASTIC INPUTS
+
+if not(settings.wind.model)
+    Day = zeros(N, 1);
+    Hour = zeros(N, 1); 
+    uw = zeros(N, 1); vw = uw; ww = uw; Azw = uw;
+    if settings.wind.input
+        signn = randi([1, 4]); % 4 sign cases
+        unc = settings.wind.input_uncertainty;
+        
+        switch signn
+            case 1
+                % unc = unc;
+            case 2
+                unc(1) = - unc(1);
+            case 3
+                unc(2) = - unc(2);
+            case 4
+                unc = - unc;
+        end
+        
+        uncert = rand(N, 2).*unc;
+    else
+        for i = 1:N
+            [uw(i), vw(i), ww(i), Azw(i)] = wind_const_generator(settings.wind);
+        end
+        uncert = zeros(N, 2);
+    end
+    
+else
+    uw = zeros(N, 1); vw = uw; ww = uw;
+    uncert = zeros(N, 2);
+    Day = randi([settings.wind.DayMin, settings.wind.DayMax], N, 1);
+    Hour = randi([settings.wind.HourMin, settings.wind.HourMax], N, 1);
+end
+
+OMEGA = settings.OMEGAmin + rand(N, 1)*(settings.OMEGAmax - settings.OMEGAmin);
+
+if settings.wind.input || settings.wind.model
+    PHI = settings.PHImin + rand(N, 1)*(settings.PHImax - settings.PHImin);
+else
+    
+    if settings.upwind
+        PHI = mod(Azw + pi, 2*pi);
+        signn = randi([1, 2]); % 4 sign cases
+        
+        if signn == 1
+            PHIsigma = settings.PHIsigma;
+        else
+            PHIsigma = -settings.PHIsigma;
+        end
+        
+        PHI = PHI + PHIsigma*rand(N, 1);
+    else
+        PHI = settings.PHImin + rand(N, 1)*(settings.PHImax - settings.PHImin);
+    end
+end
 
 %% PARFOR LOOP
 parfor_progress(N);
 parpool;
-
 parfor i = 1:N
+    settingsNew = settings;
+    settingsNew.stoch.OMEGA = OMEGA(i); 
+    settingsNew.stoch.uncert = uncert(i, :); 
+    settingsNew.stoch.Day = Day(i);
+    settingsNew.stoch.Hour = Hour(i);
+    settingsNew.stoch.uw = uw(i);
+    settingsNew.stoch.vw = vw(i);
+    settingsNew.stoch.ww = ww(i);
     
-    %% WIND GENERATION
-    
-    if not(settings.wind.model)
-        Day = 0; Hour = 0;
-        
-        if settings.wind.input
-            signn = randi([1, 4]); % 4 sign cases
-            unc = settings.wind.input_uncertainty;
-            
-            switch signn
-                case 1
-                    %                       unc = unc;
-                case 2
-                    unc(1) = - unc(1);
-                case 3
-                    unc(2) = - unc(2);
-                case 4
-                    unc = - unc;
-            end
-            
-            uncert = rand(1, 2).*unc;
-            uw = 0; vw = 0; ww = 0;
-        else
-            [uw, vw, ww, Azw] = wind_const_generator(settings.wind);
-            uncert = [0; 0];
-        end
-        
-    else
-        Day = randi([settings.wind.DayMin, settings.wind.DayMax]);
-        Hour = randi([settings.wind.HourMin, settings.wind.HourMax]);
-        uw = 0; vw = 0; ww = 0; uncert = [0; 0];
-    end
-    
-    %% ASCENT
-    % ascent phase computation
-    OMEGA = settings.OMEGAmin + rand*(settings.OMEGAmax - settings.OMEGAmin);
-    
-    % Attitude
-    if settings.wind.input || settings.wind.model
-        PHI = settings.PHImin + rand*(settings.PHImax - settings.PHImin);
-    else
-        
-        if settings.upwind
-            PHI = mod(Azw + pi, 2*pi);
-            signn = randi([1, 2]); % 4 sign cases
-            
-            if signn == 1
-                
-                PHIsigma = settings.PHIsigma;
-                
-            else
-                
-                PHIsigma = -settings.PHIsigma;
-                
-            end
-            
-            PHI = PHI + PHIsigma*rand;
-        else
-            PHI = settings.PHImin + rand*(settings.PHImax - settings.PHImin);
-            
-        end
-    end
-    
-    Q0 = angleToQuat(PHI, OMEGA, 0*pi/180)';
+    %%% ascent
+    Q0 = angleToQuat(PHI(i), OMEGA(i), 0*pi/180)';
     Y0a = [X0; V0; W0; Q0; settings.Ixxf; settings.Iyyf; settings.Izzf];
-    
-    [Ta,Ya] = ode113(@ascent, [0, tf], Y0a, settings.ode.optionsasc1, settings, uw, vw, ww, uncert, Hour, Day, OMEGA);
+    [Ta, Ya] = ode113(@ascent, [0, tf], Y0a, settings.ode.optionsasc1, settingsNew);
     
     if settings.para(1).delay ~= 0 % checking if the actuation delay is different from zero
         [Ta2,Ya2] = ode113(@ascent, [Ta(end), Ta(end) + settings.para(1).delay], Ya(end, :),...
-            settings.ode.optionsasc2, settings, uw, vw, ww, uncert, Hour, Day, OMEGA);
+            settings.ode.optionsasc2, settingsNew);
         Ta = [Ta; Ta2(2:end   )];
         Ya = [Ya; Ya2(2:end, :)];
     end
     
-    [data_ascent{i}] = recallOdeFcn(@ascent, Ta, Ya, settings, uw, vw, ww, uncert, Hour, Day, OMEGA);
+    [data_ascent{i}] = recallOdeFcn(@ascent, Ta, Ya, settingsNew);
     data_ascent{i}.state.Y = Ya;
     data_ascent{i}.state.T = Ta;
     
-    %% PARATCHUTES
+    %%% descent
     % Initial Condition are the last from ascent (need to rotate because
     % velocities are in body axes)
-    
-    Y0p = [Ya(end,1:3) quatrotate(quatconj(Ya(end,10:13)),Ya(end,4:6))];
+    Y0p = [Ya(end,1:3) quatrotate(quatconj(Ya(end,10:13)), Ya(end,4:6))];
     Yf = Ya(:, 1:6);
     Tf  = Ta;
     t0p = Ta(end);
 
     for k = 1:Np
-        para = k;
-        [Tp, Yp] = ode113(@descent_parachute, [t0p, tf], Y0p, settings.ode.optionspara,...
-            settings, uw, vw, ww, para, uncert);
+        settingsNew.stoch.para = k;
+        [Tp, Yp] = ode113(@descent_parachute, [t0p, tf], Y0p, settings.ode.optionspara, settingsNew);
         
-        ParoutDesc = recallOdeFcn(@descent_parachute, Tp, Yp, settings, uw, vw, ww, para, uncert);
+        ParoutDesc = recallOdeFcn(@descent_parachute, Tp, Yp, settingsNew);
         ParoutDesc.state.Y = Yp;
         ParoutDesc.state.T = Tp;
         
@@ -190,8 +190,8 @@ parfor i = 1:N
         
     end
     
-    LP(i,:) = Yf(end,1:3);
-    X(i,:) = [Ya(end,1); Ya(end,2); -Ya(end,3)]
+    LP(i, :) = Yf(end,1:3);
+    X(i, :) = [Ya(end,1); Ya(end,2); -Ya(end,3)];
     ApoTime(i) = Ta(end);
     parfor_progress;
 

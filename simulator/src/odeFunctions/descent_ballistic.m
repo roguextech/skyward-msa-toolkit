@@ -1,4 +1,4 @@
-function [dY, parout] = descent_ballistic(t, Y, settings, uw, vw, ww, uncert, Hour, Day)
+function [dY, parout] = descent_ballistic(t, Y, settings)
 %{ 
 
 ASCENT - ode function of the 6DOF Rigid Rocket Model
@@ -61,29 +61,43 @@ q0 = Y(10);
 q1 = Y(11);
 q2 = Y(12);
 q3 = Y(13);
-m = settings.m0;
+m = settings.ms;
 Ixx = settings.Ixxe;
 Iyy = settings.Iyye;
 Izz = settings.Izze;
 
-Q = [ q0 q1 q2 q3];
-normQ = norm(Q);
+%% CONSTANTS
+% Everything related to empty condition (descent-fase)
+S = settings.S;                         % [m^2] cross surface
+C = settings.C;                         % [m]   caliber
+g = settings.g0/(1 + (-z*1e-3/6371))^2; % [N/kg] module of gravitational field
+T = 0;
 
-Q = Q/normQ;
+if settings.stoch.N > 1
+    uncert = settings.stoch.uncert;
+    Day = settings.stoch.Day;
+    Hour = settings.stoch.Hour;
+    uw = settings.stoch.uw; vw = settings.stoch.vw; ww = settings.stoch.ww;
+else       
+    uncert = settings.wind.input_uncertainty;
+    uw = settings.constWind(1); vw = settings.constWind(2); ww = settings.constWind(3);
+end
+
+%% QUATERION ATTITUDE
+Q = [q0 q1 q2 q3];
+Q = Q/norm(Q);
 
 %% ADDING WIND (supposed to be added in NED axes);
 if settings.wind.model
-   
+    
     if settings.stoch.N > 1
-        [uw,vw,ww] = wind_matlab_generator(settings,z,t,Hour,Day);
+        [uw, vw, ww] = wind_matlab_generator(settings, z, t, Hour, Day);
     else
-        [uw,vw,ww] = wind_matlab_generator(settings,z,t);
+        [uw, vw, ww] = wind_matlab_generator(settings, z, t);
     end
     
 elseif settings.wind.input
-    
-    [uw,vw,ww] = wind_input_generator(settings,z,uncert);
-    
+    [uw, vw, ww] = wind_input_generator(settings, z, uncert);
 end
 
 dcm = quatToDcm(Q);
@@ -97,13 +111,6 @@ wr = w - wind(3);
 % Body to Inertial velocities
 Vels = dcm'*[u; v; w];
 V_norm = norm([ur vr wr]);
-
-%% CONSTANTS
-% Everything related to empty condition (descent-fase)
-S = settings.S;                         % [m^2] cross surface
-C = settings.C;                         % [m]   caliber
-g = settings.g0/(1 + (-z*1e-3/6371))^2; % [N/kg] module of gravitational field
-T = 0;
     
 %% ATMOSPHERE DATA
 if -z < 0     % z is directed as the gravity vector
@@ -133,8 +140,8 @@ beta_value = beta;
 c = 1; % descent with no aerobrakes
 
 %% INTERPOLATE AERODYNAMIC COEFFICIENTS:
-[coeffsValues, angle0] = interpCoeffs(t,alpha,M,beta,absoluteAltitude,...
-                                        c,0,settings);
+[coeffsValues, angle0] = interpCoeffs(t, alpha, M, beta, absoluteAltitude,...
+                                        c, 0, settings);
 
 % Retrieve Coefficients 
 CA = coeffsValues(1); CYB = coeffsValues(2); CY0 = coeffsValues(3);
@@ -146,33 +153,33 @@ Cn0 = coeffsValues(13); Cnr = coeffsValues(14); Cnp = coeffsValues(15);
 % compute CN,CY,Cm,Cn (linearized with respect to alpha and beta):
 alpha0 = angle0(1); beta0 = angle0(2);
 
-CN = (CN0 + CNA*(alpha-alpha0));
-CY = (CY0 + CYB*(beta-beta0));
-Cm = (Cm0 + Cma*(alpha-alpha0));
-Cn = (Cn0 + Cnb*(beta-beta0));
+CN = (CN0 + CNA*(alpha - alpha0));
+CY = (CY0 + CYB*(beta - beta0));
+Cm = (Cm0 + Cma*(alpha - alpha0));
+Cn = (Cn0 + Cnb*(beta - beta0));
 
 %% FORCES
 % first computed in the body-frame reference system
-qdyn = 0.5*rho*V_norm^2;        % [Pa] dynamics pressure
-qdynL_V = 0.5*rho*V_norm*S*C;   % 
+qdyn = 0.5*rho*V_norm^2;      % [Pa] dynamics pressure
+qdynL_V = 0.5*rho*V_norm*S*C; % 
 
-X = qdyn*S*CA;                  % [N] x-body component of the aerodynamics force
-Y = qdyn*S*CY;                  % [N] y-body component of the aerodynamics force
-Z = qdyn*S*CN;                  % [N] z-body component of the aerodynamics force
-Fg = dcm*[0; 0; m*g];           % [N] force due to the gravity
+X = qdyn*S*CA;                % [N] x-body component of the aerodynamics force
+Y = qdyn*S*CY;                % [N] y-body component of the aerodynamics force
+Z = qdyn*S*CN;                % [N] z-body component of the aerodynamics force
+Fg = dcm*[0; 0; m*g];         % [N] force due to the gravity
 
-F = Fg +[-X,+Y,-Z]';            % [N] total forces vector
+F = Fg +[-X, +Y, -Z]';        % [N] total forces vector
 
 %% STATE DERIVATIVES
 % velocity
-du = F(1)/m-q*w+r*v;
-dv = F(2)/m-r*u+p*w;
-dw = F(3)/m-p*v+q*u;
+du = F(1)/m - q*w + r*v;
+dv = F(2)/m - r*u + p*w;
+dw = F(3)/m - p*v + q*u;
 
 % Rotation
-dp = (Iyy-Izz)/Ixx*q*r + qdynL_V/Ixx*(V_norm*Cl+Clp*p*C/2);
-dq = (Izz-Ixx)/Iyy*p*r + qdynL_V/Iyy*(V_norm*Cm + (Cmad+Cmq)*q*C/2);
-dr = (Ixx-Iyy)/Izz*p*q + qdynL_V/Izz*(V_norm*Cn + (Cnr*r+Cnp*p)*C/2);
+dp = (Iyy - Izz)/Ixx*q*r + qdynL_V/Ixx*(V_norm*Cl + Clp*p*C/2);
+dq = (Izz - Ixx)/Iyy*p*r + qdynL_V/Iyy*(V_norm*Cm + (Cmad + Cmq)*q*C/2);
+dr = (Ixx - Iyy)/Izz*p*q + qdynL_V/Izz*(V_norm*Cn + (Cnr*r + Cnp*p)*C/2);
 
 % Quaternion
 OM = 1/2* [ 0 -p -q -r  ;

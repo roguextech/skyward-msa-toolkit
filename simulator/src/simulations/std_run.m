@@ -32,7 +32,7 @@ if settings.wind.model && settings.wind.input
     error('Both wind model and input wind are true, select just one of them')
 end
 
-if settings.wind.HourMin ~= settings.wind.HourMax || settings.wind.HourMin ~= settings.wind.HourMax
+if settings.wind.HourMin ~= settings.wind.HourMax || settings.wind.DayMin ~= settings.wind.DayMax
     error('In standard simulations with the wind model the day and the hour of launch must be unique, check config.m')
 end
 
@@ -48,7 +48,7 @@ if settings.upwind
     error('Upwind is available just in stochastich simulations, check config.m');
 end
 
-if settings.wind.input && all(settings.wind.input_uncertainty ~= 0)
+if settings.wind.input && not(all(settings.wind.input_uncertainty == 0))
     error('settings.wind.input_uncertainty is available just in stochastich simulations, set it null')
 end
 
@@ -68,11 +68,9 @@ W0 = [0 0 0]';
 Y0a = [X0; V0; W0; Q0; settings.Ixxf; settings.Iyyf; settings.Izzf];
 
 %% WIND GENERATION
-if settings.wind.model || settings.wind.input   % will be computed inside the integrations
-    uw = 0; vw = 0; ww = 0; uncert = [0,0];
-else
+if not(settings.wind.model) && not(settings.wind.input)
     [uw, vw, ww, ~] = wind_const_generator(settings.wind);
-    
+    settings.constWind = [uw, vw, ww];
     if ww ~= 0
         warning('Pay attention using vertical wind, there might be computational errors')
     end
@@ -83,17 +81,17 @@ tf = settings.ode.final_time;
 
 %% ASCENT
 % ascent phase computation
-[Ta, Ya] = ode113(@ascent, [0, tf], Y0a, settings.ode.optionsasc1, settings, uw, vw, ww, uncert); % till the apogee
+[Ta, Ya] = ode113(@ascent, [0, tf], Y0a, settings.ode.optionsasc1, settings); % till the apogee
 
 if settings.para(1).delay ~= 0 % checking if the actuation delay is different from zero
-    [Ta2, Ya2] = ode113(@ascent, [Ta(end), Ta(end) + settings.para(1).delay], Ya(end,:), settings.ode.optionsasc2,...
-        settings, uw, vw, ww, uncert); % till end of the delay
+    [Ta2, Ya2] = ode113(@ascent, [Ta(end), Ta(end) + settings.para(1).delay],... 
+        Ya(end,:), settings.ode.optionsasc2, settings); % till end of the delay
     
     Ta = [Ta; Ta2(2:end ) ];
     Ya = [Ya; Ya2(2:end, :)];
 end
 
-[data_ascent] = recallOdeFcn(@ascent, Ta, Ya, settings, uw, vw, ww, uncert);
+[data_ascent] = recallOdeFcn(@ascent, Ta, Ya, settings);
 data_ascent.state.Y = Ya;
 data_ascent.state.T = Ta;
 save('ascent_plot.mat', 'data_ascent');
@@ -109,11 +107,10 @@ if not(settings.descent6DOF)
     t0p = Ta(end);
 
     for i = 1:settings.Npara
-        para = i;
-        [Tp, Yp] = ode113(@descent_parachute, [t0p, tf], Y0p, settings.ode.optionspara,...
-            settings, uw, vw, ww, para, uncert);
+        para = i; settings.paraNumber = para;
+        [Tp, Yp] = ode113(@descent_parachute, [t0p, tf], Y0p, settings.ode.optionspara, settings);
 
-        [data_para{para}] = recallOdeFcn(@descent_parachute, Tp, Yp, settings, uw, vw, ww, para, uncert);
+        [data_para{para}] = recallOdeFcn(@descent_parachute, Tp, Yp, settings);
         data_para{para}.state.Y = Yp;
         data_para{para}.state.T = Tp;
 
@@ -124,7 +121,6 @@ if not(settings.descent6DOF)
         % updating ODE starting conditions
         Y0p = Yp(end, :);
         t0p = Tp(end);
-
     end
     
     % Usefull values for the plots
@@ -143,7 +139,7 @@ else
     Yf = [Ya(:, 1:16), NaN*ones(size(Ya,1),12)];
     Tf = Ta;
     
-    [data_para, Tp, Yp, bound_value] = descent_parachute6dof(Ta, Ya, settings, uw, vw, ww, uncert);
+    [data_para, Tp, Yp, bound_value] = descent_parachute6dof(Ta, Ya, settings);
     
     % total state
     Yf = [Yf; Yp];

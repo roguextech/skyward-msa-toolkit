@@ -285,6 +285,6 @@ end
 
 value = 0;
 while value == 0
-    value = exist('for006.dat','file');
+    value = exist('for006.dat', 'file');
     pause(0.01);
 end
