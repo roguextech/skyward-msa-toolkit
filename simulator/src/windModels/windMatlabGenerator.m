@@ -1,4 +1,4 @@
-function [uw, vw, ww] = wind_matlab_generator(settings, z, t, Hour, Day)
+function [uw, vw, ww] = windMatlabGenerator(settings, z, t, Hour, Day)
 %{
 
 wind_generator - Function that generates wind components in NED reference frame, based on hwm07 model

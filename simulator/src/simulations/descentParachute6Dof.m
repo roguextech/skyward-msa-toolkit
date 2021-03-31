@@ -1,4 +1,4 @@
-function [data_para, Tp, Yp, bound_value] = descent_parachute6dof(Ta, Ya, settings, uw, vw, ww, uncert)
+function [data_para, Tp, Yp, bound_value] = descentParachute6Dof(Ta, Ya, settings, uw, vw, ww, uncert)
 % This function computes the descent phase of a rocket connected to 2
 % parachute: a drogue and a main one. Due to model complexity, the problem
 % is divided into 3 phases:
@@ -7,7 +7,7 @@ function [data_para, Tp, Yp, bound_value] = descent_parachute6dof(Ta, Ya, settin
 %               has reached its nominal length
 %    - PHASE 3: final descent phase with both main and drogue.
 %
-% [data_para] = descent_parachute6dof(Ta, Ya, settings)
+% [data_para] = descentParachute6Dof(Ta, Ya, settings)
 %
 % -------------------------------------------------------------------------
 % INPUT PARAMETERS:
@@ -45,11 +45,11 @@ function [data_para, Tp, Yp, bound_value] = descent_parachute6dof(Ta, Ya, settin
 
     % ODE
     para = 1; % drogue only
-    [Tp1, Yp1] = ode113(@drogue_descent, [t0p, tf], Y0p, settings.ode.optionsDrogue6DOF,...
+    [Tp1, Yp1] = ode113(@descentDrogue, [t0p, tf], Y0p, settings.ode.optionsDrogue6DOF,...
         settings, uw, vw, ww, para, t0p, uncert);
 
     % Saving additional data
-    [data_para{1}] = recallOdeFcn(@drogue_descent, Tp1, Yp1, settings, uw, vw, ww, para, t0p, uncert);
+    [data_para{1}] = recallOdeFcn(@descentDrogue, Tp1, Yp1, settings, uw, vw, ww, para, t0p, uncert);
     data_para{1}.state.Y = Yp1;
     data_para{1}.state.T = Tp1;
     
@@ -74,11 +74,11 @@ function [data_para, Tp, Yp, bound_value] = descent_parachute6dof(Ta, Ya, settin
 
     % ODE
     para = [1, 2];
-    [Tp2, Yp2] = ode113(@main_extraction, [Tp1(end), tf], Y0p,...
+    [Tp2, Yp2] = ode113(@extractionMain, [Tp1(end), tf], Y0p,...
         settings.ode.optionsMainExt6DOF, settings, uw, vw, ww, para, t0p, uncert);
  
     % Saving additional data
-    [data_paraf1] = recallOdeFcn(@main_extraction, Tp2, Yp2, settings, uw, vw, ww, para, t0p, uncert);
+    [data_paraf1] = recallOdeFcn(@extractionMain, Tp2, Yp2, settings, uw, vw, ww, para, t0p, uncert);
     
     Yp = [Yp; Yp2];
     Tp = [Tp; Tp2];
@@ -124,11 +124,11 @@ function [data_para, Tp, Yp, bound_value] = descent_parachute6dof(Ta, Ya, settin
     t0p = [Ta(end), Tp2(end)];
     
     % ODE
-    [Tp3, Yp3] = ode113(@main_descent, [Tp2(end), tf], Y0p,...
+    [Tp3, Yp3] = ode113(@descentMain, [Tp2(end), tf], Y0p,...
         settings.ode.optionsMain6DOF, settings, uw, vw, ww, para, t0p, uncert);
     
     % Saving additional data
-    [data_paraf2] = recallOdeFcn(@main_descent, Tp3, Yp3, settings, uw, vw, ww, para, t0p, uncert);
+    [data_paraf2] = recallOdeFcn(@descentMain, Tp3, Yp3, settings, uw, vw, ww, para, t0p, uncert);
     
     Yp = [Yp; Yp3];
     Tp = [Tp; Tp3];

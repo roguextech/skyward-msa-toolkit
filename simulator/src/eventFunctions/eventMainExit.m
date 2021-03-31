@@ -1,4 +1,4 @@
-function [value, isterminal, direction] = event_main_exit(~, Y, settings, varargin)
+function [value, isterminal, direction] = eventMainExit(~, Y, settings, varargin)
     para = varargin{4};
     
     pos_para = [Y(23) Y(24) Y(25)];

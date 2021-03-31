@@ -50,10 +50,10 @@ if settings.ballistic
         else
             fprintf('Stochastic Ballistic Simulation With Random Wind Started...\n\n');
         end
-        [LP, X, ApoTime, data_ascent, data_bal] = stoch_run_bal(settings);
+        [LP, X, ApoTime, data_ascent, data_bal] = stochRunBal(settings);
     else
         fprintf('Standard Ballistic Simulation Started...\n\n');
-        [Tf, Yf, Ta, Ya, bound_value] = std_run_ballistic(settings);
+        [Tf, Yf, Ta, Ya, bound_value] = stdRunBallistic(settings);
     end
 else
     if settings.stoch.N > 1
@@ -65,10 +65,10 @@ else
         else
             fprintf('Stochastic Simulation With Random Wind Started...\n\n');
         end
-            [LP, X, ApoTime, data_ascent, data_para] = stoch_run(settings);
+            [LP, X, ApoTime, data_ascent, data_para] = stochRun(settings);
     else
         fprintf('Standard Simulation Started...\n\n');
-        [Tf, Yf, Ta, Ya, bound_value] = std_run(settings);
+        [Tf, Yf, Ta, Ya, bound_value] = stdRun(settings);
     end
 end
 

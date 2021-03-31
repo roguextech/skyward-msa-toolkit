@@ -1,7 +1,7 @@
-function [uw, vw, ww] = wind_input_generator(settings, z, uncert)
+function [uw, vw, ww] = windInputGenerator(settings, z, uncert)
 %{
 
-wind_input_generator - This function allows to use a custom set of wind, defined in config.m 
+windInputGenerator - This function allows to use a custom set of wind, defined in config.m 
 
 INPUTS:
             - settings, rocket data structure;

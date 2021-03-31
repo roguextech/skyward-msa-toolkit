@@ -1,7 +1,7 @@
 %{
 mainSensitivity - main script for the sensitivity analysis.
 
-CALLED FUNCTIONS: sensitivity_stoch_ascent, sensitivity_det_ascent.
+CALLED FUNCTIONS: sensitivityStochAscent, sensitivityDetAscent.
 
 REVISIONS:
 - #0 22/12/2020, Release, Luca Facchini
@@ -38,11 +38,11 @@ end
 
 if settings.sensitivity.stoch
     tic
-    [X, ApoTime, data_ascent] = sensitivity_stoch_ascent(settings);
+    [X, ApoTime, data_ascent] = sensitivityStochAscent(settings);
     toc
 else
     tic
-    [X, ApoTime ,data_ascent] = sensitivity_det_ascent(settings);
+    [X, ApoTime ,data_ascent] = sensitivityDetAscent(settings);
     toc
 end
 

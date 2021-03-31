@@ -22,7 +22,7 @@ settings.z0 = 1416;                   %[m] Launchpad Altitude
 settings.lrampa = 5.3;                %[m] LaunchPad route (launchpad length-distance from ground of the first hook)
 settings.lat0 = 41.809017;                                                          % Launchpad latitude
 settings.lon0 = 14.054264;                                                          % Launchpad longitude
-settings.funZ = funZ_gen('zdata.mat',settings.lat0,settings.lon0,true,'xy');        % Altitude map computation
+settings.funZ = funZGen('zdata.mat',settings.lat0,settings.lon0,true,'xy');        % Altitude map computation
 
 % launchpad directions
 % for a single run the maximum and the minimum value of the following
@@ -225,7 +225,7 @@ settings.ode.final_time =  2000;                 % [s] Final integration time
 % - InitialStep is the highest value tried by the solver
 
 settings.ode.optionsasc1 = odeset('AbsTol',1E-3,'RelTol',1E-3,...
-    'Events',@event_apogee,'InitialStep',1);    %ODE options for ascend
+    'Events',@eventApogee,'InitialStep',1);    %ODE options for ascend
 
 settings.ode.optionsasc2 = odeset('AbsTol',1E-3,'RelTol',1E-3,'InitialStep',1);    
 %ODE options for balistic descent between the apogee and the first drogue opening 
@@ -237,10 +237,10 @@ settings.ode.optionsdrg2 = odeset('AbsTol',1E-3,'RelTol',1E-3,...
     'Events',@event_rog_opening);              %ODE options for drogue
 
 settings.ode.optionsrog = odeset('AbsTol',1E-3,'RelTol',1E-3,...
-    'Events',@event_landing);              %ODE options for descent
+    'Events',@eventLanding);              %ODE options for descent
 
 settings.ode.optionsdesc = odeset('AbsTol',1E-3,'RelTol',1E-12,...
-    'Events',@event_landing);                   %ODE options for ballistic descent
+    'Events',@eventLanding);                   %ODE options for ballistic descent
 
 
 %% WIND DETAILS

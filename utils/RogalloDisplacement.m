@@ -23,7 +23,7 @@ for k = 1:Na
             settings.wind.AzMin = (Az_launch(k) + 180)*pi/180;
             settings.wind.AzMax = (Az_launch(k) + 180)*pi/180;
             settings.zdrg2 = heights(i);
-            [Tf,Yf,Ta,Ya,bound_value] = std_run(settings);
+            [Tf,Yf,Ta,Ya,bound_value] = stdRun(settings);
             %         t_rog_op = bound_value.td2;
             %         index = find(Tf == t_rog_op);
             % Save rogallo point opening

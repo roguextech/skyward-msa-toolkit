@@ -1,4 +1,4 @@
-function [dY, parout] = descent_parachute(t, Y, settings, stochInputs)
+function [dY, parout] = descentParachute(t, Y, settings, stochInputs)
 %{ 
 
 ASCENT - ode function of the 6DOF Rigid Rocket Model
@@ -76,13 +76,13 @@ m = settings.ms - pmass;                                                 % [kg] 
 if settings.wind.model
     
     if settings.stoch.N > 1
-        [uw, vw, ww] = wind_matlab_generator(settings, z, t, Hour, Day);
+        [uw, vw, ww] = windMatlabGenerator(settings, z, t, Hour, Day);
     else
-        [uw, vw, ww] = wind_matlab_generator(settings, z, t);
+        [uw, vw, ww] = windMatlabGenerator(settings, z, t);
     end
     
 elseif settings.wind.input
-    [uw, vw, ww] = wind_input_generator(settings, z, uncert);
+    [uw, vw, ww] = windInputGenerator(settings, z, uncert);
 end
 
 wind = [uw vw ww];

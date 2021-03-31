@@ -1,4 +1,4 @@
-function [dY, parout] = main_descent(t, Y, settings, uw, vw, ww, para, t0p, uncert, Hour, Day)
+function [dY, parout] = descentMain(t, Y, settings, uw, vw, ww, para, t0p, uncert, Hour, Day)
 %% RECALLING THE STATE
 % Rocket state
 x_rocket = Y(1);
@@ -49,12 +49,12 @@ m_para2 = settings.para(para(2)).mass;
 %% ADDING WIND (supposed to be added in NED axes);
 if settings.wind.model
     if settings.stoch.N > 1
-        [uw,vw,ww] = wind_matlab_generator(settings,z_rocket,t,Hour,Day);
+        [uw,vw,ww] = windMatlabGenerator(settings,z_rocket,t,Hour,Day);
     else
-        [uw,vw,ww] = wind_matlab_generator(settings,z_rocket,t);
+        [uw,vw,ww] = windMatlabGenerator(settings,z_rocket,t);
     end 
 elseif settings.wind.input
-    [uw,vw,ww] = wind_input_generator(settings,z_rocket,uncert);
+    [uw,vw,ww] = windInputGenerator(settings,z_rocket,uncert);
 end
 
 dcm = quatToDcm(Q);

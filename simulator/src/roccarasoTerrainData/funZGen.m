@@ -1,5 +1,5 @@
-function funZ=funZ_gen(fn_map,lat0,lon0,relative,mode)
-% funZ=funZ_gen(fn_map,lat0,lon0,relative,mode)
+function funZ=funZGen(fn_map,lat0,lon0,relative,mode)
+% funZ=funZGen(fn_map,lat0,lon0,relative,mode)
 % INPUT DESCRIPTION
 % fn_map    filename of the map
 % lat0,lon0 latitude and longitude of the origin

@@ -1,7 +1,7 @@
-function [X, ApoTime, data_ascent] = sensitivity_det_ascent(settings)
+function [X, ApoTime, data_ascent] = sensitivityDetAscent(settings)
 %{
 
-SENSITIVITY_DET_ASCENT - This function runs a simulation of the
+sensitivityDetAscent - This function runs a simulation of the
 ascent phase with determistic variations of the coefficients
 
 INTPUTS:
@@ -38,7 +38,7 @@ OMEGA = settings.OMEGA;
 PHI = settings.PHI;
 
 % WIND GENERATION
-[uw, vw, ww, Azw] = wind_const_generator(Az, Az, El, El, Magw, Magw);
+[uw, vw, ww, Azw] = windConstGenerator(Az, Az, El, El, Magw, Magw);
 settings.constWind = [uw; vw; ww];
 
 % Attitude

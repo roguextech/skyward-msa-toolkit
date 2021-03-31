@@ -1,7 +1,7 @@
-function [X, ApoTime, data_ascent] = sensitivity_stoch_ascent(settings)
+function [X, ApoTime, data_ascent] = sensitivityStochAscent(settings)
 %{
 
-SENSITIVITY_STOCH_ASCENT - This function runs a stochastic sensitivity
+sensitivityStochAscent - This function runs a stochastic sensitivity
 analysis of the ascent phase with stochastic variations of the coefficients
 
 INTPUTS:
@@ -38,7 +38,7 @@ OMEGA = settings.OMEGA;
 PHI = settings.PHI;
 
 % WIND GENERATION
-[uw, vw, ww, Azw] = wind_const_generator(Az, Az, El, El, Magw, Magw);
+[uw, vw, ww, Azw] = windConstGenerator(Az, Az, El, El, Magw, Magw);
 settings.constWind = [uw, vw, ww];
 
 % Attitude

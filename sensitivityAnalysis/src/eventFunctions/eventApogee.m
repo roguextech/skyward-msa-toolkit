@@ -1,7 +1,7 @@
-function [value, isterminal, direction] = event_apogee(t, Y, settings, varargin)
+function [value, isterminal, direction] = eventApogee(t, Y, settings, varargin)
 %{
 
-EVENT_APOGEE - Event function to stop simulation at apogee checking when a value tends to zero;
+eventApogee - Event function to stop simulation at apogee checking when a value tends to zero;
                the value taken is to account is the vertical velocity, vy = 0 --> apogee
 
 INPUTS:     

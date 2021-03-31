@@ -6,7 +6,7 @@ clc; clear; close all
 optionsdrg1 = odeset('AbsTol',1E-3,'RelTol',1E-3,...
     'Events',@event_drg2_opening);          
 optionsdrg2 = odeset('AbsTol',1E-3,'RelTol',1E-3,...
-    'Events',@event_landing); 
+    'Events',@eventLanding); 
 
 
 settings.m0 = 63.30421;                  % [kg]   Overall Mass

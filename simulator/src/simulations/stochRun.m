@@ -1,7 +1,7 @@
-function [LP, X, ApoTime, data_ascent, data_bal] = stoch_run_bal(settings)
+function [LP, X, ApoTime, data_ascent, data_para] = stochRun(settings)
 %{
 
-STOCH_RUN_BAL - This function runs a stochastic simulation (parallel)
+stochRun - This function runs a stochastic simulation (parallel)
 
 INPUTS:     - settings, rocket data structure.
 
@@ -24,21 +24,22 @@ Revision date: 09/10/2019
 
 %}
 
-warning off 
+warning off
 
 if settings.wind.model && settings.wind.input
     error('Both wind model and input wind are true, select just one of them')
 end
 
 if settings.descent6DOF
-    error('You can''t use descent 6 dof simulation for stochastic purpose')
+    error('You can''t use descent 6 dof simulation for stochastic purpose');
 end
 
-if settings.OMEGAmin == settings.OMEGAmax && settings.PHImin == settings.PHImax 
+if settings.OMEGAmin == settings.OMEGAmax && settings.PHImin == settings.PHImax...
+        && settings.PHIsigma == 0
     if not(settings.wind.model) && not(settings.wind.input)
         
-        if settings.wind.MagMin == settings.wind.MagMax && settings.wind.ElMin == settings.wind.ElMax
-            error('In stochastic simulations the random model wind must be setted with stochastic input, such as the magnitude that has to vary, check config.m')
+        if settings.wind.MagMin == settings.wind.MagMax && settings.wind.AzMin == settings.wind.AzMax
+            error('In stochastic simulations the wind must setted with the random model, check config.m')
         end
         
     elseif settings.wind.model
@@ -50,13 +51,15 @@ if settings.OMEGAmin == settings.OMEGAmax && settings.PHImin == settings.PHImax
     end
     
     if settings.wind.input && all(settings.wind.input_uncertainty == 0)
-        error('In stochastic simulations the wind input model, the uncertainty must be different to 0, check config.m')
+        error('In stochastic simulations the wind input model, the uncertainty must be different to 0 check config.m')
     end
-    
+end
+
+if settings.para(settings.Npara).z_cut ~= 0
+    error('The landing will be not achived, check the final altitude of the last parachute in config.m')
 end
 
 %% STARTING CONDITIONS
-
 % State
 X0 = [0 0 0]';
 V0 = [0 0 0]';
@@ -64,9 +67,11 @@ W0 = [0 0 0]';
 
 %PreAllocation
 N = settings.stoch.N;
+Np = settings.Npara;
 LP = zeros(N, 3);
 X = zeros(N, 3);
 ApoTime = zeros(N, 1);
+data_para = cell(N, Np);
 
 tf = settings.ode.final_time;
 
@@ -95,7 +100,7 @@ if not(settings.wind.model)
         uncert = rand(N, 2).*unc;
     else
         for i = 1:N
-            [uw(i), vw(i), ww(i), Azw(i)] = wind_const_generator(settings.wind);
+            [uw(i), vw(i), ww(i), Azw(i)] = windConstGenerator(settings.wind);
         end
         uncert = zeros(N, 2);
     end
@@ -142,27 +147,52 @@ parfor i = 1:N
     settingsNew.stoch.vw = vw(i);
     settingsNew.stoch.ww = ww(i);
     
+    %%% ascent
     Q0 = angleToQuat(PHI(i), OMEGA(i), 0*pi/180)';
     Y0a = [X0; V0; W0; Q0; settings.Ixxf; settings.Iyyf; settings.Izzf];
-    [Ta,Ya] = ode113(@ascent, [0, tf], Y0a, settings.ode.optionsasc1, settingsNew);
+    [Ta, Ya] = ode113(@ascent, [0, tf], Y0a, settings.ode.optionsasc1, settingsNew);
+    
+    if settings.para(1).delay ~= 0 % checking if the actuation delay is different from zero
+        [Ta2,Ya2] = ode113(@ascent, [Ta(end), Ta(end) + settings.para(1).delay], Ya(end, :),...
+            settings.ode.optionsasc2, settingsNew);
+        Ta = [Ta; Ta2(2:end   )];
+        Ya = [Ya; Ya2(2:end, :)];
+    end
+    
     [data_ascent{i}] = recallOdeFcn(@ascent, Ta, Ya, settingsNew);
     data_ascent{i}.state.Y = Ya;
     data_ascent{i}.state.T = Ta;
     
-    %% DESCEND
-    [Tb, Yb] = ode113(@descent_ballistic, [Ta(end), tf], Ya(end, 1:13), settings.ode.optionsdesc,...
-        settingsNew);
-    [data_bal{i}] = recallOdeFcn(@descent_ballistic, Tb, Yb, settingsNew);
-    data_bal{i}.state.Y = Yb;
-    data_bal{i}.state.T = Tb;
+    %%% descent
+    % Initial Condition are the last from ascent (need to rotate because
+    % velocities are in body axes)
+    Y0p = [Ya(end,1:3) quatrotate(quatconj(Ya(end,10:13)), Ya(end,4:6))];
+    Yf = Ya(:, 1:6);
+    Tf  = Ta;
+    t0p = Ta(end);
+
+    for k = 1:Np
+        settingsNew.stoch.para = k;
+        [Tp, Yp] = ode113(@descentParachute, [t0p, tf], Y0p, settings.ode.optionspara, settingsNew);
+        
+        ParoutDesc = recallOdeFcn(@descentParachute, Tp, Yp, settingsNew);
+        ParoutDesc.state.Y = Yp;
+        ParoutDesc.state.T = Tp;
+        
+        % total state
+        Yf = [Yf; Yp];
+        Tf = [Tf; Tp];
+        
+        % updating ODE starting conditions
+        Y0p = Yp(end, :);
+        t0p = Tp(end);
+        data_para{i, k} = ParoutDesc;
+        
+    end
     
-    %% FINAL STATE ASSEMBLING
-    %Total State
-    LP(i, :) = Yb(end, 1:3);
-   
-    X(i, :) = [Ya(end, 1); Ya(end, 2); -Ya(end, 3)]
+    LP(i, :) = Yf(end,1:3);
+    X(i, :) = [Ya(end,1); Ya(end,2); -Ya(end,3)];
     ApoTime(i) = Ta(end);
-    
     parfor_progress;
 
 end

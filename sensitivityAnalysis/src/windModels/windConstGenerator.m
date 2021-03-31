@@ -1,7 +1,7 @@
-function [uw, vw, ww, Az] = wind_const_generator(windData)
+function [uw, vw, ww, Az] = windConstGenerator(AzMin, AzMax, ElMin, ElMax, MagMin, MagMax)
 %{
 
-wind_const_generator - function that generates wind components in NED axes
+windConstGenerator - function that generates wind components in NED axes
 
 INPUTS:
             - AzMin, Minimum angle of Azimuth from North;
@@ -22,27 +22,18 @@ April 2014; Last revision: 25.IV.2014
 
 %}
 
-
-% extracting struct fields
-AzMin = windData.AzMin;
-AzMax = windData.AzMax;
-ElMin = windData.ElMin;
-ElMax = windData.ElMax;
-MagMin = windData.MagMin;
-MagMax = windData.MagMax;
-
 % Generating random values for orientation and magnitude
-Az = AzMin + (AzMax - AzMin)*rand;
-El = ElMin + (ElMax - ElMin)*rand;
-Mag = MagMin + (MagMax - MagMin)*rand;
+Az = AzMin + (AzMax-AzMin)*rand;
+El = ElMin + (ElMax-ElMin)*rand;
+Mag = MagMin + (MagMax-MagMin)*rand;
 
 % Random Wind Vector
-R = Mag*angle2dcm(Az, El, 0, 'ZYX');
+R = Mag*angle2dcm(Az,El,0,'ZYX');
 R(abs(R) < 1e-4) = 0;
 
-uw = R(1, 1);
-vw = R(1, 2);
-ww = R(1, 3);
+uw = R(1,1);
+vw = R(1,2);
+ww = R(1,3);
 
 if abs(uw) < 1e-3
     uw = 0;
@@ -55,6 +46,9 @@ end
 if abs(ww) < 1e-3
     ww = 0;
 end
+
+
+
 
 end
 

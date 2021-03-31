@@ -26,7 +26,7 @@ settings.PHIsigma = 0*pi/180;                               % [deg] If upwind is
 % !! ATTENTION !!  the following works only at Roccaraso
 settings.terrain = false; 
 if settings.terrain  
-     settings.funZ = funZ_gen('zdata.mat', settings.lat0, settings.lon0, true, 'xy');
+     settings.funZ = funZGen('zdata.mat', settings.lat0, settings.lon0, true, 'xy');
 end
 
 %% AEROBRAKES SETTINGS

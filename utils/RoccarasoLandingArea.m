@@ -12,7 +12,7 @@ The Safe zone is here defined as an ellipse.
 Remember to set random wind in config with 0-8 m/s , to fix the wind 
 direction and to set upwind "true"
 
-PARFOOR NEED DO BE STARTED BY HAND AND COMMENT IN STOCH_RUN.M THE COMMAND
+PARFOOR NEED DO BE STARTED BY HAND AND COMMENT IN stochRun.M THE COMMAND
 "PARFOOR" near line 56.
 %}
 
@@ -34,7 +34,7 @@ settings.stoch.N = 100;
 
 for k = 1:length(hrog)
     settings.zdrg2 = hrog(k);
-    [LP,X,ApoTime,data_ascent,data_para] = stoch_run(settings);
+    [LP,X,ApoTime,data_ascent,data_para] = stochRun(settings);
     norm_wind = zeros(100,1);
     norm_R = zeros(100,1);
     for i = 1:100

@@ -1,7 +1,7 @@
-function [Tf, Yf, Ta, Ya, bound_value] = std_run_ballistic(settings)
+function [Tf, Yf, Ta, Ya, bound_value] = stdRunBallistic(settings)
 %{ 
 
-STD_RUN_BALLISTIC - This function runs a standard ballistic (non-stochastic) simulation
+stdRunBallistic - This function runs a standard ballistic (non-stochastic) simulation
 
 INTPUTS: 
             - settings, rocket data structure;
@@ -69,7 +69,7 @@ Y0a = [X0; V0; W0; Q0; settings.Ixxf; settings.Iyyf; settings.Izzf];
 
 %% WIND GENERATION
 if not(settings.wind.model) && not(settings.wind.input)
-    [uw, vw, ww, ~] = wind_const_generator(settings.wind);
+    [uw, vw, ww, ~] = windConstGenerator(settings.wind);
     settings.constWind = [uw, vw, ww];
     if ww ~= 0
         warning('Pay attention using vertical wind, there might be computational errors')
@@ -89,8 +89,8 @@ save('ascent_plot.mat', 'data_ascent');
 
 %% DESCEND 
 % Initial Condition are the last from ascent
-[Td, Yd] = ode113(@descent_ballistic, [Ta(end), tf], Ya(end, 1:13), settings.ode.optionsdesc, settings);
-[data_bal] = recallOdeFcn(@descent_ballistic, Td, Yd, settings);
+[Td, Yd] = ode113(@descentBallistic, [Ta(end), tf], Ya(end, 1:13), settings.ode.optionsdesc, settings);
+[data_bal] = recallOdeFcn(@descentBallistic, Td, Yd, settings);
 data_bal.state.Y = Yd;
 data_bal.state.T = Td;
 save('descent_plot.mat', 'data_bal');

@@ -1,7 +1,7 @@
-function [Tf, Yf, Ta, Ya, bound_value] = std_run(settings)
+function [Tf, Yf, Ta, Ya, bound_value] = stdRun(settings)
 %{ 
 
-STD_RUN - This function runs a standard (non-stochastic) simulation
+stdRun - This function runs a standard (non-stochastic) simulation
 
 INTPUTS: 
             - settings, rocket data structure;
@@ -69,7 +69,7 @@ Y0a = [X0; V0; W0; Q0; settings.Ixxf; settings.Iyyf; settings.Izzf];
 
 %% WIND GENERATION
 if not(settings.wind.model) && not(settings.wind.input)
-    [uw, vw, ww, ~] = wind_const_generator(settings.wind);
+    [uw, vw, ww, ~] = windConstGenerator(settings.wind);
     settings.constWind = [uw, vw, ww];
     if ww ~= 0
         warning('Pay attention using vertical wind, there might be computational errors')
@@ -108,9 +108,9 @@ if not(settings.descent6DOF)
 
     for i = 1:settings.Npara
         para = i; settings.paraNumber = para;
-        [Tp, Yp] = ode113(@descent_parachute, [t0p, tf], Y0p, settings.ode.optionspara, settings);
+        [Tp, Yp] = ode113(@descentParachute, [t0p, tf], Y0p, settings.ode.optionspara, settings);
 
-        [data_para{para}] = recallOdeFcn(@descent_parachute, Tp, Yp, settings);
+        [data_para{para}] = recallOdeFcn(@descentParachute, Tp, Yp, settings);
         data_para{para}.state.Y = Yp;
         data_para{para}.state.T = Tp;
 
@@ -139,7 +139,7 @@ else
     Yf = [Ya(:, 1:16), NaN*ones(size(Ya,1),12)];
     Tf = Ta;
     
-    [data_para, Tp, Yp, bound_value] = descent_parachute6dof(Ta, Ya, settings);
+    [data_para, Tp, Yp, bound_value] = descentParachute6Dof(Ta, Ya, settings);
     
     % total state
     Yf = [Yf; Yp];

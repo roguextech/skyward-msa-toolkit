@@ -1,7 +1,7 @@
-function [ww] = wind_vert_generator(MagMin, MagMax)
+function [ww] = windVertGenerator(MagMin, MagMax)
 %{
 
-wind_vert_generator - function that generates vertical wind component
+windVertGenerator - function that generates vertical wind component
 
 INPUTS:
             - MagMin, Minimum wind magnitude;

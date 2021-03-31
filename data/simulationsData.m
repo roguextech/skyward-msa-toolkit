@@ -162,14 +162,14 @@ settings.ode.final_time =  2000;    % [s] Final integration time
 
 settings.ode.optionsasc1 = odeset('Events', @eventApogee, 'InitialStep', 1);       %ODE options for ascend
 settings.ode.optionsasc2 = odeset('InitialStep', 1);                                %ODE options for due to the opening delay of the parachute
-settings.ode.optionspara = odeset('Events', @event_para_cut);                       %ODE options for the parachutes
-settings.ode.optionsdesc = odeset('Events', @event_landing);                        %ODE options for ballistic descent
+settings.ode.optionspara = odeset('Events', @eventParaCut);                       %ODE options for the parachutes
+settings.ode.optionsdesc = odeset('Events', @eventLanding);                        %ODE options for ballistic descent
 settings.ode.optionspad = odeset('Events', @EventPad);                              %ODE options for the launchpad phase
 
 % Settings for descent 6dof simulation
-settings.ode.optionsDrogue6DOF = odeset('Events', @event_para_cut, 'AbsTol', 1e-6,'RelTol', 1e-6);         %ODE options for due to cutting of the drogue chute
-settings.ode.optionsMainExt6DOF = odeset('Events', @event_main_exit, 'AbsTol', 1e-6,'RelTol', 1e-6);       %ODE options for due to the extraction of the main chute
-settings.ode.optionsMain6DOF = odeset('Events', @event_landing, 'AbsTol', 1e-6,'RelTol', 1e-6);            %ODE options to terminate descent phase
+settings.ode.optionsDrogue6DOF = odeset('Events', @eventParaCut, 'AbsTol', 1e-6,'RelTol', 1e-6);         %ODE options for due to cutting of the drogue chute
+settings.ode.optionsMainExt6DOF = odeset('Events', @eventMainExit, 'AbsTol', 1e-6,'RelTol', 1e-6);       %ODE options for due to the extraction of the main chute
+settings.ode.optionsMain6DOF = odeset('Events', @eventLanding, 'AbsTol', 1e-6,'RelTol', 1e-6);            %ODE options to terminate descent phase
 
 
 %% STOCHASTIC DETAILS
