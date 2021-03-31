@@ -1,4 +1,4 @@
-function [coeffsValues, angle0] = interpCoeffs(t, alpha, M, beta, alt, c, alpha_tot, settings, CoeffsF, CoeffsE)
+function [coeffsValues, angle0] = interpCoeffs(t, alpha, M, beta, alt, c, alpha_tot, settings)
 %{
 interpCoeffs - interpolation of aerodynamic coefficients.
 
@@ -18,8 +18,8 @@ OUTPUTS:
 %}
 
 %% Load data:
-% CoeffsE = settings.CoeffsE;  % Empty Rocket Coefficients
-% CoeffsF = settings.CoeffsF;  % Full Rocket Coefficients
+CoeffsE = settings.CoeffsE;  % Empty Rocket Coefficients
+CoeffsF = settings.CoeffsF;  % Full Rocket Coefficients
 
 tb = settings.tb;
 

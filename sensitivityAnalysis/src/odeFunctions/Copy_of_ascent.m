@@ -1,12 +1,11 @@
-% function [dY, parout] = ascent(t, Y, settings, uw, vw, ww, CoeffsF, CoeffsE)
-function [dY, parout] = ascent(t, Y, settings, uw, vw, ww, param, varargin)
+function [dY, parout] = ascent(t, Y, settings, uw, vw, ww, uncert, Hour, Day, OMEGA)
 %{
 
 ASCENT - ode function of the 6DOF Rigid Rocket Model
 
 INPUTS:
             - t, integration time;
-            - Y, state vector, [ x y z | u v w | p q r | q0 q1 q2 q3 Ixx Iyy Izz]:
+            - Y, state vector, [ x y z | u v w | p q r | q0 q1 q2 q3 | Ixx Iyy Izz]:
 
                                 * (x y z), NED{north, east, down} horizontal frame;
                                 * (u v w), body frame velocities;
@@ -19,13 +18,10 @@ INPUTS:
             - uw, wind component along x;
             - vw, wind component along y;
             - ww, wind component along z;
-            - param, paramater studied in the sensititivity:
-                - 'mass'
-                - aerodynamic coefficient name (e.g. 'CA')
-            - varargin
-                - ms, structural mass 
-                - CoeffF, full rocket aerodynamic coefficients
-                - CoeffE, empty rocket aerodynamic coefficients
+            - uncert, wind uncertanties;
+            - Hour, hour of the day of the needed simulation;
+            - Day, day of the month of the needed simulation;
+            - OMEGA, launchpad azimuth angle;
 
 OUTPUTS:
             - dY, state derivatives;
@@ -35,6 +31,7 @@ OUTPUTS:
 NOTE: To get the NED velocities the body-frame must be multiplied for the
 conjugated of the current attitude quaternion
 E.G.  quatrotate(quatconj(Y(:,10:13)),Y(:,4:6))
+
 
 Author: Ruben Di Battista
 Skyward Experimental Rocketry | CRD Dept | crd@skywarder.eu
@@ -49,29 +46,10 @@ Release date: 16/04/2016
 Author: Adriano Filippo Inno
 Skyward Experimental Rocketry | AFD Dept | crd@skywarder.eu
 email: adriano.filippo.inno@skywarder.eu
-Release date: 13/01/2018
-
-
-ADDITIONAL NOTE (Luca Facchini): this version is modified wrt. the standard
-simulator by introducing the parameter and varargin inputs, 
-as they are varing and the variable settings cannot be modified 
-and it is different from case to case
 
 %}
 
-% Assign value from varargin depending on the parameter being considered 
-% (others are equal to the default ones)
-if strcmp(param,'m') || strcmp(param,'ms')
-    ms = varargin{1};
-    CoeffsF = settings.CoeffsF;
-    CoeffsE = settings.CoeffsE;
-else % Aerodynamic coefficient
-    CoeffsF = varargin{1};
-    CoeffsE = varargin{2};
-    ms = settings.ms;
-end
-
-% recalling the state
+% recalling the states
 % x = Y(1);
 % y = Y(2);
 z = Y(3);
@@ -93,22 +71,20 @@ Izz = Y(16);
 Q = [q0 q1 q2 q3];
 normQ = norm(Q);
 
-if abs(normQ-1) > 0.1
-    Q = Q/normQ;
-end
+Q = Q/normQ;
 
 %% ADDING WIND (supposed to be added in NED axes);
-% if settings.wind.model
-%     
-%     if settings.stoch.N > 1
-%         [uw,vw,ww] = wind_matlab_generator(settings,z,t,Hour,Day);
-%     else
-%         [uw,vw,ww] = wind_matlab_generator(settings,z,t);
-%     end
-%     
-% elseif settings.wind.input
-%     [uw,vw,ww] = wind_input_generator(settings,z,uncert);
-% end
+if settings.wind.model
+    
+    if settings.stoch.N > 1
+        [uw,vw,ww] = wind_matlab_generator(settings,z,t,Hour,Day);
+    else
+        [uw,vw,ww] = wind_matlab_generator(settings,z,t);
+    end
+    
+elseif settings.wind.input
+    [uw,vw,ww] = wind_input_generator(settings,z,uncert);
+end
 dcm = quatToDcm(Q);
 wind = dcm*[uw; vw; ww];
 % wind = quatrotate(Q, [uw vw ww]);
@@ -139,7 +115,9 @@ C = settings.C;                         % [m]     caliber
 g = settings.g0/(1 + (-z*1e-3/6371))^2; % [N/kg]  module of gravitational field 
 tb = settings.tb;                       % [s]     Burning Time
 
-OMEGA = settings.OMEGA;      % [rad] Elevation Angle in the launch pad
+if settings.stoch.N == 1
+    OMEGA = settings.OMEGA;             % [rad] Elevation Angle in the launch pad
+end
 
 % inertias for full configuration (with all the propellant embarqued) obtained with CAD's
 Ixxf = settings.Ixxf;        % [kg*m^2] Inertia to x-axis
@@ -155,16 +133,14 @@ Izze = settings.Izze;        % [kg*m^2] Inertia to z-axis
 dI = 1/tb*([Ixxf Iyyf Izzf]'-[Ixxe Iyye Izze]');
 
 if t<tb
-%     m = settings.ms + interp1(settings.motor.exp_time, settings.motor.exp_m, t);
-    m = ms + interp1(settings.motor.exp_time, settings.motor.exp_m, t);
+    m = settings.ms + interp1(settings.motor.exp_time, settings.motor.exp_m, t);
     Ixxdot = -dI(1);
     Iyydot = -dI(2);
     Izzdot = -dI(3);
     T = interp1(settings.motor.exp_time, settings.motor.exp_thrust, t);
     
 else     % for t >= tb the fligth condition is the empty one(no interpolation needed)
-%     m = settings.ms;
-    m = ms;
+    m = settings.ms;
     Ixxdot = 0;
     Iyydot = 0;
     Izzdot = 0;
@@ -187,27 +163,27 @@ beta_value = beta;
 
 %% CHOSING THE EMPTY CONDITION VALUE
 % interpolation of the coefficients with the value in the nearest condition of the Coeffs matrix
-% if t >= tb && M <= 0.7
-%     
-%     switch settings.control
-%         case '0%'
-%             c = 1;
-%             
-%         case '50%'
-%             c = 2;
-%             
-%         case '100%'
-%             c = 3;
-%     end
-%     
-% else
-%     c = 1;
-% end
-c = 1;
+
+if t >= tb && M <= 0.7
+    
+    switch settings.control
+        case '0%'
+            c = 1;
+            
+        case '50%'
+            c = 2;
+            
+        case '100%'
+            c = 3;
+    end
+    
+else
+    c = 1;
+end
 
 %% INTERPOLATE AERODYNAMIC COEFFICIENTS:
 [coeffsValues, angle0] = interpCoeffs(t,alpha,M,beta,absoluteAltitude,...
-    c,alpha_tot,settings,CoeffsF,CoeffsE);
+    c,alpha_tot,settings);
 
 % Retrieve Coefficients
 CA = coeffsValues(1); CYB = coeffsValues(2); CY0 = coeffsValues(3);
@@ -268,7 +244,7 @@ else
     Z = qdyn*S*CN;                      % [N] z-body component of the aerodynamics force
     Fg = dcm*[0; 0; m*g];               % [N] force due to the gravity in body frame
     
-    F = Fg +[-X+T, +Y, -Z]';            % [N] total forces vector
+    F = Fg +[-X+T, Y, -Z]';             % [N] total forces vector
     
 %% STATE DERIVATIVES
     % velocity
@@ -277,20 +253,20 @@ else
     dw = F(3)/m-p*v+q*u;
     
     % Rotation
-    dp = (Iyy-Izz)/Ixx*q*r + qdynL_V/Ixx*(V_norm*Cl+Clp*p*C/2)-Ixxdot*p/Ixx;
-    dq = (Izz-Ixx)/Iyy*p*r + qdynL_V/Iyy*(V_norm*Cm + (Cmad+Cmq)*q*C/2)...
-        -Iyydot*q/Iyy;
-    dr = (Ixx-Iyy)/Izz*p*q + qdynL_V/Izz*(V_norm*Cn + (Cnr*r+Cnp*p)*C/2)...
-        -Izzdot*r/Izz;
+    dp = (Iyy - Izz)/Ixx*q*r + qdynL_V/Ixx*(V_norm*Cl+Clp*p*C/2) - Ixxdot*p/Ixx;
+    dq = (Izz - Ixx)/Iyy*p*r + qdynL_V/Iyy*(V_norm*Cm + (Cmad+Cmq)*q*C/2)...
+        - Iyydot*q/Iyy;
+    dr = (Ixx - Iyy)/Izz*p*q + qdynL_V/Izz*(V_norm*Cn + (Cnr*r+Cnp*p)*C/2)...
+        - Izzdot*r/Izz;
     
 end
 % Quaternions
-OM = 1/2* [ 0 -p -q -r  ;
-    p  0  r -q  ;
-    q -r  0  p  ;
-    r  q -p  0 ];
+OM = [ 0 -p -q -r  ;
+       p  0  r -q  ;
+       q -r  0  p  ;
+       r  q -p  0 ];
 
-dQQ = OM*Q';
+dQQ = 1/2*OM*Q';
 
 %% FINAL DERIVATIVE STATE ASSEMBLING
 dY(1:3) = Vels;
@@ -313,6 +289,7 @@ parout.interp.M = M_value;
 parout.interp.alpha = alpha_value;
 parout.interp.beta = beta_value;
 parout.interp.alt = -z;
+parout.interp.mass = m;
 
 parout.wind.NED_wind = [uw, vw, ww];
 parout.wind.body_wind = wind;
