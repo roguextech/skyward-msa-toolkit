@@ -29,16 +29,12 @@ W0 = [0 0 0]';
 
 tf = settings.ode.final_time;
 
-Az = settings.wind.Az;
-El = settings.wind.El;
-Magw = settings.wind.Mag;
-
 % ascent phase computation
 OMEGA = settings.OMEGA;
 PHI = settings.PHI;
 
 % WIND GENERATION
-[uw, vw, ww, Azw] = windConstGenerator(Az, Az, El, El, Magw, Magw);
+[uw, vw, ww, Azw] = windConstGenerator(settings.wind);
 settings.constWind = [uw; vw; ww];
 
 % Attitude

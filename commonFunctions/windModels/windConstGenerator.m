@@ -24,19 +24,24 @@ April 2014; Last revision: 25.IV.2014
 
 
 % extracting struct fields
-AzMin = windData.AzMin;
-AzMax = windData.AzMax;
-ElMin = windData.ElMin;
-ElMax = windData.ElMax;
-MagMin = windData.MagMin;
-MagMax = windData.MagMax;
+if all(isfield(windData, ["AzMin", "AzMax", "MagMin", "MagMax"]))
+    AzMin = windData.AzMin;
+    AzMax = windData.AzMax;
+    ElMin = windData.ElMin;
+    ElMax = windData.ElMax;
+    MagMin = windData.MagMin;
+    MagMax = windData.MagMax;
+    Az = AzMin + (AzMax - AzMin)*rand;
+    El = ElMin + (ElMax - ElMin)*rand;
+    Mag = MagMin + (MagMax - MagMin)*rand;
+elseif all(isfield(windData, ["Az", "Mag"]))
+    Az = windData.Az;
+    Mag = windData.Mag;
+    El = 0;
+else
+    error('constant wind not well defined')
+end
 
-% Generating random values for orientation and magnitude
-Az = AzMin + (AzMax - AzMin)*rand;
-El = ElMin + (ElMax - ElMin)*rand;
-Mag = MagMin + (MagMax - MagMin)*rand;
-
-% Random Wind Vector
 R = Mag*angle2dcm(Az, El, 0, 'ZYX');
 R(abs(R) < 1e-4) = 0;
 
