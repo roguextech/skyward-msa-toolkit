@@ -62,7 +62,7 @@ end
 %% length check
 pattern = '*** END OF JOB ***';
 if not(contains(linestring, pattern))
-    error('Datcom didn''t complete the computations, probably the for005 contains too many cases')
+    error('Datcom didn''t complete the computations, probably the for005 contains too many cases (more than 97)')
 end
 
 %% get_coeffs_name
@@ -177,8 +177,8 @@ for i = 1:Nb
     lines = splitlines(block);
     
     j = 1;
-    line = [];
-    while isempty(line) || not(all(not(isletter(line))))
+    line = "a";
+    while not( contains(line, 'NaN') || all(not(isletter(line))) ) || isempty(line)
         line = strtrim(lines{j});
         j = j + 1;
     end
@@ -192,8 +192,8 @@ for i = 1:Nb
     j = j + Na - 1;
     
     if not(all(not(contains(lines(j:end), 'ALPHA'))))
-        line = [];
-        while isempty(line) ||not(all(not(isletter(line))))
+        line = "a";
+        while not( contains(line, 'NaN') || all(not(isletter(line))) ) || isempty(line)
             line = strtrim(lines{j});
             j = j + 1;
         end
@@ -239,6 +239,6 @@ State.Altitudes = A;
 
 if savemat
     Geometry = varargin{2};
-    save(mat_name, 'State', 'Coeffs', 'Geometry'); 
+    save(mat_name, 'State', 'Coeffs', 'Geometry');
 end
 

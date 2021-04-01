@@ -28,6 +28,8 @@ addpath(genpath(currentPath));
 %% LOAD DATA
 dataPath = '../data/';
 addpath(dataPath);
+commonFunctionsPath = '../commonFunctions/';
+addpath(genpath(commonFunctionsPath));
 simulationsData;
 configApogee;
 
@@ -91,7 +93,7 @@ for i = 1:2
                 settings.ms=ms(l) + settings.mm - settings.mp;
                 settings.m0=ms(l) + settings.mm;
 
-                [apogee(l,k,j,i), max_a(l,k,j,i), vExit(l,k,j,i)] = start_simulation(settings);
+                [apogee(l,k,j,i), max_a(l,k,j,i), vExit(l,k,j,i)] = quickApogeeOnly(settings);
             end
             clc
             nIT = nIT + 1;

@@ -1,2 +1,0 @@
-function q = dcmToQuat(dmc)
-

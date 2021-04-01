@@ -81,7 +81,7 @@ if settings.stoch.N > 1
     uw = settings.stoch.uw; vw = settings.stoch.vw; ww = settings.stoch.ww;
 else
     OMEGA = settings.OMEGA;            
-    uncert = settings.wind.input_uncertainty;
+    uncert = [0, 0];
     uw = settings.constWind(1); vw = settings.constWind(2); ww = settings.constWind(3);
 end
 
@@ -172,13 +172,13 @@ beta_value = beta;
 if t >= tb && M <= 0.7
     
     switch settings.control
-        case '0%'
+        case 1
             c = 1;
             
-        case '50%'
+        case 2
             c = 2;
             
-        case '100%'
+        case 3
             c = 3;
     end
     

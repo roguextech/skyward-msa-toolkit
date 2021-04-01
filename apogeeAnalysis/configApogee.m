@@ -50,10 +50,17 @@ vars.wind.Az(2) = 180*pi/180;                   %[rad] wind azimuth user input i
 vars.wind.El(2) = 0*pi/180;                     %[rad] wind elevation user input in degrees
 
 % Aerobrakes height (1: closed, 2: 50% open, 3: fully open)
-vars.control{2} = [1];
+vars.control{2} = [1, 2];
 
 % NOTE: wind aziumt angle indications (wind directed towards):
 % 0 deg (use 360 instead of 0)  -> North
 % 90 deg                        -> East
 % 180 deg                       -> South
 % 270 deg                       -> West
+
+%% COMPATIBILITY SETTINGS
+% this settings are needed to work with the commonFunctions folder,  do not
+% modify it unless you now what you're doing
+settings.stoch.N = 1;                                       
+settings.wind.model = false;
+settings.wind.input = false;

@@ -15,13 +15,6 @@ settings.PHI = 0*pi/180;    % [rad] Azimuth Angle from North Direction, user inp
 settings.upwind = false;    % If true, phi is selected according to wind direction (constant wind model only)
 
 %% WIND DETAILS
-%%%%% Matlab Wind Model
-settings.wind.model = false;
-
-%%%%% Input wind
-settings.wind.input = false;
-
-%%%%% Random wind model
 % Consider only constant wind, specified by the input
 % Setting the same values for min and max will fix the parameters of the wind.
 settings.wind.Mag = 6;       % [m/s] Magnitude
@@ -75,9 +68,9 @@ settings.sensitivity.stdStoch = [0.05,... % thrust
 settings.sensitivity.thrustUncertainty = "independent"; 
 
 %% COMPATIBILITY SETTINGS
+% this settings are needed to work with the commonFunctions folder,  do not
+% modify it unless you now what you're doing
 settings.stoch.N = 1;                                     
-
-settings.control = '0%';              
-
- settings.wind.input_uncertainty = [0,0]; 
-
+settings.control = 1;              
+settings.wind.model = false;
+settings.wind.input = false;

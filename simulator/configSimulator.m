@@ -30,7 +30,7 @@ if settings.terrain
 end
 
 %% AEROBRAKES SETTINGS
-settings.control = '0%';                                    % aerobrakes 0%, 50% or 100% opened
+settings.control = 1;                                       % aerobrakes, 1-2-3 for 0%, 50% or 100% opened
 
 %% DESCENT PHASE MODEL
 settings.descent6DOF = false;                               % set to true in order to start a 6DOF parachute descent phase

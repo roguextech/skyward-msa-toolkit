@@ -63,3 +63,10 @@ A = [-1 1 0 0 0 0
      -1 0 1 0 0 0 ];
 b = [0; 0];
 
+%% COMPATIBILITY SETTINGS
+% this settings are needed to work with the commonFunctions folder,  do not
+% modify it unless you now what you're doing
+settings.stoch.N = 1;                                     
+settings.control = 1;              
+settings.wind.model = false;
+settings.wind.input = false;
