@@ -1,4 +1,4 @@
-function [dY, parout] = descentParachute(t, Y, settings, stochInputs)
+function [dY, parout] = descentParachute(t, Y, settings)
 %{ 
 
 ASCENT - ode function of the 6DOF Rigid Rocket Model

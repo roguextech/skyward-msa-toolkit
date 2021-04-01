@@ -26,6 +26,8 @@ addpath(genpath(currentPath));
 configSimulator;
 dataPath = '../data/';
 addpath(dataPath);
+commonFunctionsPath = '../commonFunctions/';
+addpath(genpath(commonFunctionsPath));
 simulationsData;
 
 %% START THE CHOSEN SIMULATION
