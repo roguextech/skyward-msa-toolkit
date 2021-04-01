@@ -18,6 +18,8 @@ addpath(genpath(currentPath));
 %% LOAD DATA
 dataPath = '../data/';
 addpath(dataPath);
+commonFunctionsPath = '../commonFunctions/';
+addpath(genpath(commonFunctionsPath));
 simulationsData;
 configAutoMatProtub;
 
