@@ -304,7 +304,7 @@ if settings.stoch.N == 1
            hold on
            posPara = data_para{i}.state.Y(:,17:19);
            posRocket = data_para{i}.state.Y(:,1:3);
-           posDepl = posRocket + quatrotate(quatconj(data_para{i}.state.Y(:,10:13)),[(settings.xcg-settings.Lnose) 0 0]);
+           posDepl = posRocket + quatrotate(quatconj(data_para{i}.state.Y(:,10:13)),[(settings.xcg(2)-settings.Lnose) 0 0]);
            val = vecnorm((posPara - posDepl)');
            h(i) = plot(data_para{i}.integration.t, val); grid on;
            xlabel('Time [s]'); ylabel('L [m]'); title('Chord Elongation');

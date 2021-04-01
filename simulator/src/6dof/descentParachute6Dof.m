@@ -1,4 +1,4 @@
-function [data_para, Tp, Yp, bound_value] = descentParachute6Dof(Ta, Ya, settings, uw, vw, ww, uncert)
+function [data_para, Tp, Yp, bound_value] = descentParachute6Dof(Ta, Ya, settings)
 % This function computes the descent phase of a rocket connected to 2
 % parachute: a drogue and a main one. Due to model complexity, the problem
 % is divided into 3 phases:
@@ -32,24 +32,24 @@ function [data_para, Tp, Yp, bound_value] = descentParachute6Dof(Ta, Ya, setting
     %% PHASE 1 : Drogue descent
     % Initial conditions
     posPara0 = quatrotate(quatconj(Ya(end,10:13)),...                         % (NED) Initial drogue position
-        [(settings.xcg-settings.Lnose) 0 0]) + Ya(end,1:3);
+        [(settings.xcg(2)-settings.Lnose) 0 0]) + Ya(end,1:3);
     
     velPara0 = quatrotate(quatconj(Ya(end,10:13)),Ya(end,4:6)+...             % (NED) Initial drogue velocity
         [settings.para(1).Vexit 0 0]) + quatrotate(quatconj(Ya(end,10:13)),...
-        cross(Ya(end,7:9),[(settings.xcg-settings.Lnose) 0 0]));
+        cross(Ya(end,7:9),[(settings.xcg(2)-settings.Lnose) 0 0]));
     
     Y0p = [Ya(end, 1:16) posPara0 velPara0];                                  % Initializing starting state vector
 
     t0p = Ta(end);
     tf  = settings.ode.final_time;
-
+    
     % ODE
-    para = 1; % drogue only
+    para = 1; settings.paraNumber = 1; % drogue only
     [Tp1, Yp1] = ode113(@descentDrogue, [t0p, tf], Y0p, settings.ode.optionsDrogue6DOF,...
-        settings, uw, vw, ww, para, t0p, uncert);
+        settings, para, t0p);
 
     % Saving additional data
-    [data_para{1}] = recallOdeFcn(@descentDrogue, Tp1, Yp1, settings, uw, vw, ww, para, t0p, uncert);
+    [data_para{1}] = recallOdeFcn(@descentDrogue, Tp1, Yp1, settings, para, t0p);
     data_para{1}.state.Y = Yp1;
     data_para{1}.state.T = Tp1;
     
@@ -63,11 +63,11 @@ function [data_para, Tp, Yp, bound_value] = descentParachute6Dof(Ta, Ya, setting
     %% PHASE 2 : Main Extraction
     % Initial conditions
     posMain0 = quatrotate(quatconj(Yp1(end,10:13)),...                        % (NED) Initial main position
-        [(settings.xcg-settings.Lnose) 0 0]) + Yp1(end,1:3);
+        [(settings.xcg(2)-settings.Lnose) 0 0]) + Yp1(end,1:3);
 
     velMain0 = quatrotate(quatconj(Yp1(end,10:13)),Yp1(end,4:6)) +...         % (NED) INitial main velocity
         quatrotate(quatconj(Yp1(end,10:13)),cross(Yp1(end,7:9),...
-        [(settings.xcg-settings.Lnose) 0 0]));
+        [(settings.xcg(2)-settings.Lnose) 0 0]));
 
     Y0p = [Yp1(end,1:22) posMain0 velMain0];                                  % Initializing starting state vector
     t0p = Ta(end);
@@ -75,10 +75,10 @@ function [data_para, Tp, Yp, bound_value] = descentParachute6Dof(Ta, Ya, setting
     % ODE
     para = [1, 2];
     [Tp2, Yp2] = ode113(@extractionMain, [Tp1(end), tf], Y0p,...
-        settings.ode.optionsMainExt6DOF, settings, uw, vw, ww, para, t0p, uncert);
+        settings.ode.optionsMainExt6DOF, settings, para, t0p);
  
     % Saving additional data
-    [data_paraf1] = recallOdeFcn(@extractionMain, Tp2, Yp2, settings, uw, vw, ww, para, t0p, uncert);
+    [data_paraf1] = recallOdeFcn(@extractionMain, Tp2, Yp2, settings, para, t0p);
     
     Yp = [Yp; Yp2];
     Tp = [Tp; Tp2];
@@ -125,10 +125,10 @@ function [data_para, Tp, Yp, bound_value] = descentParachute6Dof(Ta, Ya, setting
     
     % ODE
     [Tp3, Yp3] = ode113(@descentMain, [Tp2(end), tf], Y0p,...
-        settings.ode.optionsMain6DOF, settings, uw, vw, ww, para, t0p, uncert);
+        settings.ode.optionsMain6DOF, settings, para, t0p);
     
     % Saving additional data
-    [data_paraf2] = recallOdeFcn(@descentMain, Tp3, Yp3, settings, uw, vw, ww, para, t0p, uncert);
+    [data_paraf2] = recallOdeFcn(@descentMain, Tp3, Yp3, settings, para, t0p);
     
     Yp = [Yp; Yp3];
     Tp = [Tp; Tp3];

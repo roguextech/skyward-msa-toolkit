@@ -1,4 +1,4 @@
-function [dY, parout] = extractionMain(t, Y, settings, uw, vw, ww, para, t0p, uncert, Hour, Day)
+function [dY, parout] = extractionMain(t, Y, settings, varargin)
 %% RECALLING THE STATE
 % Rocket state
 % x_rocket = Y(1);
@@ -14,17 +14,6 @@ q0 = Y(10);
 q1 = Y(11);
 q2 = Y(12);
 q3 = Y(13);
-m_rocket = settings.ms - settings.para(para(1)).mass - settings.para(para(2)).mass;
-Ixx = settings.Ixxe;
-Iyy = settings.Iyye;
-Izz = settings.Izze;
-
-Q = [ q0 q1 q2 q3];
-normQ = norm(Q);
-
-if abs(normQ-1) > 0.1
-    Q = Q/normQ;
-end
 
 % first parachute state
 x_para1 = Y(17);
@@ -34,8 +23,6 @@ u_para1 = Y(20);
 v_para1 = Y(21);
 w_para1 = Y(22);
 
-m_para1 = settings.mnc + settings.para(para(1)).mass;
-
 % second parachute state
 x_para2 = Y(23);
 y_para2 = Y(24);
@@ -44,17 +31,46 @@ u_para2 = Y(26);
 v_para2 = Y(27);
 w_para2 = Y(28);
 
+%% CONSTANTS
+g = settings.g0/(1 + (-z_rocket*1e-3/6371))^2;
+para = varargin{1};
+t0p = varargin{2};
+
+% Parachute parameters
+S_para = settings.para(para(1)).S;                      
+CD_para = settings.para(para(1)).CD;
+D0 = sqrt(4*settings.para(para(1)).S/pi);
+SCD0 = S_para*CD_para;
+
+% Mass
+m_rocket = settings.ms - settings.para(para(1)).mass - settings.para(para(2)).mass;
+m_para1 = settings.mnc + settings.para(para(1)).mass;
 m_para2 = settings.para(para(2)).mass;
+
+% OMEGA = settings.OMEGA;            
+uncert = [0, 0];
+if not(settings.wind.input) && not(settings.wind.model)
+    uw = settings.constWind(1); vw = settings.constWind(2); ww = settings.constWind(3);
+end
+
+% Inertias
+Ixx = settings.Ixxe;
+Iyy = settings.Iyye;
+Izz = settings.Izze;
+
+%% QUATERNION ATTITUDE
+Q = [q0 q1 q2 q3];
+Q = Q/norm(Q);
 
 %% ADDING WIND (supposed to be added in NED axes);
 if settings.wind.model
-    if settings.stoch.N > 1
-        [uw,vw,ww] = windMatlabGenerator(settings,z_rocket,t,Hour,Day);
-    else
-        [uw,vw,ww] = windMatlabGenerator(settings,z_rocket,t);
-    end 
+    
+    [uw, vw, ww] = windMatlabGenerator(settings, z_rocket, t);
+    
 elseif settings.wind.input
-    [uw,vw,ww] = windInputGenerator(settings,z_rocket,uncert);
+    
+    [uw, vw, ww] = windInputGenerator(settings, z_rocket, uncert);
+    
 end
 
 dcm = quatToDcm(Q);
@@ -93,10 +109,6 @@ if V_norm_para1 < 1e-3
 else
     t_vers = -Vrel_para1/V_norm_para1;
 end
-
-%% CONSTANTS
-% Everything related to empty condition (descent-fase)
-g = settings.g0/(1 + (-z_rocket*1e-3/6371))^2;
 
 %% ATMOSPHERE DATA
 % since z_rocket is similar to z_para, atmospherical data will be computed
@@ -139,12 +151,8 @@ else
 end
 
 %% DROGUE FORCES
-S_para = settings.para(para(1)).S;                      
-CD_para = settings.para(para(1)).CD;
-D0 = sqrt(4*settings.para(para(1)).S/pi);
 t0 = settings.para(para(1)).nf * D0/V_norm_para1;
 tx = t0 * settings.para(para(1)).CX^(1/settings.para(para(1)).m);
-SCD0 = S_para*CD_para;
 
 dt = t-t0p(1);
 

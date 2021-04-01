@@ -82,7 +82,10 @@ if settings.stoch.N > 1
 else
     OMEGA = settings.OMEGA;            
     uncert = [0, 0];
-    uw = settings.constWind(1); vw = settings.constWind(2); ww = settings.constWind(3);
+    
+    if not(settings.wind.input) && not(settings.wind.model)
+        uw = settings.constWind(1); vw = settings.constWind(2); ww = settings.constWind(3);
+    end
 end
 
 % inertias for full configuration (with all the propellant embarqued) obtained with CAD's

@@ -1,4 +1,4 @@
-function [dY, parout] = descentDrogue(t, Y, settings, uw, vw, ww, para, t0p, uncert, Hour, Day)
+function [dY, parout] = descentDrogue(t, Y, settings, varargin)
 %% RECALLING THE STATE
 % Rocket state
 x_rocket = Y(1);
@@ -14,17 +14,6 @@ q0 = Y(10);
 q1 = Y(11);
 q2 = Y(12);
 q3 = Y(13);
-m_rocket = settings.ms - settings.para(para(1)).mass;
-Ixx = settings.Ixxe;
-Iyy = settings.Iyye;
-Izz = settings.Izze;
-
-Q = [q0 q1 q2 q3];
-normQ = norm(Q);
-
-if abs(normQ-1) > 0.1
-    Q = Q/normQ;
-end
 
 % parachute state
 x_para = Y(17);
@@ -34,17 +23,45 @@ u_para = Y(20);
 v_para = Y(21);
 w_para = Y(22);
 
+%% CONSTANTS
+g = settings.g0/(1 + (-z_rocket*1e-3/6371))^2;
+para = varargin{1};
+t0p = varargin{2};
+
+% Parachute parameters
+S_para = settings.para(para).S;                                         
+CD_para = settings.para(para).CD;
+D0 = sqrt(4*settings.para(para).S/pi);
+SCD0 = S_para*CD_para;
+
+% Mass
+m_rocket = settings.ms - settings.para(para(1)).mass;
 m_para = settings.mnc + settings.para(para).mass;
+
+% OMEGA = settings.OMEGA;            
+uncert = [0, 0];
+if not(settings.wind.input) && not(settings.wind.model)
+    uw = settings.constWind(1); vw = settings.constWind(2); ww = settings.constWind(3);
+end
+
+% Inertias
+Ixx = settings.Ixxe;
+Iyy = settings.Iyye;
+Izz = settings.Izze;
+
+%% QUATERNION ATTITUDE
+Q = [q0 q1 q2 q3];
+Q = Q/norm(Q);
 
 %% ADDING WIND (supposed to be added in NED axes);
 if settings.wind.model
-    if settings.stoch.N > 1
-        [uw,vw,ww] = windMatlabGenerator(settings,z_rocket,t,Hour,Day);
-    else
-        [uw,vw,ww] = windMatlabGenerator(settings,z_rocket,t);
-    end 
+    
+    [uw, vw, ww] = windMatlabGenerator(settings, z_rocket, t);
+    
 elseif settings.wind.input
-    [uw,vw,ww] = windInputGenerator(settings,z_rocket,uncert);
+    
+    [uw, vw, ww] = windInputGenerator(settings, z_rocket, uncert);
+    
 end
 
 dcm = quatToDcm(Q);
@@ -74,12 +91,8 @@ V_norm_para = norm([ur_para; vr_para; wr_para]);
 if V_norm_para < 1e-3
     t_vers = [0; 0; -1];
 else
-    t_vers = -Vrel_para/V_norm_para;
+    t_vers = - Vrel_para/V_norm_para;
 end
-
-%% CONSTANTS
-% Everything related to empty condition (descent-fase)
-g = settings.g0/(1 + (-z_rocket*1e-3/6371))^2;                                                                                                                                
 
 %% ATMOSPHERE DATA
 % since z_rocket is similar to z_para, atmospherical data will be computed
@@ -93,9 +106,10 @@ M_value = M;
 % (NED) positions of parachute and rocket
 posPara = [x_para; y_para; z_para]; 
 posRocket = [x_rocket; y_rocket; z_rocket];
+xcg = settings.xcg(2);
 
 % (NED) position of the point from where the parachute is deployed
-posDepl = posRocket + dcm'*[(settings.xcg-settings.Lnose); 0; 0];
+posDepl = posRocket + dcm'*[(xcg-settings.Lnose); 0; 0];
 
 % (NED) relative position between parachute and rocket
 posRel = posPara - posDepl;
@@ -111,7 +125,7 @@ velPara = [u_para; v_para; w_para];
 velRocket = dcm'*[u_rocket; v_rocket; w_rocket];
 
 % (NED) velocity of the point from where the parachute is deployed
-velDepl = velRocket + dcm'*cross([p; q; r],[(settings.xcg-settings.Lnose); 0; 0]);
+velDepl = velRocket + dcm'*cross([p; q; r],[(xcg-settings.Lnose); 0; 0]);
 
 % (NED) relative velocity between parachute and rocket
 velRel = velPara - velDepl;
@@ -129,12 +143,8 @@ end
 
 %% PARACHUTE FORCES
 % computed in the NED-frame reference system
-S_para = settings.para(para).S;                                         
-CD_para = settings.para(para).CD;
-D0 = sqrt(4*settings.para(para).S/pi);
 t0 = settings.para(para).nf * D0/V_norm_para;
 tx = t0 * settings.para(para).CX^(1/settings.para(para).m);
-SCD0 = S_para*CD_para;
 
 dt = t-t0p;
 
@@ -166,7 +176,7 @@ dv_rocket = F_rocket(2)/m_rocket-r*u_rocket+p*w_rocket;
 dw_rocket = F_rocket(3)/m_rocket-p*v_rocket+q*u_rocket;
 
 % Rotation
-b = [(settings.xcg-settings.Lnose) 0 0];
+b = [(xcg-settings.Lnose) 0 0];
 Momentum = cross(b, Ft_chord_rocket);                                   
 
 dp_rocket = (Iyy-Izz)/Ixx*q*r + Momentum(1)/Ixx;
