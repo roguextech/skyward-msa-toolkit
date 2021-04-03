@@ -20,8 +20,6 @@ email: adriano.filippo.inno@skywarder.eu
 
 %}
 
-cd ..
-cd commonFunctions/Datcom
 %% recalling the variables
 Mach = datcom.Mach;
 Alpha = datcom.Alpha;
@@ -289,7 +287,4 @@ value = 0;
 while value == 0
     value = exist('for006.dat', 'file');
     pause(0.01);
-end 
-
-cd ../..
-cd AutoMatricesProtub
+end
