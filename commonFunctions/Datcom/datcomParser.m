@@ -1,4 +1,4 @@
-function [Coeffs, State] = datcomParser5(varargin)
+function [Coeffs, State] = datcomParser(varargin)
 %{ 
 
 DATCOMPARSER - function to parse the 'for006.dat' file and to generate the
