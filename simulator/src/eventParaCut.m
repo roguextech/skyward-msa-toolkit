@@ -1,4 +1,4 @@
-function [value, isterminal, direction] = eventParaCut(~, Y, settings, varargin)
+function [value, isterminal, direction] = eventParaCut(~, Y, settings)
 %{
 
 eventParaCut - Event function to stop simulation at the chosen altitude to cut the 

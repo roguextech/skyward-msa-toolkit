@@ -44,12 +44,13 @@ function [data_para, Tp, Yp, bound_value] = descentParachute6Dof(Ta, Ya, setting
     tf  = settings.ode.final_time;
     
     % ODE
-    para = 1; settings.paraNumber = 1; % drogue only
+    settings.paraN = 1; settings.paraNumber = 1; % drogue only
+    settings.t0p = t0p;
     [Tp1, Yp1] = ode113(@descentDrogue, [t0p, tf], Y0p, settings.ode.optionsDrogue6DOF,...
-        settings, para, t0p);
+        settings);
 
     % Saving additional data
-    [data_para{1}] = recallOdeFcn(@descentDrogue, Tp1, Yp1, settings, para, t0p);
+    [data_para{1}] = recallOdeFcn(@descentDrogue, Tp1, Yp1, settings);
     data_para{1}.state.Y = Yp1;
     data_para{1}.state.T = Tp1;
     
@@ -73,12 +74,13 @@ function [data_para, Tp, Yp, bound_value] = descentParachute6Dof(Ta, Ya, setting
     t0p = Ta(end);
 
     % ODE
-    para = [1, 2];
+    settings.paraN = [1, 2];
+    settings.t0p = t0p;
     [Tp2, Yp2] = ode113(@extractionMain, [Tp1(end), tf], Y0p,...
-        settings.ode.optionsMainExt6DOF, settings, para, t0p);
+        settings.ode.optionsMainExt6DOF, settings);
  
     % Saving additional data
-    [data_paraf1] = recallOdeFcn(@extractionMain, Tp2, Yp2, settings, para, t0p);
+    [data_paraf1] = recallOdeFcn(@extractionMain, Tp2, Yp2, settings);
     
     Yp = [Yp; Yp2];
     Tp = [Tp; Tp2];
@@ -124,11 +126,13 @@ function [data_para, Tp, Yp, bound_value] = descentParachute6Dof(Ta, Ya, setting
     t0p = [Ta(end), Tp2(end)];
     
     % ODE
+    settings.paraN = [1, 2];
+    settings.t0p = t0p;
     [Tp3, Yp3] = ode113(@descentMain, [Tp2(end), tf], Y0p,...
-        settings.ode.optionsMain6DOF, settings, para, t0p);
+        settings.ode.optionsMain6DOF, settings);
     
     % Saving additional data
-    [data_paraf2] = recallOdeFcn(@descentMain, Tp3, Yp3, settings, para, t0p);
+    [data_paraf2] = recallOdeFcn(@descentMain, Tp3, Yp3, settings);
     
     Yp = [Yp; Yp3];
     Tp = [Tp; Tp3];

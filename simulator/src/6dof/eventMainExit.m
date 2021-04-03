@@ -1,5 +1,5 @@
-function [value, isterminal, direction] = eventMainExit(~, Y, settings, varargin)
-    para = varargin{1};
+function [value, isterminal, direction] = eventMainExit(~, Y, settings)
+    para = settings.paraN;
     
     pos_para = [Y(23) Y(24) Y(25)];
     rel_pos = norm(pos_para - ([Y(1) Y(2) Y(3)] + ...

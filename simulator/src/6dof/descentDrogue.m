@@ -1,4 +1,4 @@
-function [dY, parout] = descentDrogue(t, Y, settings, varargin)
+function [dY, parout] = descentDrogue(t, Y, settings)
 %% RECALLING THE STATE
 % Rocket state
 x_rocket = Y(1);
@@ -25,8 +25,8 @@ w_para = Y(22);
 
 %% CONSTANTS
 g = settings.g0/(1 + (-z_rocket*1e-3/6371))^2;
-para = varargin{1};
-t0p = varargin{2};
+para = settings.paraN;
+t0p = settings.t0p;
 
 % Parachute parameters
 S_para = settings.para(para).S;                                         
