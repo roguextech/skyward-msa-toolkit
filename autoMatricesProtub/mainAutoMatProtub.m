@@ -89,7 +89,8 @@ Geometry.xcg = datcom.xcg;
 save('empty', 'State', 'Coeffs', 'Geometry');
 
 %%
-
+cd ..
+cd commonFunctions/Datcom
 delete('for003.dat', 'for004.dat', 'for005.dat', 'for006.dat', 'for009.dat',...
     'for010.dat', 'for011.dat', 'for012.dat')
 
