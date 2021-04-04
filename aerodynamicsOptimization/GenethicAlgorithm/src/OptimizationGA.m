@@ -1,4 +1,5 @@
 function [apogee] = OptimizationGA(x, datcom, settings)
+datcomPath = '../../commonFunctions/Datcom/';
 datcom.Chord1 = x(1)/100;
 datcom.Chord2 = x(2)/100;
 datcom.Height = x(3)/100;
@@ -38,12 +39,12 @@ settings.Machs = datcom.Mach;
 %%%
 xcg = settings.xcg - settings.Lnose;
 datcom.xcg = xcg(1) + datcom.Lnose;
-createFor006(datcom, settings);
-[settings.CoeffsF, ~] = datcomParser5();
+createFor006(datcom, settings, datcomPath);
+[settings.CoeffsF, ~] = datcomParser();
 %%%
 datcom.xcg = xcg(2) + datcom.Lnose;
-createFor006(datcom, settings);
-[settings.CoeffsE, ~] = datcomParser5();
+createFor006(datcom, settings, datcomPath);
+[settings.CoeffsE, ~] = datcomParser();
 %%%
 settings.wind.Az = (360)*pi/180;
 apogee1 = quickApogeeOnly(settings);

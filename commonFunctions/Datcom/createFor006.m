@@ -1,4 +1,4 @@
-function createFor006(datcom, settings)
+function createFor006(datcom, settings, datcomPath)
 %{ 
 
 CREATEFOR006 - function to create the 'for006.dat' file.
@@ -6,6 +6,8 @@ CREATEFOR006 - function to create the 'for006.dat' file.
 INPUTS:
             - datcom:  struct containing all the values to be inserted in
                         the for005
+            - currentDir: variable containing the current directory where 
+                          MatLab will work
 
 OUTPUTS: 
 
@@ -20,8 +22,9 @@ email: adriano.filippo.inno@skywarder.eu
 
 %}
 
-cd ..
-cd commonFunctions/Datcom
+oldFolder = cd;                     % save the older current directory
+cd(datcomPath)                      % redirect the new directory in 'commonFunctions/Datcom'
+
 %% recalling the variables
 Mach = datcom.Mach;
 Alpha = datcom.Alpha;
@@ -291,5 +294,4 @@ while value == 0
     pause(0.01);
 end 
 
-cd ../..
-cd AutoMatricesProtub
+cd(oldFolder);                    % redirect back the current directory to the old folder

@@ -23,6 +23,7 @@ dataPath = '../../data/';
 addpath(dataPath);
 commonFunctionsPath = '../../commonFunctions/';
 addpath(genpath(commonFunctionsPath));
+datcomPath = '../../commonFunctions/Datcom/';
 simulationsData;
 configOptmization;
 

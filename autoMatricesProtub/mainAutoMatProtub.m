@@ -22,6 +22,7 @@ commonFunctionsPath = '../commonFunctions/';
 addpath(genpath(commonFunctionsPath));
 simulationsData;
 configAutoMatProtub;
+datcomPath = '../commonFunctions/Datcom/';
 
 tic
 
@@ -50,8 +51,8 @@ for k = 1:2
         datcom.hprot = vars.hprot(1);
         clc
         fprintf('----------------- Aerobrakes Aerodynamics Prediction ----------------- \n')
-        createFor006(datcom, settings);
-        [CoeffsF, State] = datcomParser5('full', Geometry);
+        createFor006(datcom, settings, datcomPath);
+        [CoeffsF, State] = datcomParser('full', Geometry);
         clc
         perc = round(100/(n_hprot + 1)) ;
         fprintf('----------------- Aerobrakes Aerodynamics Prediction ----------------- \n')
@@ -65,12 +66,12 @@ for k = 1:2
     else
         for n = 1:n_hprot
             datcom.hprot = vars.hprot(n);
-            createFor006(datcom, settings);
+            createFor006(datcom, settings, datcomPath);
             clc
             perc = round((n)/(n_hprot+1)*(100)) ;
             fprintf('----------------- Aerobrakes Aerodynamics Prediction ----------------- \n')
             fprintf(' Progress %d %% \n', perc);
-            currentCoeffs = datcomParser5();
+            currentCoeffs = datcomParser();
 
             for f = 1:numel(fn)
                 CoeffsE.(fn{f})(:,:,:,:,n) = currentCoeffs.(fn{f});
@@ -89,8 +90,7 @@ Geometry.xcg = datcom.xcg;
 save('empty', 'State', 'Coeffs', 'Geometry');
 
 %%
-cd ..
-cd commonFunctions/Datcom
+cd(datcomPath)
 delete('for003.dat', 'for004.dat', 'for005.dat', 'for006.dat', 'for009.dat',...
     'for010.dat', 'for011.dat', 'for012.dat')
 

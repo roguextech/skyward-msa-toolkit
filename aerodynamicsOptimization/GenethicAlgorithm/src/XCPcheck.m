@@ -1,5 +1,5 @@
 function [c, ceq] = XCPcheck(x, datcom, settings)
-
+datcomPath = '../../commonFunctions/Datcom/';
 datcom.Chord1 = x(1)/100;
 datcom.Chord2 = x(2)/100;
 datcom.Height = x(3)/100;
@@ -41,8 +41,8 @@ datcom.Alt = settings.z0;
 %%%
 xcg = settings.xcg - settings.Lnose;
 datcom.xcg = xcg(1) + datcom.Lnose;
-createFor006(datcom, settings);
-[Coeffs0, ~] = datcomParser5();
+createFor006(datcom, settings, datcomPath);
+[Coeffs0, ~] = datcomParser();
 
 %% LAUNCHPAD DYNAMICS
 % State
@@ -84,12 +84,12 @@ for i = 1:8
     datcom.Beta = betaExit;
     
     datcom.xcg = xcg(1) + datcom.Lnose;
-    createFor006(datcom, settings);
-    [CoeffsF, ~] = datcomParser5();
+    createFor006(datcom, settings, datcomPath);
+    [CoeffsF, ~] = datcomParser();
     %%%
     datcom.xcg = xcg(2) + datcom.Lnose;
-    createFor006(datcom, settings);
-    [CoeffsE, ~] = datcomParser5();
+    createFor006(datcom, settings, datcomPath);
+    [CoeffsE, ~] = datcomParser();
 
     XCPfullLon = -CoeffsF.X_C_P(indexAlpha);
     XCPemptyLon = -CoeffsE.X_C_P(indexAlpha);
