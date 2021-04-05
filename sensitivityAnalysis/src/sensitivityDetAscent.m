@@ -1,24 +1,21 @@
 function [X, ApoTime, data_ascent] = sensitivityDetAscent(settings)
 %{
+sensitivityDetAscent - This function runs a simulation of the ascent phase 
+with determistic variations of the parameters.
 
-sensitivityDetAscent - This function runs a simulation of the
-ascent phase with determistic variations of the coefficients
-
-INTPUTS:
-            - settings, rocket data structure;
+INPUTS:
+- settings, struct, stores data of the rocket and of the simulation.
 
 OUTPUTS:
-            - X, Apogee coordinates in NED
-            - ApoTime, times when the apogee is reached;
-            - data_ascent, Usefull values for the plots.
+- X, array [3, n° parameters, n° variations], Apogee coordinates in NED
+- ApoTime, array,  [n° parameters, n° variations], times when the apogee is reached
+- data_ascent, cell, (n° variations, n° parameters), useful data for the plots
 
-Author: Luca Facchini
-Skyward Experimental Rocketry | AFD Dept
-email: luca.facchini@skywarder.eu
-Revision date: 22/12/2020
+CALLED FUNCTIONS: windConstGenerator, parfor_progress, ascent, recallOdeFcn.
 
+REVISIONS:
+- #0 22/12/2020, Release, Luca Facchini
 %}
-
 
 %% STARTING CONDITIONS (EQUAL FOR ALL)
 

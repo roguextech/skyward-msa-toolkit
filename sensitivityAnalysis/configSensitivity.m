@@ -1,9 +1,9 @@
 %{
+configSensitivity - Script to set up the sensitivity analysis. The
+paramenters are stored in the 'settings' struct.
 
-CONFIG - This script sets up all the parameters for the simulation
-All the parameters are stored in the "settings" structure.
-
-
+REVISIONS:
+- #0 22/12/2020, Release, Luca Facchini
 %}
 
 %% LAUNCH SETUP
@@ -42,10 +42,10 @@ settings.wind.Az = (180)*pi/180; % [rad] Azimuth, user input in degrees (ex. 90)
 % the structural mass of the rocket ('ms')
 % E.g: 
 %   settings.sensitivity.para = {'CA' 'CN' 'CY' 'CM' 'CL' 'CYB' 'CNA' 'ms'};
-settings.sensitivity.para = {'CA','CN','ms'};
+settings.sensitivity.para = {'CA'};
 
 % Determines which simulation is run
-settings.sensitivity.stoch = false;  
+settings.sensitivity.stoch = true;  
 % - false: consider deterministic paramters variations  (option 1)
 % - true: consider random variations (option 2)
 

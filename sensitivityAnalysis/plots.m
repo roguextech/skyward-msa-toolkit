@@ -1,12 +1,8 @@
 %{
+plots - script to plot the results of the sensitivity analysis.
 
-PLOTS - this script plots the computed data
-
-Author: Luca Facchini
-Skyward Experimental Rocketry | AFD Dept | crd@skywarder.eu
-email: luca.facchini@skywarder.eu
-Release date: 23/12/2020
-
+REVISIONS:
+- #0 22/12/2020, Release, Luca Facchini
 %}
 
 Ncoeff = length(settings.sensitivity.para);

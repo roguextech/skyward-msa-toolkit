@@ -1,24 +1,24 @@
 function [X, ApoTime, data_ascent] = sensitivityStochAscent(settings)
 %{
+sensitivityStochAscent - This function runs a stochastic sensitivity analysis
+of the ascent phase with stochastic variations of the parameters.
 
-sensitivityStochAscent - This function runs a stochastic sensitivity
-analysis of the ascent phase with stochastic variations of the coefficients
-
-INTPUTS:
-            - settings, rocket data structure;
+INPUTS:
+- settings, struct, stores data of the rocket and of the simulation.
 
 OUTPUTS:
-            - X, Apogee coordinates in NED
-            - ApoTime, times when the apogee is reached;
-            - data_ascent, Usefull values for the plots.
+- X, array [3, n° simulations], Apogee coordinates in NED
+- ApoTime, array,  [n° simulations, 1], times when the apogee is reached
+- data_ascent, cell, (n° simulations, 1), useful data for the plots
 
-Author: Luca Facchini
-Skyward Experimental Rocketry | AFD Dept
-email: luca.facchini@skywarder.eu
-Revision date: 22/12/2020
+CALLED FUNCTIONS: windConstGenerator, parfor_progress, ascent, recallOdeFcn.
 
+REVISIONS:
+- #0 22/12/2020, Release, Luca Facchini
+- #1 05/04/2021, Revision, Giulio Pacifici
+  Changes: Variation of more than one parameter. Normal distribution of
+  uncertainty. Uncertainty on thrust.
 %}
-
 
 %% STARTING CONDITIONS (EQUAL FOR ALL)
 
@@ -38,7 +38,7 @@ OMEGA = settings.OMEGA;
 PHI = settings.PHI;
 
 % WIND GENERATION
-[uw, vw, ww, Azw] = windConstGenerator(Az, Az, El, El, Magw, Magw);
+[uw, vw, ww, Azw] = windConstGenerator(settings.wind);
 settings.constWind = [uw, vw, ww];
 
 % Attitude
@@ -53,8 +53,6 @@ Y0a = [X0; V0; W0; Q0; settings.Ixxf; settings.Iyyf; settings.Izzf];
 %% PREALLOCATION
 N = settings.sensitivity.N;
 
-% Preallocation depends on what simulation is performed (determinatic
-% variations or stochastic variations)
 ApoTime = zeros(N,1);
 X = zeros(3,N);
 data_ascent = cell(N,1);

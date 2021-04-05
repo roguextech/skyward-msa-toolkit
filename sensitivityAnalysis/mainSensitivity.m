@@ -1,6 +1,8 @@
 %{
 mainSensitivity - main script for the sensitivity analysis.
 
+CALLED SCRIPTS: simulationsData, configSensitivity, plots
+
 CALLED FUNCTIONS: sensitivityStochAscent, sensitivityDetAscent.
 
 REVISIONS:
