@@ -5,7 +5,7 @@ The simulator predicts 3D trajectory, apogee, forces acting on the rockets, and 
 ## Usage
 The simulator requires aerodynamic coefficients computed using Missile DACTOM 97: one with the parameters of
 the rocket full of fuel and another with the parameters of the empty rocket. These must be stored in the `\data` folder with the name `rocketname_empty.mat` and `rocketname_full.mat`.
-Before starting the simulation, data and parameters to be used must be specified in `config.m` by changing the appropriate field in the `settings` variable, such as
+Before starting the simulation, data and parameters to be used must be specified in `configSimulator.m` by changing the appropriate field in the `settings` variable, such as
 * Rocket name
 * Launchpad data (height, inclination)
 * Geometry, mass, aerodyanmic properties (length, mass, moments of inertia, reference surface etc..)
@@ -15,7 +15,7 @@ Before starting the simulation, data and parameters to be used must be specified
 * Type of simulation to be performed (ascend phase + parachute descend, ballistic, stochastic, parachute failure etc..) 
 * Plot settings
 
-The appropriate simulation is then started running `start_simulation.m`,based on the settings specified
+The appropriate simulation is then started running `mainSimulator.m`,based on the settings specified
 
 ## Types of simulation
 The standard simulation is a 6 d.o.f. dynamics in the ascend phase and 3 d.o.f. descent with a parachute. However it is possible to simulate the descend phase using a 6 d.o.f. dynamics for a ballistic flight or in the case of the parachute failure. <br/>

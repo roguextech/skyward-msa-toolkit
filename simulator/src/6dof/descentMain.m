@@ -1,4 +1,32 @@
 function [dY, parout] = descentMain(t, Y, settings)
+%{
+    descentMain - ode function of the main's descent phase (third stage of descent)
+   
+    INPUTS:
+        -  t            [nx1]          integration time                [s]
+        -  Y            [nx28]         state vector                    [-]
+
+           State vector: [ x y z | u v w | p q r | q0 q1 q2 q3 | Ixx Iyy Izz | x_para1 y_para1 z_para1 | u_para1 v_para1 w_para1 | x_para2 y_para2 z_para2 | u_para2 v_para2 w_para2]:
+
+                            * (x y z), NED{north, east, down} horizontal frame;
+                            * (u v w), body frame velocities;
+                            * (p q r), body frame angular rates;
+                            * (q0 q1 q2 q3), attitude unit quaternion;
+                            * (Ixx Iyy Izz), Inertias;
+                            * (x_para1 y_para1 z_para1), NED{north, east, down} horizontal frame of the drogue;
+                            * (u_para1 v_para1 w_para1), body frame velocities of the drogue;
+                            * (x_para2 y_para2 z_para2), NED{north, east, down} horizontal frame of the main;
+                            * (u_para2 v_para2 w_para2), body frame velocities of the main;
+
+        -  settings     [1x1 struct]   settings struct                 [-]
+
+    OUTPUTS:
+        -  dY           [nx28]         state derivatives vector        [-]
+        -  parout       [1x1 struct]   quantities saved fot the plots  [-]
+
+    REVISIONS:
+        - #0 16/12/2020, Release, Davide Rosato, Fiammetta Artioli
+%}
 %% RECALLING THE STATE
 % Rocket state
 x_rocket = Y(1);

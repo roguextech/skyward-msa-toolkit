@@ -1,4 +1,31 @@
 function [dY, parout] = descentDrogue(t, Y, settings)
+%{
+    descentDrogue - ode function of the drogue's opening phase (first stage of descent)
+   
+    INPUTS:
+        -  t            [nx1]          integration time                [s]
+        -  Y            [nx22]         state vector                    [-]
+
+           State vector: [ x y z | u v w | p q r | q0 q1 q2 q3 | Ixx Iyy Izz | x_para y_para z_para | u_para v_para w_para]:
+
+                            * (x y z), NED{north, east, down} horizontal frame;
+                            * (u v w), body frame velocities;
+                            * (p q r), body frame angular rates;
+                            * (q0 q1 q2 q3), attitude unit quaternion;
+                            * (Ixx Iyy Izz), Inertias;
+                            * (x_para y_para z_para), NED{north, east, down} horizontal frame of the drogue;
+                            * (u_para v_para w_para), body frame velocities of the drogue;
+
+        -  settings     [1x1 struct]   settings struct                 [-]
+
+    OUTPUTS:
+        -  dY           [nx22]         state derivatives vector        [-]
+        -  parout       [1x1 struct]   quantities saved fot the plots  [-]
+
+    REVISIONS:
+        - #0 16/12/2020, Release, Davide Rosato, Fiammetta Artioli
+%}
+
 %% RECALLING THE STATE
 % Rocket state
 x_rocket = Y(1);
