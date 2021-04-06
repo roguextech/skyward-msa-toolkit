@@ -11,7 +11,7 @@ CALLED FUNCTIONS: createFor006, datcomParser.
 CALLED DATA FILES: -
 
 REVISIONS:
-- 0     18/10/2019, release     Adriano Filippo Inno
+- 0     18/10/2019, release     Adriano Filippo Inno, Giulio Pacifici
 
 - 1     27/03/2021, Compatibility with common functions folder
                     Adriano Filippo Inno
