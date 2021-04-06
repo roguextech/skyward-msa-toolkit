@@ -70,7 +70,7 @@ X0pad = [0; 0; 0; 0];
 %%% Attitude
 Q0 = angleToQuat(settings.PHI, settings.OMEGA, 0*pi/180)';
 
-[Tpad, Ypad] = ode113(@LaunchPadFreeDyn, [0, 10], X0pad, settings.ode.optionspad,...
+[Tpad, Ypad] = ode113(@launchPadFreeDyn, [0, 10], X0pad, settings.ode.optionspad,...
     settings, Q0, Coeffs0.CA(2));
 
 %% COMPUTING THE LAUNCHPAD STABILITY DATA

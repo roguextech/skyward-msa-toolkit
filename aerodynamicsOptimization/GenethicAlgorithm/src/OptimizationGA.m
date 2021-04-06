@@ -1,4 +1,4 @@
-function [apogee] = OptimizationGA(x, datcom, settings)
+function [apogee] = optimizationGA(x, datcom, settings)
 %{
 optimizationGA - cost function of the optimization
 
