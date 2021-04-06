@@ -1,7 +1,21 @@
 %{
+mainAutoMatProtub - Main script to compute aerodynamic coefficients using
+                    Missile DATCOM. Two MAT-file are created: "full.mat"
+                    and "empty.mat" containing the data of full and empty
+                    missile configurations.
 
+CALLED SCRIPTS: simulationsData, configAutoMatProtub.
+
+CALLED FUNCTIONS: createFor006, datcomParser.
+
+CALLED DATA FILES: -
+
+REVISIONS:
+- 0     18/10/2019, release     Adriano Filippo Inno
+
+- 1     27/03/2021, Compatibility with common functions folder
+                    Adriano Filippo Inno
 %}
-
 close all
 clear 
 clc
