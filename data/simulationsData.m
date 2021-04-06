@@ -164,7 +164,7 @@ settings.ode.optionsasc1 = odeset('Events', @eventApogee, 'InitialStep', 1);    
 settings.ode.optionsasc2 = odeset('InitialStep', 1);                                %ODE options for due to the opening delay of the parachute
 settings.ode.optionspara = odeset('Events', @eventParaCut);                       %ODE options for the parachutes
 settings.ode.optionsdesc = odeset('Events', @eventLanding);                        %ODE options for ballistic descent
-settings.ode.optionspad = odeset('Events', @EventPad);                              %ODE options for the launchpad phase
+settings.ode.optionspad = odeset('Events', @eventPad);                              %ODE options for the launchpad phase
 
 % Settings for descent 6dof simulation
 settings.ode.optionsDrogue6DOF = odeset('Events', @eventParaCut, 'AbsTol', 1e-6,'RelTol', 1e-6);         %ODE options for due to cutting of the drogue chute

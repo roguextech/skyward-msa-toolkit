@@ -1,8 +1,14 @@
 %{
-Skyward Experimental Rocketry | CRD Dept | crd@skywarder.eu
-email: adriano.filippo.inno@skywarder.eu
-Update date: 21/10/20
+configOptimization - this script runs the aerodynamics surfaces optimization.
 
+CALLED SCRIPTS: simulationData, configOptimization
+
+CALLED FUNCTIONS: optimizationGA, XCPcheck
+
+CALLED DATA FILES: /
+
+REVISIONS:
+- 0     21/10/20,   release     Adriano Filippo Inno
 %}
 
 clear 
@@ -41,8 +47,9 @@ fitnessfcn = @(x) OptimizationGA(x, datcom, settings);
 
 computationalTime = toc;
 
-XCP = -XCPcheck(x, datcom, settings) + settings.cal_min;
+XCP = -XCPcheck(x, datcom, settings) + settings.minStabilityMargin;
 
+cd(datcomPath)
 delete('for003.dat', 'for004.dat', 'for005.dat', 'for006.dat', 'for009.dat',...
     'for010.dat', 'for011.dat', 'for012.dat');
 
