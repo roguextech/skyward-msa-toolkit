@@ -1,12 +1,16 @@
 %{
 
-CONFIG - This script sets up all the parameters for the simulation
-All the parameters are stored in the "settings" structure.
+configApogee - This script sets up all the parameters for the simulation
+               All the parameters are stored in the "settings" structure.
 
-Author: Matteo Pozzoli
-Skyward Experimental Rocketry | CRD Dept | crd@skywarder.eu
-email: matteo.pozzoli@skywarder.eu
-Release date: 23/11/2020
+CALLED SCRIPT: -
+
+CALLED FUNCTIONS: -
+
+CALLED DATA FILES: -
+
+REVISIONS:
+- 23/11/2000, Creation, Matteo Pozzoli
 
 %}
 

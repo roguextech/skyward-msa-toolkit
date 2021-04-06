@@ -1,14 +1,19 @@
 %{
 
-MAIN - this is the main script; it runs the simulation that has been chosen
-       in config.m. It computes the apogee and the maximum acceleration
-       reached by the rocket changing its structural mass and looping on
-       different motors.
+mainApogee - this is the main script; it runs the simulation that has been 
+             chosen in configApogee.m. It computes the apogee, the maximum 
+             acceleration and the launchpad exit velocity reached by the 
+             rocket changing its structural mass and looping on different 
+             motors.
 
-Author: Matteo Pozzoli
-Skyward Experimental Rocketry | CRD Dept | crd@skywarder.eu
-email: matteo.pozzoli@skywarder.eu
-Release date: 23/11/2020
+CALLED SCRIPT: simulationsData, configApogee
+
+CALLED FUNCTIONS: quickApogeeOnly
+
+CALLED DATA FILES: -
+
+REVISIONS:
+- #0 23/11/2000, Release, Matteo Pozzoli
 
 %}
 
