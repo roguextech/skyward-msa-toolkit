@@ -1,34 +1,31 @@
 function [data_para, Tp, Yp, bound_value] = descentParachute6Dof(Ta, Ya, settings)
-%{ This function computes the descent phase of a rocket connected to 2
-% parachute: a drogue and a main one. Due to model complexity, the problem
-% is divided into 3 phases:
-%    - PHASE 1: drogue extraction and first desccent phase
-%    - PHASE 2: drogue pulls out the main parachute till main shock cord
-%               has reached its nominal length
-%    - PHASE 3: final descent phase with both main and drogue.
-%
-%
-% -------------------------------------------------------------------------
-% INPUT PARAMETERS:
-% -  Ta            [nx1]          integration time from ascent          [s]
-% -  Ya            [nx16]         state vector from ascent              [-]
-% -  settings      [1x1 struct]   settings struct                       [-]    
-%
-% -------------------------------------------------------------------------
-% OUTPUT PARAMETERS:
-% -  data_para     [2x1 struct]   descent phases data                   [-]
-% -  Tp            [Nx1]          descent integration time vector       [s] 
-% -  Yp            [Nx78]         descent state matrix                  [-]
-% -  bound_value   [3x1 struct]   boundary values for the plots         [-]
-%
-% CALLED FUNCTIONS:
-% - descentDrogue;
-% - extractionMain;
-% - descentMain;
-% 
-% REVISIONS:
-% - #0 16/12/2020, Release, Davide Rosato, Fiammetta Artioli
-%}% -------------------------------------------------------------------------
+%{
+     This function computes the descent phase of a rocket connected to 2
+     parachute: a drogue and a main one. Due to model complexity, the problem
+     is divided into 3 phases:
+        - PHASE 1: drogue extraction and first desccent phase
+        - PHASE 2: drogue pulls out the main parachute till main shock cord
+                   has reached its nominal length
+        - PHASE 3: final descent phase with both main and drogue.
+
+
+     INPUT PARAMETERS:
+     -  Ta, array, [n° variations, 1], integration time from ascent          
+     -  Ya, array, [n° variations, 16], state vector from ascent              
+     -  settings, struct, stores data of the rocket and of the simulation    
+
+
+     OUTPUT PARAMETERS:
+     -  data_para, cell, (n° parachutes, 1), descent phase data                  
+     -  Tp, array, descent integration time vector       
+     -  Yp, array, descent state matrix                  
+     -  bound_value, struct, boundary values for the plots         
+
+     CALLED FUNCTIONS: descentDrogue, extractionMain, descentMain, recallOdeFcn
+
+     REVISIONS:
+     - #0 16/12/2020, Release, Davide Rosato, Fiammetta Artioli
+%}
     bound_value = struct;
     bound_value(1).t = Ta(end);
     bound_value(1).X = [Ya(end, 2), Ya(end, 1), -Ya(end, 3)];

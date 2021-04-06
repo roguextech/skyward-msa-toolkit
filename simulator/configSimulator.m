@@ -3,11 +3,8 @@
 CONFIG - This script sets up all the parameters for the simulation
 All the parameters are stored in the "settings" structure.
 
-Author: Francesco Colombi
-Skyward Experimental Rocketry | CRD Dept | crd@skywarder.eu
-email: francesco.colombi@skywarder.eu
-Release date: 16/04/2016
-
+REVISIONS:
+- #0 16/04/2016, Release, Francesco Colombi
 %}
 
 %% LAUNCH SETUP

@@ -3,24 +3,21 @@ function [LP, X, ApoTime, data_ascent, data_bal] = stochRunBal(settings)
 
 stochRunBal - This function runs a stochastic simulation (parallel)
 
-INPUTS:     - settings, rocket data structure.
+INPUTS:     
+            - settings, struct, stores data of the rocket and of the simulation.
 
 OUTPUTS:
-            - LP, Landing Points matrix;
-            - X, Apogee Points matrix;
-            - ApoTime, Apogee time vector;
-            - data_ascent, cell matrix containing fligth data of the ascent phase;
-            - data_para, cell matrix containing fligth data of the descent phase.
+            - LP, array, [n° simulations, 3], Landing Points matrix;
+            - X, array, [n° simulations, 3], Apogee Points matrix;
+            - ApoTime, array,  [n° simulations, 1], Apogee time vector;
+            - data_ascent, cell, (n°simulations, 1), cell matrix containing fligth data of the ascent phase;
+            - data_para, cell, (n°simulations, n° of parachutes), cell matrix containing fligth data of the descent phase.
 
-Author: Ruben Di Battista
-Skyward Experimental Rocketry | CRD Dept | crd@skywarder.eu
-email: ruben.dibattista@skywarder.eu
-April 2014; Last revision: 29.V.2014
+CALLED FUNCTIONS: windConstGenerator, parfor_progress, ascent, descentBallistic, recallOdeFcn.
 
-Author: Adriano Filippo Inno
-Skyward Experimental Rocketry | AFD Dept
-email: adriano.filippo.inno@skywarder.eu
-Revision date: 09/10/2019
+REVISIONS:
+- #0 29.05.2014, Release, Ruben Di Battista
+- #1 09/10/2019, Revision, Adriano Filippo Inno
 
 %}
 

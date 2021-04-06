@@ -7,17 +7,17 @@ subject to the constraints specified in config.m:
                 - Landing area                                                         #2
                 - Crash of 1st drogue at opening (apogee + delay time of opening)      #3
 
-INPUTS:         - settings, rocket data structure;
-                - data_ascent, cell matrix containing fligth data of the ascent phase;
-                - data_descent, cell matrix containing fligth data of the descent phase;
-                - LP, landing points.
+INPUTS:         - settings, struct, rocket data structure;
+                - data_ascent, cell, (n°simulations, 1), cell matrix containing fligth data of the ascent phase;
+                - data_descent, cell, (n°simulations, n°parachutes), cell matrix containing fligth data of the descent phase;
+                - LP, array, [n°simulations, 3], landing points.
 
 OUTPUTS:
-                - p, probability;
-                - flag, outputs if each constrain is active as follows;
-                - ind_Pin, logical vector that specifies il the i-th landing point is inside the landing area;
-                - ind_Pout, logical vector that specifies il the i-th landing point is outside the landing area;
-                - LPOP, last parachute opening points.
+                - p, array, [1, 1], probability;
+                - flag, array, [n° simulations, 1], outputs if each constrain is active as follows;
+                - ind_Pin, logical array, [1, 1], logical vector that specifies il the i-th landing point is inside the landing area;
+                - ind_Pout, logical array, [1, 1], logical vector that specifies il the i-th landing point is outside the landing area;
+                - LPOP, array, [n° simulations, 2], last parachute opening points.
 
 FLAGS (logical explanation):     #1  #2  #3
                                  1   1   1    ==> flag = 1
@@ -29,11 +29,8 @@ FLAGS (logical explanation):     #1  #2  #3
                                  0   0   1    ==> flag = -6
                                  0   0   0    ==> flag = -7
 
-Author: Adriano Filippo Inno
-Skyward Experimental Rocketry | AFD Dept | crd@skywarder.eu
-email: adriano.filippo.inno@skywarder.eu
-Release date: 16/11/2018
-
+REVISIONS:
+- #0 16/11/2018, Release, Adriano Filippo Inno
 %}
 
 N_simul = settings.stoch.N;

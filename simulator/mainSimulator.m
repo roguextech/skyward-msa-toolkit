@@ -2,10 +2,13 @@
 
 START_SIMULATION - this is the main script; it runs the simulation that has been chosen in config.m
 
-Author: Francesco Colombi
-Skyward Experimental Rocketry | CRD Dept | crd@skywarder.eu
-email: francesco.colombi@skywarder.eu
-Release date: 16/04/2016
+CALLED SCRIPTS: simulationsData, configSimulator, plots.
+
+CALLED FUNCTIONS: stochRunBal, stdRunBallistic, stochRun, stdRun, launchProb.
+
+REVISIONS:
+- #0 16/04/2016, Release, Francesco Colombi
+
 
 %}
 

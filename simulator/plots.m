@@ -2,11 +2,10 @@
 
 PLOTS - this script plots the computed data
 
-Author: Adriano Filippo Inno
-Skyward Experimental Rocketry | AFD Dept | crd@skywarder.eu
-email: adriano.filippo.inno@skywarder.eu
-Release date: 13/01/2018
+CALLED FUNCTIONS: dcmToAngle.
 
+REVISIONS:
+- #0 13/01/2018, Release, Adriano Filippo Inno
 %}
 
 if settings.stoch.N == 1

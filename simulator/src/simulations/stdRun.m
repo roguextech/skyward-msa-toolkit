@@ -4,28 +4,21 @@ function [Tf, Yf, Ta, Ya, bound_value] = stdRun(settings)
 stdRun - This function runs a standard (non-stochastic) simulation
 
 INTPUTS: 
-            - settings, rocket data structure;
+            - settings, struct, stores data of the rocket and of the simulation.
 
 OUTPUTS:
-            - Tf, Total integration time vector; 
-            - Yf, Total State Matrix;
-            - Ta, Ascent Integration time vector;
-            - Ya, Ascent State Matrix;
-            - bound_value, Usefull values for the plots;
+            - Tf, array, Total integration time vector; 
+            - Yf, array, Total State Matrix;
+            - Ta, array, [n° variations, 1], Ascent Integration time vector;
+            - Ya, array, [n° variations, 16], Ascent State Matrix;
+            - bound_value, struct, Useful values for the plots;
 
-Author: Ruben Di Battista
-Skyward Experimental Rocketry | CRD Dept | crd@skywarder.eu
-email: ruben.dibattista@skywarder.eu
+CALLED FUNCTIONS: windConstGenerator, ascent, recallOdeFcn, descentParachute, descentParachute6Dof.
 
-Author: Francesco Colombi
-Skyward Experimental Rocketry | CRD Dept | crd@skywarder.eu
-email: francesco.colombi@skywarder.eu
-
-Author: Adriano Filippo Inno
-Skyward Experimental Rocketry | AFD Dept
-email: adriano.filippo.inno@skywarder.eu
-Revision date: 09/10/2019
-
+REVISIONS:
+- #0, Release, Ruben Di Battista
+- #1, Revision, Francesco Colombi
+- #2 09/10/2019, Revision, Adriano Filippo Inno
 %}
 
 if settings.wind.model && settings.wind.input

@@ -8,8 +8,9 @@ eventParaCut - Event function to stop simulation when the main parachute is extr
                has completed the extraction)
 
     INPUTS:     
-            - t, integration time;
-            - Y, State vector: [ x y z | u v w | p q r | q0 q1 q2 q3 | Ixx Iyy Izz | x_para1 y_para1 z_para1 | u_para1 v_para1 w_para1 | x_para2 y_para2 z_para2 | u_para2 v_para2 w_para2]:
+            - t, array, [n° variations, 1], integration time;
+            - Y, array, [n° variations, 28], state vector;
+                    State vector: [ x y z | u v w | p q r | q0 q1 q2 q3 | Ixx Iyy Izz | x_para1 y_para1 z_para1 | u_para1 v_para1 w_para1 | x_para2 y_para2 z_para2 | u_para2 v_para2 w_para2]:
 
                             * (x y z), NED{north, east, down} horizontal frame;
                             * (u v w), body frame velocities;
@@ -21,12 +22,12 @@ eventParaCut - Event function to stop simulation when the main parachute is extr
                             * (x_para2 y_para2 z_para2), NED{north, east, down} horizontal frame of the main;
                             * (u_para2 v_para2 w_para2), body frame velocities of the main;
 
-            - settings, rocket data structure.
+            - settings, struct, rocket data structure.
 
     OUTPUTS:        
-            - isterminal, logical input to stop the integration;
-            - direction, to select the sign that the function must have when tends to zero, 1 = positive;
-            - value, selected value to check if the integration has to be stopped (difference between relative position of the main and its chord length).
+            - isterminal, logical array [1,1], logical input to stop the integration;
+            - direction, logical array [1,1], to select the sign that the function must have when tends to zero, 1 = positive;
+            - value, logical array [1,1], selected value to check if the integration has to be stopped (difference between relative position of the main and its chord length).
 
     REVISIONS:
         - #0 16/12/2020, Release, Davide Rosato
