@@ -1,4 +1,20 @@
 function q = angleToQuat(yaw, pitch, roll)
+%{
+angleToQuat - This function converts Euler angles to quaternion.
+
+INPUTS:
+        - yaw, double [1,1], rotation around z-axis;
+        - pitch, double [1,1], rotation around y-axis;
+        - roll, double [1,1], rotation around x-axis.
+
+OUTPUTS:
+        - q, double [4,1], quaternion.
+
+CALLED FUNCTIONS: -
+
+REVISIONS:
+-
+%}
 
 dcm = zeros(3);
 cr = cos(roll); sr = sin(roll);

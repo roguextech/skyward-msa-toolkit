@@ -1,21 +1,20 @@
 function [Coeffs, State] = datcomParser(varargin)
-%{ 
-
-DATCOMPARSER - function to parse the 'for006.dat' file and to generate the
-               matrices of the aerodynamic coefficients.
+%{
+ datcomParser - function to parse the 'for006.dat' file and to generate the
+                matrices of the aerodynamic coefficients.
 
 INPUTS:
-            - varargin: it can be either a string that contains the name of
-                        .mat file that is saved in the Current Folder or it
-                        can be an empty field and the .mat file is not
-                        saved. (Read NOTES for more informations.)
+        - varargin, it can be either a string that contains the name of .mat file 
+                    that is saved in the Current Folder or it can be an empty field
+                    and the .mat file is not saved. 
+                    (Read NOTES for more informations.)
 
 OUTPUTS: 
-            - Coeffs:   struct in which the fields are the matrices 
-                        of the aerodynamic coefficients. (e.g. Coeffs.CA)
-            - State:    struct in which the fields are the arrays of the
-                        aerodynamic states (Alpha, Mach, Beta, Altitude)
-                        used to compute the aerodynamic coefficients.
+        - Coeffs, struct, struct in which the fields are the matrices of the aerodynamic 
+                  coefficients. (e.g. Coeffs.CA)
+        - State:, struct, struct in which the fields are the arrays of the aerodynamic states
+                 (Alpha, Mach, Beta, Altitude) used to compute the aerodynamic 
+                 coefficients.
 
 NOTES: If the function is used with the syntax 
 '[Coeffs, State] = datcomParser()' the file .mat is not saved in the 
@@ -26,16 +25,12 @@ State that can be loaded into the workspace in any future moment using the
 command MATLAB function 'load'. Note that the file 'for006.dat' that has to
 be parsed must be in the Current Folder.
 
-Author: Giulio Pacifici
-Skyward Experimental Rocketry | CRD Dept | crd@skywarder.eu
-email: giulio.pacifici@skywarder.eu
-Release date: 14/10/2019
+CALLED FUNCTIONS: -
 
-Author: Adriano Filippo Inno
-Skyward Experimental Rocketry | CRD Dept | crd@skywarder.eu
-email: adriano.filippo.inno@skywarder.eu
-Update date: 21/10/20
+REVISIONS:
+- #0    14/10/2019, Release, Giulio Pacifici
 
+- #1    21/10/2020, Revision, Adriano Filippo Inno
 %}
 
 if not(isempty(varargin))

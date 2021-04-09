@@ -4,22 +4,20 @@ function createFor006(datcom, settings, datcomPath)
 CREATEFOR006 - function to create the 'for006.dat' file.
 
 INPUTS:
-            - datcom:  struct containing all the values to be inserted in
-                        the for005
-            - currentDir: variable containing the current directory where 
-                          MatLab will work
+        - datcom, struct, data of the rocket and the simulation;
+        - settings, struct, data of the rocket and the simulation;
+        - datcomPath, path, relative path from where this function is called 
+                      to the location of this function.
 
 OUTPUTS: 
+/
 
-Author: Giulio Pacifici
-Skyward Experimental Rocketry | CRD Dept | crd@skywarder.eu
-email: giulio.pacifici@skywarder.eu
-Release date: 21/10/2019
+CALLED FUNCTION: -
 
-Author: Adriano Filippo Inno
-Skyward Experimental Rocketry | CRD Dept | crd@skywarder.eu
-email: adriano.filippo.inno@skywarder.eu
+REVISION:
+- #0    21/10/2019, Release, Giulio Pacifici
 
+- #1                Revision, Adriano Filippo Inno
 %}
 
 oldFolder = cd;                     % save the older current directory

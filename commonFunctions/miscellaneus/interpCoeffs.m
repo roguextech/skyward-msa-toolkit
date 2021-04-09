@@ -1,20 +1,25 @@
-function [coeffsValues, angle0] = interpCoeffs(t, alpha, M, beta, alt, c, alpha_tot, settings)
+function [coeffsValues, angle0] = interpCoeffs(t, alpha, M, beta, alt, c, alphaTot, settings)
 %{
 interpCoeffs - interpolation of aerodynamic coefficients.
 
 INPUTS:
-            - t, integration time;
-            - alpha, angle of attack;
-            - M, mach number;
-            - beta, sideslip angle;
-            - alt, altitude (m.s.l.);
-            - c, aerobrakes control variable;
-            - alpha_tot, total angle of attack;
-            - settings, input structure;
+        - t, double [1,1], integration time, [s];
+        - alpha, double[1,1], angle of attack, [];
+        - M, double[1,1], mach number, [];
+        - beta, double[1,1], sideslip angle, [];
+        - alt, double[1,1], altitude, [m];
+        - c, double[1,1], aerobrakes control variable, [];
+        - alphaTot, double[1,1], total angle of attack, [];
+        - settings, struct, rocket and simulation data.
 
 OUTPUTS:
-            - coeffsValues, array of aerodynamic coefficients;
-            - angle0, array of the reference aerodynamic angles;
+        - coeffsValues, array [16,1],  aerodynamic coefficients;
+        - angle0, array [2,1], array of the reference aerodynamic angles.
+
+CALLED FUNCTIONS: -
+
+VERSIONS:
+-
 %}
 
 %% Load data:
@@ -30,9 +35,9 @@ M_datcom = settings.Machs;
 
 %% Interpolation:
 % Last two entries of cellT and inst are for the evaluation of the XCP for
-% alpha = alpha_tot and beta = 0.
+% alpha = alphaTot and beta = 0.
 cellT = {A_datcom, M_datcom, B_datcom, H_datcom, A_datcom, B_datcom};
-inst = [alpha, M, beta, alt, alpha_tot, 0];
+inst = [alpha, M, beta, alt, alphaTot, 0];
 
 index = zeros(6, 1);
 for i = 1:6

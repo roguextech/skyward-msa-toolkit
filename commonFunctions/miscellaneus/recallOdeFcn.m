@@ -1,22 +1,27 @@
 function [allSteps] = recallOdeFcn(fun, T, Y, varargin)
 %{
-
-RECALLODEFCN - This function allows to compute some parameters used
-inside the ODE integrations
+recallOdeFcn - This function allows to compute some parameters used
+               inside the ODE integrations.
 
 INPUTS:
-            - fun, ode function used;
-            - T, integration time vector;
-            - Y, state matrix.
+        - fun, function, ode function used;
+        - T, double [n° variation, 1], integration time vector;
+        - Y, double [n° variation, 16], state matrix,
+                            [ x y z | u v w | p q r | q0 q1 q2 q3 | m | Ixx Iyy Izz ]:
+                            * (x y z), NED{north, east, down} horizontal frame;
+                            * (u v w), body frame velocities;
+                            * (p q r), body frame angular rates;
+                            * m , total mass;
+                            * (Ixx Iyy Izz), Inertias;
+                            * (q0 q1 q2 q3), attitude unit quaternion.
 
 OUTPUTS:
-            - all_steps, structure which contains all the parameters needed.
+        - allSteps, struct, which contains all the parameters needed.
 
-Author: Adriano Filippo Inno
-Skyward Experimental Rocketry | AFD Dept
-email: adriano.filippo.inno@skywarder.eu
-Release date: 16/11/2018
+CALLED FUNCTIONS: -
 
+REVISIONS:
+- #0    16/11/2018, Release, Adriano Filippo Inno
 %}
 [~,firstStep] = fun(T(1),Y(1,:),varargin{:});
 

@@ -1,5 +1,21 @@
 function dcm = quatToDcm(q)
 
+%{
+quatToDcm - This function converts quaternion to direction cosine
+            martrix (dcm).
+
+INPUTS:
+        - q, double [4,1], quaternion.
+
+OUTPUTS:
+        - dcm, double [3,3], direction cosine matrix.
+
+CALLED FUNCTIONS: -
+
+REVISIONS:
+-
+%}
+
 dcm = zeros(3);
 
 dcm(1, 1) = q(1)^2 + q(2)^2 - q(3)^2 - q(4)^2;
