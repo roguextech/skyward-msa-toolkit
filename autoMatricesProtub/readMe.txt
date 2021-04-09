@@ -1,7 +1,7 @@
 # autoMatricesProtub
 
 This code allows an automatic computation of the rocket aerodynamic coefficients
-using Missile DATCOM.
+using Missile DATCOM, for different aerobrakes configuration.
 
 Fixed geometric variables are taken from SimulationsData.m located in ../data
 folder. Those variables that can not be prior known, like flight conditions,

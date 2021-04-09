@@ -1,4 +1,4 @@
-function [Tf, Yf, Ta, Ya, bound_value] = stdRunBallistic(settings)
+function [Tf, Yf, Ta, Ya, bound_value] = stdRunBal(settings)
 %{ 
 
 stdRunBallistic - This function runs a standard ballistic (non-stochastic) simulation

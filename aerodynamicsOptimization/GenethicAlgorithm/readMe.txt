@@ -1,7 +1,6 @@
 # aerodynamicsOptimization
 
 This code implements an aerodynamics optimization of the rocket.
-Two types of analysis are available: derministic and stochastic.
 
 The optimization variables are the fin chords and heigth, the fin shape,    
 the ogive length and the ogive shape.
