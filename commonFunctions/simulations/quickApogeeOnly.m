@@ -1,21 +1,26 @@
 function [apogee, maxAccel, vExit] = quickApogeeOnly(settings)
 
 %{
+quickApogeeOnly - This function tests the fins simulating the ascent
 
-RunSim - This function tests the fins simulating the ascent
+INPUTS:
+- settings,    struct (motor, CoeffsE, CoeffsF, para, ode, stoch, prob, wind), rocket data structure 
+                   
 
-Author: Matteo Pozzoli
-Skyward Experimental Rocketry | CRD Dept | crd@skywarder.eu
-email: matteo.pozzoli@skywarder.eu
-Website: http://www.skywarder.eu
-Release date: 14/10/2019
+OUTPUTS:
+- apogee,      double [1, 1], maximum altitude reached by the rocket [m];
+- maxAccel,    double [1, 1], maximum acceleration of the rocket [m/s^2];
+- vExit,       double [1, 1], launchpad exit velocity [m/s];
 
-Author: Adriano Filippo Inno
-Skyward Experimental Rocketry | CRD Dept | crd@skywarder.eu
-email: adriano.filippo.inno@skywarder.eu
-Update date: 21/10/20
+CALLED FUNCTIONS: windConstGenerator.
+
+REVISIONS:
+-#0 14/10/2019, Release, Matteo Pozzoli
+
+-#2 21/10/2020, Second version, Adriano Filippo Inno
 
 %}
+
 
 %% STARTING CONDITIONS
 

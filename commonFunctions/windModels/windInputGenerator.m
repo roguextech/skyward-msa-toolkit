@@ -4,20 +4,20 @@ function [uw, vw, ww] = windInputGenerator(settings, z, uncert)
 windInputGenerator - This function allows to use a custom set of wind, defined in config.m 
 
 INPUTS:
-            - settings, rocket data structure;
-            - z, local altitude;
-            - uncert, wind uncertanties.
+- settings,  struct(motor, CoeffsE, CoeffsF, para, ode, stoch, prob, wind),rocket data structure;
+- z,         double [1, 1], local altitude;
+- uncert,    double [2, 1], wind uncertanties.
 
 OUTPUTS:
-            - uw, wind component along x;
-            - vw, wind component along y;
-            - ww, wind component along z;
-            - Az, angle of Azimuth from North.
+- uw,        double [1, 1], wind component along x [m/s];
+- vw,        double [1, 1], wind component along y [m/s];
+- ww,        double [1, 1], wind component along z [m/s];
 
-Author: Adriano Filippo Inno
-Skyward Experimental Rocketry | AFD Dept | crd@skywarder.eu
-email: adriano.filippo.inno@skywarder.eu
-Release date: 13/03/2018
+CALLED FUNCTIONS: /
+
+REVISION:
+-#0, 13/03/2018, Release, Adriano Filippo Inno
+
 
 %}
 settings.wind.input_matr = [ (settings.wind.input_ground * (1 + settings.wind.input_mult/100))

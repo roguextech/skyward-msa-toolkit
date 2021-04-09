@@ -4,16 +4,16 @@ function [ww] = windVertGenerator(MagMin, MagMax)
 windVertGenerator - function that generates vertical wind component
 
 INPUTS:
-            - MagMin, Minimum wind magnitude;
-            - MagMax, Maximum wind magnitude.
+- MagMin,      double [1, 1], Minimum wind magnitude, [m/s];
+- MagMax,      double [1, 1], Maximum wind magnitude, [m/s].
 
 OUTPUTS:
-            - ww, wind component along z.
+- ww,          double [1, 1], wind component along z.
 
-Author: Ruben Di Battista & Gabriele Poiana
-Skyward Experimental Rocketry | CRD Dept | crd@skywarder.eu
-email: ruben.dibattista@skywarder.eu gabriele.poiana@skywarder.eu
-April 2014; Last revision: 17.I.2016
+CALLED FUNCTIONS: /
+
+REVISION:
+-#0, 17/01/2016, Release, Ruben Di Battista & Gabriele Poiana
 
 %}
 

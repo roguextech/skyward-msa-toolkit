@@ -1,41 +1,28 @@
 function [dY, parout] = descentParachute(t, Y, settings)
-%{ 
+%{
+descentBallistic - ode function of the descent with parachute
 
-ASCENT - ode function of the 6DOF Rigid Rocket Model
+INPUTS:
+- t,         double [1, 1] integration time [s];
+- Y,         double [6, 1] state vector [ x y z | u v w ]:
+                                * (x y z), NED{north, east, down} horizontal frame;
+                                * (u v w), body frame velocities;
+- settings, struct(motor, CoeffsE, CoeffsF, para, ode, stoch, prob, wind), rocket data structure;
 
-INPUTS:      
-            - t, integration time;
-            - Y, state vector, [ x y z | u v w ]:
+OUTPUTS:
+- dY,        double[6, 1] state derivatives
+- parout,    struct, interesting fligth quantities structure (aerodyn coefficients, forces and so on..)
 
-                                * (x y z), NED{north, east, down} horizontal frame; 
-                                * (u v w), horizontal frame velocities.
 
-            - settings, rocket data structure;
-            - uw, wind component along x;
-            - vw, wind component along y;
-            - ww, wind component along z;
-            - uncert, wind uncertanties;
-            - Hour, hour of the day of the needed simulation;
-            - Day, day of the month of the needed simulation;
+CALLED FUNCTIONS: windMatlabGenerator, windInputGenerator
 
-OUTPUTS:    
-            - dY, state derivatives;
-            - parout, interesting fligth quantities structure (aerodyn coefficients, forces and so on..).
 
-Author: Ruben Di Battista
-Skyward Experimental Rocketry | CRD Dept | crd@skywarder.eu
-email: ruben.dibattista@skywarder.eu
-April 2014; Last revision: 31.XII.2014
+REVISIONS:
+-#0 31/12/2014, Release, Ruben Di Battista
 
-Author: Francesco Colombi
-Skyward Experimental Rocketry | CRD Dept | crd@skywarder.eu
-email: francesco.colombi@skywarder.eu
-Release date: 16/04/2016
+-#1 16/04/2016, Second version, Francesco Colombi
 
-Author: Adriano Filippo Inno
-Skyward Experimental Rocketry | AFD Dept | crd@skywarder.eu
-email: adriano.filippo.inno@skywarder.eu
-Release date: 13/01/2018
+-#2 13/01/2018, Third version, Adriano Filippo Inno
 
 %}
 

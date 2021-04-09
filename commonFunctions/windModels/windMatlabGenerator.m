@@ -3,20 +3,22 @@ function [uw, vw, ww] = windMatlabGenerator(settings, z, t, Hour, Day)
 
 wind_generator - Function that generates wind components in NED reference frame, based on hwm07 model
 
-INPUT:      - settings, structure of rocket data;
-            - z, local altitude;
-            - t, time sample;
-            - Hour, hour of the day of the needed simulation;
-            - Day, day of the month of the needed simulation.
+INPUT:      
+- settings, struct(motor, CoeffsE, CoeffsF, para, ode, stoch, prob, wind), structure of rocket data;
+- z,        double [1, 1], local altitude [m];
+- t,        double [1, 1] time sample [t];
+- Hour,     double [1, 1] hour of the day of the needed simulation;
+- Day,      double [1, 1] day of the year of the needed simulation.
 
-OUTPUTS:    - uw, wind component along x;
-            - vw, wind component along y;
-            - ww, wind component along z.
+OUTPUTS:
+- uw,       double [1, 1], wind component along x [m/s];
+- vw,       double [1, 1], wind component along y [m/s];
+- ww,       double [1, 1], wind component along z [m/s];
 
-Author: Gabriele Poiana
-Skyward Experimental Rocketry | CRD Dept | crd@skywarder.eu
-email: gabriele.poiana@skywarder.eu
-January 2016; Last revision: 17.I.2016
+CALLED FUNCTIONS: /
+
+REVISION: 
+-#0, 17/01/2016, Release, Gabriele Poiana
 
 %}
 

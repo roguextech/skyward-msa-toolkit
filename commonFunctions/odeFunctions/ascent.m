@@ -1,53 +1,38 @@
 function [dY, parout] = ascent(t, Y, settings)
 %{
-
-ASCENT - ode function of the 6DOF Rigid Rocket Model
+ascent - ode function of the 6DOF Rigid Rocket Model
 
 INPUTS:
-            - t, integration time;
-            - Y, state vector, [ x y z | u v w | p q r | q0 q1 q2 q3 | Ixx Iyy Izz]:
+- t,       double [1, 1] integration time [s];
+- Y,       double [16, 1] state vector [ x y z | u v w | p q r | q0 q1 q2 q3 | Ixx Iyy Izz]:
 
                                 * (x y z), NED{north, east, down} horizontal frame;
                                 * (u v w), body frame velocities;
                                 * (p q r), body frame angular rates;
                                 * (Ixx Iyy Izz), Inertias;
-                                * (q0 q1 q2 q3), attitude unit quaternion.
- 
-
-            - settings, rocket data structure;
-            - uw, wind component along x;
-            - vw, wind component along y;
-            - ww, wind component along z;
-            - uncert, wind uncertanties;
-            - Hour, hour of the day of the needed simulation;
-            - Day, day of the month of the needed simulation;
-            - OMEGA, launchpad azimuth angle;
+                                * (q0 q1 q2 q3), attitude unit quaternion;
+- settings, struct(motor, CoeffsE, CoeffsF, para, ode, stoch, prob, wind), rocket data structure;
 
 OUTPUTS:
-            - dY, state derivatives;
-            - parout, interesting fligth quantities structure (aerodyn coefficients, forces and so on..).
+- dY,      double [16, 1] state derivatives
+- parout,  struct, interesting fligth quantities structure (aerodyn coefficients, forces and so on..)
 
+
+CALLED FUNCTIONS: windMatlabGenerator, windInputGenerator, quatToDcm, interpCoeffs 
 
 NOTE: To get the NED velocities the body-frame must be multiplied for the
 conjugated of the current attitude quaternion
 E.G.  quatrotate(quatconj(Y(:,10:13)),Y(:,4:6))
 
+REVISIONS:
+-#0 31/12/2014, Release, Ruben Di Battista
 
-Author: Ruben Di Battista
-Skyward Experimental Rocketry | CRD Dept | crd@skywarder.eu
-email: ruben.dibattista@skywarder.eu
-April 2014; Last revision: 31.XII.2014
+-#1 16/04/2016, Second version, Francesco Colombi
 
-Author: Francesco Colombi
-Skyward Experimental Rocketry | CRD Dept | crd@skywarder.eu
-email: francesco.colombi@skywarder.eu
-Release date: 16/04/2016
-
-Author: Adriano Filippo Inno
-Skyward Experimental Rocketry | AFD Dept | crd@skywarder.eu
-email: adriano.filippo.inno@skywarder.eu
+-#2 01/01/2021, Third version, Adriano Filippo Inno
 
 %}
+
 
 % recalling the states
 % x = Y(1);

@@ -1,24 +1,27 @@
 function [uw, vw, ww, Az] = windConstGenerator(windData)
 %{
 
-windConstGenerator - function that generates wind components in NED axes
+windConstGenerator - function that generates constant wind components in NED axes
 
 INPUTS:
-            - AzMin, Minimum angle of Azimuth from North;
-            - AzMax, Maximum angle of Azimuth from North;
-            - ElMin, Minimum angle of Elevation;
-            - ElMax, Maximum angle of Elevatiom.
+- windData, struct:
+            - windDAta.AzMin, Minimum angle of Azimuth from North [°];
+            - windData.AzMax, Maximum angle of Azimuth from North [°];
+            - windData.ElMin, Minimum angle of Elevation [°];
+            - windData.ElMax, Maximum angle of Elevation [°];
+            - windData.MagMin, Minimum magnitude of Wind [m/s];
+            - windData.MagMax, Maximum magnitude of Wind [m/s];
 
 OUTPUTS:
-            - uw, wind component along x;
-            - vw, wind component along y;
-            - ww, wind component along z;
-            - Az, angle of Azimuth from North.
+- uw,      double [1, 1], wind component along x [m/s];
+- vw,      double [1, 1], wind component along y [m/s];
+- ww,      double [1, 1], wind component along z [m/s];
+- Az,      double [1, 1], angle of Azimuth from North [°].
 
-Author: Ruben Di Battista
-Skyward Experimental Rocketry | CRD Dept | crd@skywarder.eu
-email: ruben.dibattista@skywarder.eu
-April 2014; Last revision: 25.IV.2014
+CALLED FUNCTIONS: /
+
+REVISIONS:
+-#0, 25/04/2014, Release, Ruben Di Battista
 
 %}
 
