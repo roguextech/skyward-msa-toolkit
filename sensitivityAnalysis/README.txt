@@ -1,7 +1,7 @@
 # sensitivityAnalysis
 
 This code implements a sensitivity analysis on the ascent phase of the rocket.
-Two types of analysis are available: derministic and stochastic.
+Two types of analysis are available: deterministic and stochastic.
 
 In the deterministic analysis it is possible to vary the nominal values of the 
 aerodynamics coefficients and the structural mass of the rocket. The relative 
@@ -13,9 +13,9 @@ The output of the deterministic analysis is a set of plots in which the value of
 several output parameters of the simulations (for example the apogee) is shown as a 
 function of the relative variation of the input parameters.
 
-In the stochastic analysis a Monte Carlo simulation is performed. Several 
-simulations are performed, in each of these the uncertain parameters assume values
-according to a normal distribution centered on their respective nominal values. 
+In the stochastic analysis several simulations are performed, in each of these the 
+uncertain parameters assume values according to a normal distribution centered on 
+their respective nominal values. 
 The relative standard deviation of each uncertain parameter is set by the user.
 The uncertain parameters are: the structural mass, the axial force coefficient, and 
 the thrust. 
