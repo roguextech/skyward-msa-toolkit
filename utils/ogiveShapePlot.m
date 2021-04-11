@@ -1,4 +1,7 @@
-%%% Calcolo interferenza ogiva payload %%%
+%{
+This script plots different ogive shapes to visualize them
+it also plots 
+%}
 
 close all
 clc
