@@ -1,11 +1,11 @@
 function [value, isterminal, direction] = eventMainExit(~, Y, settings)
 %{
 
-eventParaCut - Event function to stop simulation when the main parachute is extracted,
-               checking when a value tends to zero;
-               The value taken into account is the difference between the main parachute 
-               relative position and the main chord's length (when it tends to zero the main parachute
-               has completed the extraction)
+eventMainExit - Event function to stop simulation when the main parachute is extracted,
+                checking when a value tends to zero;
+                The value taken into account is the difference between the main parachute 
+                relative position and the main chord's length (when it tends to zero the main parachute
+                has completed the extraction)
 
     INPUTS:     
             - t, array, [n° variations, 1], integration time;

@@ -28,7 +28,7 @@ settings.para2.mass = 1.140;                     % [kg]   Parachute Mass
 settings.para2.CD = 0.59;                        % [/] Parachute Drag Coefficient
 settings.para2.CL = 0;                           % [/] Parachute Lift Coefficient
 
-settings.rocket_name = "";
+settings.rocketName = "";
 settings.terrain = false;
 
 %% STARTING CONDITIONS

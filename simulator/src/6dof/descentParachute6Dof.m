@@ -1,12 +1,17 @@
 function [data_para, Tp, Yp, bound_value] = descentParachute6Dof(Ta, Ya, settings)
 %{
-     This function computes the descent phase of a rocket connected to 2
-     parachute: a drogue and a main one. Due to model complexity, the problem
-     is divided into 3 phases:
-        - PHASE 1: drogue extraction and first desccent phase
-        - PHASE 2: drogue pulls out the main parachute till main shock cord
-                   has reached its nominal length
-        - PHASE 3: final descent phase with both main and drogue.
+
+descentParachute6Dof - This function computes the descent phase of a rocket 
+                       connected to 2 parachute: a drogue and a main one. 
+                       Due to model complexity, the problem is divided into 
+                       3 phases:
+                            - PHASE 1: drogue extraction and first descent 
+                                       phase.
+                            - PHASE 2: drogue pulls out the main parachute 
+                                       till main shock cord has reached its 
+                                       nominal length
+                            - PHASE 3: final descent phase with both main 
+                                       and drogue.
 
 
      INPUT PARAMETERS:
@@ -46,7 +51,7 @@ function [data_para, Tp, Yp, bound_value] = descentParachute6Dof(Ta, Ya, setting
     Y0p = [Ya(end, 1:16) posPara0 velPara0];                                  % Initializing starting state vector
 
     t0p = Ta(end);
-    tf  = settings.ode.final_time;
+    tf  = settings.ode.finalTime;
     
     % ODE
     settings.paraN = 1; settings.paraNumber = 1; % drogue only

@@ -27,7 +27,7 @@ X0 = [0 0 0]';
 V0 = [0 0 0]';
 W0 = [0 0 0]';
 
-tf = settings.ode.final_time;
+tf = settings.ode.finalTime;
 
 Az = settings.wind.Az;
 El = settings.wind.El;
@@ -71,11 +71,11 @@ parfor i = 1:N
     
     % Thrust:
     if strcmp("same",settings.sensitivity.thrustUncertainty)
-        newSettings.motor.exp_thrust = settings.motor.exp_thrust*(1 + randn*stdThrust);
+        newsettings.motor.expThrust = settings.motor.expThrust*(1 + randn*stdThrust);
     elseif strcmp("independent",settings.sensitivity.thrustUncertainty)
-        nExpThrust = length(settings.motor.exp_thrust);
-        newSettings.motor.exp_thrust =...
-            settings.motor.exp_thrust.*(1 + randn(1,nExpThrust)*stdThrust);
+        nExpThrust = length(settings.motor.expThrust);
+        newsettings.motor.expThrust =...
+            settings.motor.expThrust.*(1 + randn(1,nExpThrust)*stdThrust);
     end
     
     % CA:

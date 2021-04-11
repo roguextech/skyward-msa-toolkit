@@ -14,7 +14,7 @@
 
 %% LAUNCH SETUP
 % rocket name
-settings.rocket_name = "R2A";
+settings.rocketName = "R2A";
 
 % launchpad
 settings.z0 = 5;                                 % [m] Launchpad Altitude
@@ -43,9 +43,9 @@ switch engine
         % Cesaroni PRO 150 White Thunder
         % Sampling for thrust interpolation
         settings.motor.Name = 'Cesaroni PRO 150 White Thunder';
-        settings.motor.exp_time = [0 0.05 0.15 0.5 0.6 0.74 0.85 1.15 1.7 2.4 3 ...
+        settings.motor.expTime = [0 0.05 0.15 0.5 0.6 0.74 0.85 1.15 1.7 2.4 3 ...
             4 4.5 4.8 4.9 5 5.05 5.1 5.15 5.2];  % [s]
-        settings.motor.exp_thrust = [8605.1 8900 7900 8400 8400 8250 8200 8300 ...
+        settings.motor.expThrust = [8605.1 8900 7900 8400 8400 8250 8200 8300 ...
             8400 8400 8200 7800 7600 7450 7350 7300 4500 500 100 0]; % [N]
         
         settings.m0 = 67.761;                    % [kg]    Overall Mass (Burnout + Propellant)
@@ -57,9 +57,9 @@ switch engine
         % Cesaroni PRO 150 SkidMark
         % Sampling for thrust interpolation
         settings.motor.Name = 'Cesaroni PRO 150 SkidMark';
-        settings.motor.exp_time = [0 0.1 0.2 0.3 0.4 0.5 0.6 0.8 1.2 1.8 3.2 ...
+        settings.motor.expTime = [0 0.1 0.2 0.3 0.4 0.5 0.6 0.8 1.2 1.8 3.2 ...
             3.6 4.8 6 7 7.2 7.6 7.8 7.9 8 8.1 8.19]; % [s]
-        settings.motor.exp_thrust = [0 3400 3100 3000 3300 3400 3500 3700 3700 ...
+        settings.motor.expThrust = [0 3400 3100 3000 3300 3400 3500 3700 3700 ...
             3800 4000 4081.6 3900 3800 3700 3500 3350 3200 3000 2000 750 0]; % [N]
         
         settings.m0 = 64.9;                      % [kg]    Overall Mass
@@ -71,9 +71,9 @@ switch engine
         % Cesaroni PRO 150 BlueStreak
         % Sampling for thrust interpolation
         settings.motor.Name = 'Cesaroni PRO 150 BlueStreak';
-        settings.motor.exp_time =   [0 0.06 0.1 0.15 0.25 0.45 0.8  1     2    3 ...
+        settings.motor.expTime =   [0 0.06 0.1 0.15 0.25 0.45 0.8  1     2    3 ...
             4     5   6   6.8  7.05 7.3 7.6 7.8]; % [s]
-        settings.motor.exp_thrust = [0 800 4000 5500 5160 5130 5400 5300 5450 5347 ...
+        settings.motor.expThrust = [0 800 4000 5500 5160 5130 5400 5300 5450 5347 ...
             5160 4950 4700 4400 4400 3800 300 0]; % [N]
         
         settings.m0 = 63.30421;                  % [kg]   Overall Mass
@@ -122,7 +122,7 @@ settings.Izze = 65.77;                           % [kg*m^2] Inertia to z-axis
 % empty and full configuration
 
 DATA_PATH = '../data/';
-filename = strcat(DATA_PATH, settings.rocket_name);
+filename = strcat(DATA_PATH, settings.rocketName);
 
 % Coefficients in full configuration
 filename_full = strcat(filename,'_full.mat');
@@ -173,7 +173,7 @@ settings.zrog = 2000;                            % [m] Altitude of Rogallo Openi
 
 %% INTEGRATION OPTIONS
 
-settings.ode.final_time =  2000;                 % [s] Final integration time
+settings.ode.finalTime =  2000;                 % [s] Final integration time
 
 % create an option structure for the integrations:
 
@@ -225,11 +225,11 @@ settings.wind.ww = 0;                            % [m/s] Vertical wind speed
 % third row: altitude
 
 settings.wind.input = false;
-settings.wind.input_matr = [ 5    7    9   10   11   11   13   12   13   13   14   12   10    10
+settings.wind.inputMatr = [ 5    7    9   10   11   11   13   12   13   13   14   12   10    10
                              250  260  260 260  260  260  270  270  270  270  270  270  270   270
                              0    100  600 750  900  1500 2000 3000 4200 5500 7000 9000 10000 18000];
                          
-settings.wind.input_uncertainty = 20;             % [perc] uncertainty percentage
+settings.wind.inputUncertainty = 20;             % [perc] uncertainty percentage
                          
                          
 
@@ -270,16 +270,16 @@ settings.ao = false;
 % If N > 1 the stochastic routine is started
 
 settings.stoch.N = 10;                            % Number of cases
-settings.stoch.prob.x_lim = 2e3;                  % Max ovest displacement [m]
-settings.stoch.prob.V_lim = 30;                   % Max drogue stress [Pa]
-settings.stoch.prob.t_delay = 5;                  % drogue opening delay [s]
+settings.stoch.prob.xLim = 2e3;                  % Max ovest displacement [m]
+settings.stoch.prob.VLim = 30;                   % Max drogue stress [Pa]
+settings.stoch.prob.tDelay = 5;                  % drogue opening delay [s]
 
 %% PLOT DETAILS
 settings.plots = true;
-settings.only_XCP = false;                        % plot only the stability margin
+settings.onlyXCP = false;                        % plot only the stability margin
 
 %% LANDING POINTS
-settings.landing_map = true;
-settings.map_file = 'map.png'; % name of map for landing points
-settings.map_xaxis = [-20000 20250];  % limits for the data of the landing map
-settings.map_yaxis = [-20850 20000];
+settings.landingMap = true;
+settings.mapFile = 'map.png'; % name of map for landing points
+settings.mapXAxis = [-20000 20250];  % limits for the data of the landing map
+settings.mapYAxis = [-20850 20000];

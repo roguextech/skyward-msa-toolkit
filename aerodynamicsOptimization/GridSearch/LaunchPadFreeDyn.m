@@ -40,7 +40,7 @@ tb = settings.tb;            % [s]     Burning Time
 mfr = settings.mfr;          % [kg/s]  Mass Flow Rate
 
 OMEGA = settings.OMEGA;   
-T = interp1(settings.motor.exp_time, settings.motor.exp_thrust, t);
+T = interp1(settings.motor.expTime, settings.motor.expThrust, t);
 
 alpha = 0; beta = 0;
 

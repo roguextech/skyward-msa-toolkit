@@ -53,7 +53,7 @@ settings.stoch.N = 200;            % Number of cases
 
 %% LANDING POINTS
 % satellite maps of the landing zone 
-settings.landing_map = false;       % 2D map
+settings.landingMap = false;       % 2D map
 settings.satellite3D = false;       % 3D map
 
 %% COMPATIBILITY SETTINGS

@@ -27,9 +27,9 @@ Motors = load(filename); Motors = [Motors.Cesaroni, Motors.Aerotech];
 name = 'M2000Rbis';
 % name = 'L1350-CS';
 iMotor = [Motors.MotorName] == name;
-settings.motor.exp_time = Motors(iMotor).t;
-settings.motor.exp_thrust = Motors(iMotor).T;
-settings.motor.exp_m = Motors(iMotor).m;
+settings.motor.expTime = Motors(iMotor).t;
+settings.motor.expThrust = Motors(iMotor).T;
+settings.motor.expM = Motors(iMotor).m;
 settings.mp = Motors(iMotor).mp;                        % [kg]   Propellant Mass                                                
 settings.tb = Motors(iMotor).t(end) ;                   % [s]    Burning time
 mm = Motors(iMotor).mm;                                 % [kg]   Total Mass of the Motor 
@@ -58,8 +58,8 @@ settings.shape = 'rect';                                   % [/] fin shape
 settings.Npanel = 3;                                       % [m] number of fins
 settings.Ler = 0.003;                                      % [deg] Leading edge radius
 settings.d = 0;                                            % [m] rocket tip-fin distance
-settings.zup_raw = 0.0015;                                 % [m] fin semi-thickness 
-settings.Lmaxu_raw = 0.0015;                               % [m] Fraction of chord from leading edge to max thickness
+settings.zupRaw = 0.0015;                                 % [m] fin semi-thickness 
+settings.LmaxuRaw = 0.0015;                               % [m] Fraction of chord from leading edge to max thickness
 
 %%% protub data
 settings.xprot = settings.Lcenter + settings.Lnose - 0.85; % axial position 
@@ -150,7 +150,7 @@ settings.para(2).m = 1;         % [m^2/s] Coefficient of the surface vs. time op
 settings.para(2).nf = 8.7;      % [/] Adimensional Opening Time
 
 %% INTEGRATION OPTIONS
-settings.ode.final_time =  2000;    % [s] Final integration time
+settings.ode.finalTime =  2000;    % [s] Final integration time
 
 % create an option structure for the integrations:
 
@@ -174,9 +174,9 @@ settings.ode.optionsMain6DOF = odeset('Events', @eventLanding, 'AbsTol', 1e-6,'R
 
 %% STOCHASTIC DETAILS
 %%% launch probability details
-settings.stoch.prob.x_lim = 2e3;                    % Max ovest displacement [m]
-settings.stoch.prob.V_lim = 50;                     % Max drogue velocity [Pa]
-settings.stoch.prob.XCP_lim = 1.5;                  % Min XCP
+settings.stoch.prob.xLim = 2e3;                    % Max ovest displacement [m]
+settings.stoch.prob.VLim = 50;                     % Max drogue velocity [Pa]
+settings.stoch.prob.XCPLim = 1.5;                  % Min XCP
 
 %%% Safe Ellipse - roccaraso
 settings.prob.SafeEllipse.a = 1100;
@@ -191,5 +191,5 @@ settings.plots = true;
 %% LANDING POINTS
 % satellite maps of the landing zone 
 % delta limit on the coordinates (for the landing map)
-settings.lim_lat = 0.04; 
-settings.lim_lon = 0.025;
+settings.limLat = 0.04; 
+settings.limLon = 0.025;

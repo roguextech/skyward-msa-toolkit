@@ -86,12 +86,12 @@ for i = 1:2
         
         % motors loop
         for k = 1:nMotors
-            settings.motor.exp_time = settings.motors(k).t;
-            settings.motor.exp_thrust = settings.motors(k).T;
-            settings.motor.exp_m = settings.motors(k).m;
+            settings.motor.expTime = settings.motors(k).t;
+            settings.motor.expThrust = settings.motors(k).T;
+            settings.motor.expM = settings.motors(k).m;
             settings.mp = settings.motors(k).mp;                                % [kg]   Propellant Mass
             settings.mm = settings.motors(k).mm;
-            settings.tb = settings.motor.exp_time(end);                         % [s]    Burning time
+            settings.tb = settings.motor.expTime(end);                         % [s]    Burning time
             settings.mfr = settings.mp/settings.tb;                             % [kg/s] Mass Flow Rate
 
             for l = 1:nMass

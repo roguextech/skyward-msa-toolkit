@@ -34,8 +34,8 @@ REVISIONS:
 %}
 
 N_simul = settings.stoch.N;
-V_lim = settings.stoch.prob.V_lim;
-XCP_lim = settings.stoch.prob.XCP_lim;
+V_lim = settings.stoch.prob.VLim;
+XCP_lim = settings.stoch.prob.XCPLim;
 
 % pre-allocation
 flag = zeros(N_simul,1);

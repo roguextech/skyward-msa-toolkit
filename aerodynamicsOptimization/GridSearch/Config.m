@@ -35,8 +35,8 @@ load('MotorsList.mat'); motors = MotorsByName;
 %name = 'M2020';
 name = 'M1890';
 % name = 'M1800';
-settings.motor.exp_time = motors.(name).t;
-settings.motor.exp_thrust = motors.(name).T;
+settings.motor.expTime = motors.(name).t;
+settings.motor.expThrust = motors.(name).T;
 settings.mp = motors.(name).mp;                                            % [kg]   Propellant Mass                                                
 settings.tb = motors.(name).t(end) ;                                                     % [s]    Burning time
 settings.mfr = settings.mp/settings.tb;                                               % [kg/s] Mass Flow Rate
@@ -70,7 +70,7 @@ settings.Iyye = 11.5612;                    % [kg*m^2] Inertia to y-axis
 settings.Izze = 11.5640;                    % [kg*m^2] Inertia to z-axis
 
 %% INTEGRATION OPTIONS
-settings.ode.final_time =  2000;                                                % [s] Final integration time
+settings.ode.finalTime =  2000;                                                % [s] Final integration time
 settings.ode.optionsasc = odeset('Events', @EventApogee,'InitialStep',1);      %ODE options for ascend
 settings.ode.optionspad = odeset('Events', @EventPad);                         %ODE options for ascend
 
@@ -87,4 +87,4 @@ settings.wind.Az = (360)*pi/180;          % [rad] Azimuth, user input in degrees
 % 270 deg                       -> West
 
 %% Optimization Choice
-settings.cal_min = 1.5;                    % minum stability margin required
+settings.calMin = 1.5;                    % minum stability margin required

@@ -24,7 +24,7 @@ X0 = [0 0 0]';
 V0 = [0 0 0]';
 W0 = [0 0 0]';
 
-tf = settings.ode.final_time;
+tf = settings.ode.finalTime;
 
 % ascent phase computation
 OMEGA = settings.OMEGA;

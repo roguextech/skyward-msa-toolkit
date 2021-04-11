@@ -317,13 +317,13 @@ else   %%%% STOCHASTIC PLOTS (only if N>1)
     %% LANDING POINTS 2D
     % Position Scaled map in background
     figure('Name', 'Landing Points', 'NumberTitle','off')
-    if settings.landing_map
+    if settings.landingMap
         [lat_LP, lon_LP, ~] = ned2geodetic(LP(:,1), LP(:,2), 0, settings.lat0, settings.lon0, 0, wgs84Ellipsoid);
         geoplot(lat_LP, lon_LP, '.r','MarkerSize',11);
         hold on
         geoplot(settings.lat0, settings.lon0,'ro', 'MarkerSize', 16, 'MarkerFacecolor', 'b');
         geobasemap('satellite');
-        geolimits([settings.lat0-settings.lim_lat settings.lat0+settings.lim_lat], [settings.lon0-settings.lim_lon settings.lon0+settings.lim_lon]);
+        geolimits([settings.lat0-settings.limLat settings.lat0+settings.limLat], [settings.lon0-settings.limLon settings.lon0+settings.limLon]);
     else
     axis on; hold on
     plot(LP(:, 2), LP(:, 1), '.r','MarkerSize', 11);

@@ -1,6 +1,6 @@
 function [dY, parout] = descentParachute(t, Y, settings)
 %{
-descentBallistic - ode function of the descent with parachute
+descentdescentParachute - ode function of the descent with parachute
 
 INPUTS:
 - t,         double [1, 1] integration time [s];
@@ -42,7 +42,7 @@ if settings.stoch.N > 1
     uw = settings.stoch.uw; vw = settings.stoch.vw; ww = settings.stoch.ww;
     para = settings.stoch.para;
 else        
-    uncert = settings.wind.input_uncertainty;
+    uncert = settings.wind.inputUncertainty;
     uw = settings.constWind(1); vw = settings.constWind(2); ww = settings.constWind(3);
     para = settings.paraNumber;
 end

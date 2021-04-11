@@ -50,13 +50,13 @@ settings.wind.ww = 0;                                       % [m/s] Vertical win
 settings.wind.input = false;
 % Wind is generated for every altitude interpolating with the coefficient defined below
 
-settings.wind.input_ground = 9;                            % wind magnitude at the ground [m/s]
-settings.wind.input_alt = [0 100 600 750 900 1500 4000];    % altitude vector [m]
-settings.wind.input_mult = [0 0 10 15 20 30 30];            % percentage of increasing magnitude at each altitude
-settings.wind.input_azimut = [30 30 30 30 30 30 30];        % wind azimut angle at each altitude (toward wind incoming direction) [deg]
+settings.wind.inputGround = 9;                            % wind magnitude at the ground [m/s]
+settings.wind.inputAlt = [0 100 600 750 900 1500 4000];    % altitude vector [m]
+settings.wind.inputMult = [0 0 10 15 20 30 30];            % percentage of increasing magnitude at each altitude
+settings.wind.inputAzimut = [30 30 30 30 30 30 30];        % wind azimut angle at each altitude (toward wind incoming direction) [deg]
 
-settings.wind.input_uncertainty = [0, 0];
-% settings.wind.input_uncertainty = [a,b];      wind uncertanties:
+settings.wind.inputUncertainty = [0, 0];
+% settings.wind.inputUncertainty = [a,b];      wind uncertanties:
 % - a, wind magnitude percentage uncertanty: magn = magn *(1 +- a)
 % - b, wind direction band uncertanty: dir = dir 1 +- b
 
@@ -91,5 +91,5 @@ settings.plots = true;
 
 %% LANDING POINTS
 % satellite maps of the landing zone 
-settings.landing_map = false;                               % 2D map
+settings.landingMap = false;                               % 2D map
 settings.satellite3D = false;                               % 3D map

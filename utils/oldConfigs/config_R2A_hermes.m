@@ -15,7 +15,7 @@
 %% LAUNCH SETUP
 
 % rocket name
-settings.rocket_name = "R2A_hermes";
+settings.rocketName = "R2A_hermes";
 
 % launchpad 
 settings.z0 = 1416;                   %[m] Launchpad Altitude
@@ -49,14 +49,14 @@ switch engine
        case 1 
            
         settings.motor.Name = 'K1000T-P';
-        settings.motor.exp_time =   [0   0.0150    0.0250    0.0950  ...
+        settings.motor.expTime =   [0   0.0150    0.0250    0.0950  ...
             0.2000    0.3000    0.4000    0.5000    0.6000    0.7000 ...
             0.8000    0.9000    1.0000    1.1000    1.2000    1.3000 ...
             1.4000    1.5000    1.6000    1.7000    1.8000    1.9000 ...
             2.0000    2.1000    2.1800    2.2000    2.2180    2.2690 ...  
             2.3000    2.3320    2.3560    2.3890    2.4360    2.5000];      % [s]
         
-        settings.motor.exp_thrust = [ 0.8951    1.1198    1.0933    1.0966...
+        settings.motor.expThrust = [ 0.8951    1.1198    1.0933    1.0966...
             1.1099    1.1165    1.1231    1.1330    1.1396    1.1363 ...
             1.1363    1.1363    1.1396    1.1330    1.1297    1.1264 ...
             1.1198    1.1099    1.0966    1.0636    1.0174    0.9711 ...
@@ -73,10 +73,10 @@ switch engine
     case 2
         
         settings.motor.Name = 'K550';
-        settings.motor.exp_time = [0 0.13 0.38 0.63 0.88 1.14 1.39...
+        settings.motor.expTime = [0 0.13 0.38 0.63 0.88 1.14 1.39...
             1.64 1.9 2.15 2.40 2.66 2.91 3.16 3.5];                         %[s]
         
-        settings.motor.exp_thrust = [ 0 139.8 158.07 171.978 178.769 ...
+        settings.motor.expThrust = [ 0 139.8 158.07 171.978 178.769 ...
             178.247 158.859 132.922 111.005 92.082 74.075 44.837 16.156...
             4.589 0.000  ] * 9.81/2.2;                                      % [N]
         
@@ -153,7 +153,7 @@ end
 % empty and full configuration
 
 DATA_PATH = '../data/';
-filename = strcat(DATA_PATH, settings.rocket_name);
+filename = strcat(DATA_PATH, settings.rocketName);
 
 if settings.fins == 1
     
@@ -214,7 +214,7 @@ settings.zdrg2 = 200;                % [m] Altitude of drogue 2 opening
 
 %% INTEGRATION OPTIONS
 
-settings.ode.final_time =  2000;                 % [s] Final integration time
+settings.ode.finalTime =  2000;                 % [s] Final integration time
 
 % create an option structure for the integrations:
 
@@ -269,7 +269,7 @@ settings.wind.input = true;
 % third row: altitude
 
 % POST INTEGRATION
-% settings.wind.input_matr = [ 9*ones(1,7)
+% settings.wind.inputMatr = [ 9*ones(1,7)
 %     337.5*ones(1,7)
 %     0    100  600  750  900  1500 2500 ];
 
@@ -277,12 +277,12 @@ settings.wind.input = true;
 V0 = 3;
 C = [0 0 10 15 20 30 40];
     
-settings.wind.input_matr = [ (V0+V0*C/100)
+settings.wind.inputMatr = [ (V0+V0*C/100)
     120*ones(1,7)
     0    100  600  750  900  1500 2500 ];
 
-settings.wind.input_uncertainty = [30,20];
-% settings.wind.input_uncertainty = [a,b];      wind uncertanties:
+settings.wind.inputUncertainty = [30,20];
+% settings.wind.inputUncertainty = [a,b];      wind uncertanties:
 % - a, wind magnitude percentage uncertanty: magn = magn *(1 +- a)
 % - b, wind direction band uncertanty: dir = dir 1 +- b
 
@@ -321,8 +321,8 @@ settings.ldf = false;
 settings.stoch.N = 1;                             % Number of cases
 
 %%% launch probability details
-settings.stoch.prob.x_lim = 2e3;                  % Max ovest displacement [m]
-settings.stoch.prob.V_lim = 50;                   % Max drogue velocity [Pa]
+settings.stoch.prob.xLim = 2e3;                  % Max ovest displacement [m]
+settings.stoch.prob.VLim = 50;                   % Max drogue velocity [Pa]
 
 %%% Safe Ellipse
 settings.prob.SafeEllipse.a = 1100;
@@ -341,11 +341,11 @@ settings.ao = false;
 %% PLOT DETAILS
 
 settings.plots = true;
-settings.only_XCP = false; % plot only the stability margin
+settings.onlyXCP = false; % plot only the stability margin
 settings.terrain = true;
 
 %% LANDING POINTS
-settings.landing_map = true;
-settings.map_file = 'map_roccaraso.jpg'; % name of map for landing points
-settings.map_xaxis = [-5000 5000];  % limits for the data of the landing map
-settings.map_yaxis = [-5000 5000];
+settings.landingMap = true;
+settings.mapFile = 'map_roccaraso.jpg'; % name of map for landing points
+settings.mapXAxis = [-5000 5000];  % limits for the data of the landing map
+settings.mapYAxis = [-5000 5000];

@@ -46,7 +46,7 @@ if settings.OMEGAmin == settings.OMEGAmax && settings.PHImin == settings.PHImax.
         
     end
     
-    if settings.wind.input && all(settings.wind.input_uncertainty == 0)
+    if settings.wind.input && all(settings.wind.inputUncertainty == 0)
         error('In stochastic simulations the wind input model, the uncertainty must be different to 0 check config.m')
     end
 end
@@ -69,7 +69,7 @@ X = zeros(N, 3);
 ApoTime = zeros(N, 1);
 data_para = cell(N, Np);
 
-tf = settings.ode.final_time;
+tf = settings.ode.finalTime;
 
 
 %% STOCHASTIC INPUTS
@@ -80,7 +80,7 @@ if not(settings.wind.model)
     uw = zeros(N, 1); vw = uw; ww = uw; Azw = uw;
     if settings.wind.input
         signn = randi([1, 4]); % 4 sign cases
-        unc = settings.wind.input_uncertainty;
+        unc = settings.wind.inputUncertainty;
         
         switch signn
             case 1

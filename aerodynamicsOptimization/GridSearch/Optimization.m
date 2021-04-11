@@ -101,7 +101,7 @@ for i = 1:n
     xcpf = -DataPad{i}.full.Coeffs.X_C_P(2);
     xcpe = -DataPad{i}.empty.Coeffs.X_C_P(2);
     XCP_pad(i) = Tpad(end)/settings.tb*(xcpe - xcpf) + xcpf;
-    if XCP_pad(i) > settings.cal_min
+    if XCP_pad(i) > settings.calMin
         clc
         fprintf('----------------- Fins Aerodynamics Prediction ----------------- \n')
         fprintf(' Progress %d %% \n\n', 100);

@@ -41,8 +41,8 @@ if settings.upwind
     error('Upwind is available just in stochastich simulations, check config.m');
 end
 
-if settings.wind.input && not(all(settings.wind.input_uncertainty == 0))
-    error('settings.wind.input_uncertainty is available just in stochastich simulations, set it null')
+if settings.wind.input && not(all(settings.wind.inputUncertainty == 0))
+    error('settings.wind.inputUncertainty is available just in stochastich simulations, set it null')
 end
 
 %% STARTING CONDITIONS
@@ -70,7 +70,7 @@ if not(settings.wind.model) && not(settings.wind.input)
     
 end
 
-tf = settings.ode.final_time;
+tf = settings.ode.finalTime;
 
 %% ASCENT
 % ascent phase computation

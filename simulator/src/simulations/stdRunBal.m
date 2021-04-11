@@ -13,7 +13,7 @@ OUTPUTS:
             - Ya, array, [n° variations, 16], Ascent State Matrix;
             - bound_value, struct, Useful values for the plots;
 
-CALLED FUNCTIONS: windConstGenerator, ascent, recallOdeFcn, descentBallistic.
+CALLED FUNCTIONS: windConstGenerator, ascent, recallOdeFcn, descentBal.
 
 REVISIONS:
 - #0, Release, Ruben Di Battista
@@ -42,8 +42,8 @@ if settings.upwind
     error('Upwind is available just in stochastich simulations, check config.m');
 end
 
-if settings.wind.input && not(all(settings.wind.input_uncertainty == 0))
-    error('settings.wind.input_uncertainty is available just in stochastich simulations, set it null')
+if settings.wind.input && not(all(settings.wind.inputUncertainty == 0))
+    error('settings.wind.inputUncertainty is available just in stochastich simulations, set it null')
 end
 
 %% STARTING CONDITIONS
@@ -71,7 +71,7 @@ if not(settings.wind.model) && not(settings.wind.input)
     
 end
 
-tf = settings.ode.final_time;
+tf = settings.ode.finalTime;
 
 %% ASCENT
 % ascent phase computation
@@ -83,8 +83,8 @@ save('ascent_plot.mat', 'data_ascent');
 
 %% DESCEND 
 % Initial Condition are the last from ascent
-[Td, Yd] = ode113(@descentBallistic, [Ta(end), tf], Ya(end, 1:13), settings.ode.optionsdesc, settings);
-[data_bal] = recallOdeFcn(@descentBallistic, Td, Yd, settings);
+[Td, Yd] = ode113(@descentBal, [Ta(end), tf], Ya(end, 1:13), settings.ode.optionsdesc, settings);
+[data_bal] = recallOdeFcn(@descentBal, Td, Yd, settings);
 data_bal.state.Y = Yd;
 data_bal.state.T = Td;
 save('descent_plot.mat', 'data_bal');

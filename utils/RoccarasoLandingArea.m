@@ -51,7 +51,7 @@ end
 %%
 
 figure()
-imshow(settings.map_file, 'YData',-settings.map_yaxis, 'XData',settings.map_xaxis);
+imshow(settings.mapFile, 'YData',-settings.mapYAxis, 'XData',settings.mapXAxis);
 set(gca,'YDir','normal'); % set y axis with ascending increasing values
 hold on
 axis on

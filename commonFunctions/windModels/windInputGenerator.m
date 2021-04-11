@@ -20,17 +20,17 @@ REVISION:
 
 
 %}
-settings.wind.input_matr = [ (settings.wind.input_ground * (1 + settings.wind.input_mult/100))
-                             settings.wind.input_azimut
-                             settings.wind.input_alt ];
+settings.wind.inputMatr = [ (settings.wind.inputGround * (1 + settings.wind.inputMult/100))
+                             settings.wind.inputAzimut
+                             settings.wind.inputAlt ];
                          
-magn = (1 + uncert(1)/100).*settings.wind.input_matr(1, :);
-dir = mod(180 + settings.wind.input_matr(2, :), 360);
+magn = (1 + uncert(1)/100).*settings.wind.inputMatr(1, :);
+dir = mod(180 + settings.wind.inputMatr(2, :), 360);
 dir = dir + uncert(2);
 
 uw_vect = magn.*cosd(dir);
 vw_vect = magn.*sind(dir);
-h_vect = settings.wind.input_matr(3, :);
+h_vect = settings.wind.inputMatr(3, :);
 
 h = -z;
 
@@ -39,7 +39,7 @@ if h < 0
 end
 
 if h > h_vect(end)
-    error('The current altitude of the missile is out of range of the settings.wind.input_alt variable, fix it in config.m ')
+    error('The current altitude of the missile is out of range of the settings.wind.inputAlt variable, fix it in config.m ')
 end
 
 uw = interp1(h_vect, uw_vect, h);

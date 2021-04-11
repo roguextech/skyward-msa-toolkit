@@ -1,7 +1,7 @@
-function [dY, parout] = descentBallistic(t, Y, settings)
+function [dY, parout] = descentBal(t, Y, settings)
 
 %{
-descentBallistic - ode function of the ballistic descent
+descentBal - ode function of the ballistic descent
 
 INPUTS:
 - t,         double [1, 1], integration time [s];
@@ -66,7 +66,7 @@ if settings.stoch.N > 1
     Hour = settings.stoch.Hour;
     uw = settings.stoch.uw; vw = settings.stoch.vw; ww = settings.stoch.ww;
 else       
-    uncert = settings.wind.input_uncertainty;
+    uncert = settings.wind.inputUncertainty;
     uw = settings.constWind(1); vw = settings.constWind(2); ww = settings.constWind(3);
 end
 

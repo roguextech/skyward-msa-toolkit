@@ -113,7 +113,7 @@ if t<tb
     Ixxdot = -dI(1);
     Iyydot = -dI(2);
     Izzdot = -dI(3);
-    T = interp1(settings.motor.exp_time, settings.motor.exp_thrust, t);
+    T = interp1(settings.motor.expTime, settings.motor.expThrust, t);
     
 else             % for t >= tb the fligth condition is the empty one(no interpolation needed)
     mdot = 0;

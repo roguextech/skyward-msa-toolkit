@@ -66,7 +66,7 @@ geoplot(lat_LP, lon_LP, '.r','MarkerSize', 5);
 hold on
 geoplot(settings.lat0, settings.lon0,'ro', 'MarkerSize', 16, 'MarkerFacecolor', 'r');
 geobasemap('satellite');
-geolimits([settings.lat0-settings.lim_lat, settings.lat0+settings.lim_lat], [settings.lon0-settings.lim_lon settings.lon0+settings.lim_lon]);
+geolimits([settings.lat0-settings.limLat, settings.lat0+settings.limLat], [settings.lon0-settings.limLon settings.lon0+settings.limLon]);
 
 title('Landing Points in ballistic');
 
@@ -87,7 +87,7 @@ geoplot(lat_LP, lon_LP, '.b','MarkerSize', 5);
 hold on
 geoplot(settings.lat0, settings.lon0,'bo', 'MarkerSize', 16, 'MarkerFacecolor', 'b');
 geobasemap('satellite');
-geolimits([settings.lat0-settings.lim_lat, settings.lat0+settings.lim_lat], [settings.lon0-settings.lim_lon settings.lon0+settings.lim_lon]);
+geolimits([settings.lat0-settings.limLat, settings.lat0+settings.limLat], [settings.lon0-settings.limLon settings.lon0+settings.limLon]);
 
 title('Landing Points with 2nd drouge');
 

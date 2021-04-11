@@ -43,8 +43,8 @@ Lcenter = settings.Lcenter;
 Npanel = settings.Npanel;
 Ler = settings.Ler;
 d = settings.d;
-zup_raw = settings.zup_raw;
-Lmaxu_raw = settings.Lmaxu_raw;
+zup_raw = settings.zupRaw;
+Lmaxu_raw = settings.LmaxuRaw;
 H = datcom.Height;
 
 if Npanel == 3

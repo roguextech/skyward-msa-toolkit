@@ -40,8 +40,8 @@ S = settings.S;              % [m^2] cross surface
 g = settings.g0;                 % [N/kg] module of gravitational field at zero
 
 OMEGA = settings.OMEGA;   
-T = interp1(settings.motor.exp_time, settings.motor.exp_thrust, t);
-m = settings.ms + interp1(settings.motor.exp_time, settings.motor.exp_m, t);
+T = interp1(settings.motor.expTime, settings.motor.expThrust, t);
+m = settings.ms + interp1(settings.motor.expTime, settings.motor.expM, t);
 
 %% Dynamics
 Fg = m*g*sin(OMEGA);                % [N] force due to the gravity

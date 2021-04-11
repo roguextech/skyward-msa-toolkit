@@ -13,7 +13,7 @@ OUTPUTS:
             - data_ascent, cell, (n°simulations, 1), cell matrix containing fligth data of the ascent phase;
             - data_para, cell, (n°simulations, n° of parachutes), cell matrix containing fligth data of the descent phase.
 
-CALLED FUNCTIONS: windConstGenerator, parfor_progress, ascent, descentBallistic, recallOdeFcn.
+CALLED FUNCTIONS: windConstGenerator, parfor_progress, ascent, descentBal, recallOdeFcn.
 
 REVISIONS:
 - #0 29.05.2014, Release, Ruben Di Battista
@@ -46,7 +46,7 @@ if settings.OMEGAmin == settings.OMEGAmax && settings.PHImin == settings.PHImax
         
     end
     
-    if settings.wind.input && all(settings.wind.input_uncertainty == 0)
+    if settings.wind.input && all(settings.wind.inputUncertainty == 0)
         error('In stochastic simulations the wind input model, the uncertainty must be different to 0, check config.m')
     end
     
@@ -65,7 +65,7 @@ LP = zeros(N, 3);
 X = zeros(N, 3);
 ApoTime = zeros(N, 1);
 
-tf = settings.ode.final_time;
+tf = settings.ode.finalTime;
 
 
 %% STOCHASTIC INPUTS
@@ -76,7 +76,7 @@ if not(settings.wind.model)
     uw = zeros(N, 1); vw = uw; ww = uw; Azw = uw;
     if settings.wind.input
         signn = randi([1, 4]); % 4 sign cases
-        unc = settings.wind.input_uncertainty;
+        unc = settings.wind.inputUncertainty;
         
         switch signn
             case 1
@@ -147,9 +147,9 @@ parfor i = 1:N
     data_ascent{i}.state.T = Ta;
     
     %% DESCEND
-    [Tb, Yb] = ode113(@descentBallistic, [Ta(end), tf], Ya(end, 1:13), settings.ode.optionsdesc,...
+    [Tb, Yb] = ode113(@descentBal, [Ta(end), tf], Ya(end, 1:13), settings.ode.optionsdesc,...
         settingsNew);
-    [data_bal{i}] = recallOdeFcn(@descentBallistic, Tb, Yb, settingsNew);
+    [data_bal{i}] = recallOdeFcn(@descentBal, Tb, Yb, settingsNew);
     data_bal{i}.state.Y = Yb;
     data_bal{i}.state.T = Tb;
     

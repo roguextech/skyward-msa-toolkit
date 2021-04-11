@@ -31,7 +31,7 @@ Q0 = angleToQuat(settings.PHI, settings.OMEGA, 0*pi/180)';
 
 [uw, vw, ww, ~] = windConstGenerator(settings.wind);
 settings.constWind = [uw, vw, ww];
-tf = settings.ode.final_time;
+tf = settings.ode.finalTime;
 
 %% ASCENT
 X0 = [0 0 0]';

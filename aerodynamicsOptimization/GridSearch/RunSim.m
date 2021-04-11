@@ -25,7 +25,7 @@ Q0 = angle2quat(settings.PHI, settings.OMEGA, 0*pi/180,'ZYX')';
 %% WIND GENERATION
 
 [uw, vw, ww, ~] = windConstGenerator(settings.wind.Az, settings.wind.Mag);
-tf = settings.ode.final_time;
+tf = settings.ode.finalTime;
 
 %% ASCENT
 X0 = [0 0 0]';

@@ -126,11 +126,11 @@ M_value = M;
 dI = 1/tb*([Ixxf Iyyf Izzf]' - [Ixxe Iyye Izze]');
 
 if t < tb
-    m = settings.ms + interp1(settings.motor.exp_time, settings.motor.exp_m, t);
+    m = settings.ms + interp1(settings.motor.expTime, settings.motor.expM, t);
     Ixxdot = -dI(1);
     Iyydot = -dI(2);
     Izzdot = -dI(3);
-    T = interp1(settings.motor.exp_time, settings.motor.exp_thrust, t);
+    T = interp1(settings.motor.expTime, settings.motor.expThrust, t);
     
 else     % for t >= tb the fligth condition is the empty one(no interpolation needed)
     m = settings.ms;
