@@ -134,8 +134,8 @@ settings.para(2).z_cut = 0;     % [m] Final altitude of the parachute
 
 % parachute 1
 settings.para(1).CX = 1.4;      % [/] Parachute Longitudinal Drag Coefficient
-settings.para(1).L = 4;         % [m] Shock Chord Length
-settings.para(1).K = 1000;      % [N/m^2] Shock Chord Elastic Constant
+settings.para(1).L = 1.5;         % [m] Shock Chord Length
+settings.para(1).K = 7200;      % [N/m^2] Shock Chord Elastic Constant
 settings.para(1).C = 0;         % [Ns/m] Shock Chord Dynamic Coefficient
 settings.para(1).m = 1;         % [m^2/s] Coefficient of the surface vs. time opening model
 settings.para(1).nf = 12;       % [/] Adimensional Opening Time
@@ -144,7 +144,7 @@ settings.para(1).Vexit = 5;     % [m/s] Expulsion Speed
 % parachute 2
 settings.para(2).CX = 1.2;      % [/] Parachute Longitudinal Drag Coefficient
 settings.para(2).L = 6;         % [m] Shock Chord Length
-settings.para(2).K = 2000;      % [N/m^2] Shock Chord Elastic Constant
+settings.para(2).K = 3000;      % [N/m^2] Shock Chord Elastic Constant
 settings.para(2).C = 0;         % [Ns/m] Shock Chord Dynamic Coefficient
 settings.para(2).m = 1;         % [m^2/s] Coefficient of the surface vs. time opening model
 settings.para(2).nf = 8.7;      % [/] Adimensional Opening Time
@@ -185,8 +185,6 @@ settings.prob.SafeEllipse.x0  = 0;
 settings.prob.SafeEllipse.y0 = -300;
 settings.prob.SafeEllipse.alpha = 10;
 
-%% PLOT DETAILS
-settings.plots = true;
 
 %% LANDING POINTS
 % satellite maps of the landing zone 

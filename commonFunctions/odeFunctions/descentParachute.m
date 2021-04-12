@@ -131,7 +131,7 @@ dY(6) = dw;
 dY = dY';
 
 %% SAVING THE QUANTITIES FOR THE PLOTS
-if settings.plots
+%if settings.plots
     
     parout.integration.t = t;
     parout.interp.alt = -z;
@@ -145,4 +145,4 @@ if settings.plots
     
     parout.velocities = [u, v, w];
     
-end
+%end
