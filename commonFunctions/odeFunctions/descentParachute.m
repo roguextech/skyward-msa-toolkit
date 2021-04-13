@@ -1,6 +1,6 @@
 function [dY, parout] = descentParachute(t, Y, settings)
 %{
-descentdescentParachute - ode function of the descent with parachute
+descentParachute - ode function of the descent with parachute
 
 INPUTS:
 - t,         double [1, 1] integration time [s];
