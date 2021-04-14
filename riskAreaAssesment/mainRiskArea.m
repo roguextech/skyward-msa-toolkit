@@ -60,18 +60,27 @@ settings.OMEGAmax = 90*pi/180;
 settings.ballistic = true;
 [LP, ~, ~, ~, ~] = stochRunBal(settings);
 
-figure('Name', 'Landing Points', 'NumberTitle','off')
-[lat_LP, lon_LP, ~] = ned2geodetic(LP(:, 1), LP(:, 2), 0, settings.lat0, settings.lon0, 0, wgs84Ellipsoid);
-geoplot(lat_LP, lon_LP, '.r','MarkerSize', 5);
+%%% compute the LP in latitude and longitude
+[latLP, lonLP, ~] = ned2geodetic(LP(:, 1), LP(:, 2), 0, settings.lat0, settings.lon0, 0, wgs84Ellipsoid);
+
+%%% max LP 
+radiusLP = vecnorm(LP');
+[~, iMaxRadius] = max(radiusLP);
+
+%%% geoplot
+figure('Name', 'Landing Points - ballistic', 'NumberTitle','off')
+launchpadHandle = geoplot(settings.lat0, settings.lon0,'ro', 'MarkerSize', 16, 'MarkerFacecolor', 'r');
 hold on
-geoplot(settings.lat0, settings.lon0,'ro', 'MarkerSize', 16, 'MarkerFacecolor', 'r');
+LPhandle = geoplot(latLP, lonLP, '.r','MarkerSize', 5);
 geobasemap('satellite');
 geolimits([settings.lat0-settings.limLat, settings.lat0+settings.limLat], [settings.lon0-settings.limLon settings.lon0+settings.limLon]);
 
+%%% adding circle to the max LP
+[latCircle, lonCircle] = scircle2(settings.lat0, settings.lon0, latLP(iMaxRadius), lonLP(iMaxRadius), wgs84Ellipsoid);
+circleHandle = geoplot(latCircle, lonCircle, 'r', 'LineWidth', 2);
+
+legend([launchpadHandle, LPhandle, circleHandle], {'Launchpad', 'Landing Points', 'Red Area'});
 title('Landing Points in ballistic');
-
-
-% [h1, h2, h3] = landingConePlot(LP(:, 1), LP(:, 2), [178, 34, 34]/255, [205, 92, 92]/255, [139, 0, 0]/255);
 
 delete(gcp('nocreate'))
 
@@ -79,16 +88,27 @@ delete(gcp('nocreate'))
 settings.ballistic = false;
 settings.Npara = length(settings.para);
 [LP, X, ApoTime, data_ascent, data_para] = stochRun(settings);
-% [h4, h5, h6] = landingConePlot(LP(:, 1), LP(:, 2), [], [], []);
 
-figure('Name', 'Landing Points', 'NumberTitle','off')
-[lat_LP, lon_LP, ~] = ned2geodetic(LP(:, 1), LP(:, 2), 0, settings.lat0, settings.lon0, 0, wgs84Ellipsoid);
-geoplot(lat_LP, lon_LP, '.b','MarkerSize', 5);
+%%% compute the LP in latitude and longitude
+[latLP, lonLP, ~] = ned2geodetic(LP(:, 1), LP(:, 2), 0, settings.lat0, settings.lon0, 0, wgs84Ellipsoid);
+
+%%% max LP 
+radiusLP = vecnorm(LP');
+[~, iMaxRadius] = max(radiusLP);
+
+%%% geoplot
+figure('Name', 'Landing Points - nominal', 'NumberTitle','off')
+launchpadHandle = geoplot(settings.lat0, settings.lon0,'bo', 'MarkerSize', 16, 'MarkerFacecolor', 'b');
 hold on
-geoplot(settings.lat0, settings.lon0,'bo', 'MarkerSize', 16, 'MarkerFacecolor', 'b');
+LPhandle = geoplot(latLP, lonLP, '.b','MarkerSize', 5);
 geobasemap('satellite');
 geolimits([settings.lat0-settings.limLat, settings.lat0+settings.limLat], [settings.lon0-settings.limLon settings.lon0+settings.limLon]);
 
+%%% adding circle to the max LP
+[latCircle, lonCircle] = scircle2(settings.lat0, settings.lon0, latLP(iMaxRadius), lonLP(iMaxRadius), wgs84Ellipsoid);
+circleHandle = geoplot(latCircle, lonCircle, 'b', 'LineWidth', 2);
+
+legend([launchpadHandle, LPhandle, circleHandle], {'Launchpad', 'Landing Points', 'Blu Area'});
 title('Landing Points with 2nd drouge');
 
 delete('parfor_progress.txt')

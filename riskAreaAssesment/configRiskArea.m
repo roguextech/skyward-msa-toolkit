@@ -21,7 +21,7 @@ settings.PHIsigma = 20*pi/180;      % [deg] If upwind is true, you can select a 
 
 %% ROCCARASO TERRAIN
 % !! ATTENTION !!  the following works only at Roccaraso
-settings.terrain = true; 
+settings.terrain = false; 
 if settings.terrain  
      settings.funZ = funZGen('zdata.mat', settings.lat0, settings.lon0, true, 'xy');
 end
