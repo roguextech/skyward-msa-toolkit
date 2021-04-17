@@ -21,9 +21,9 @@ settings.PHIsigma = 20*pi/180;      % [deg] If upwind is true, you can select a 
 
 %% ROCCARASO TERRAIN
 % !! ATTENTION !!  the following works only at Roccaraso
-settings.terrain = false; 
+settings.terrain = true; 
 if settings.terrain  
-     settings.funZ = funZGen('zdata.mat', settings.lat0, settings.lon0, true, 'xy');
+     settings.funZ = funZGen('zData.mat', settings.lat0, settings.lon0);
 end
 
 %% WIND DETAILS
@@ -50,11 +50,6 @@ settings.wind.AzMax = (360)*pi/180; % [rad] Maximum Azimuth, user input in degre
 %% STOCHASTIC DETAILS
 % If N > 1 the stochastic routine is started
 settings.stoch.N = 200;            % Number of cases
-
-%% LANDING POINTS
-% satellite maps of the landing zone 
-settings.landingMap = false;       % 2D map
-settings.satellite3D = false;       % 3D map
 
 %% COMPATIBILITY SETTINGS
 % this settings are needed to work with the commonFunctions folder, do not
