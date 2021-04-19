@@ -131,8 +131,13 @@ else
 end
 
 %% PARFOR LOOP
-parfor_progress(N);
-parpool;
+pw = PoolWaitbar(N, 'Please wait... ');
+if settings.parThreads
+    parpool('threads');
+else
+    parpool;
+end
+
 parfor i = 1:N
     settingsNew = settings;
     settingsNew.stoch.OMEGA = OMEGA(i); 
@@ -189,7 +194,6 @@ parfor i = 1:N
     LP(i, :) = Yf(end,1:3);
     X(i, :) = [Ya(end,1); Ya(end,2); -Ya(end,3)];
     ApoTime(i) = Ta(end);
-    parfor_progress;
-
+    increment(pw);
 end
 

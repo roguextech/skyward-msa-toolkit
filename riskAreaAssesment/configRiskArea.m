@@ -50,6 +50,8 @@ settings.wind.AzMax = (360)*pi/180; % [rad] Maximum Azimuth, user input in degre
 %% STOCHASTIC DETAILS
 % If N > 1 the stochastic routine is started
 settings.stoch.N = 200;            % Number of cases
+% Choose to open a parallel pool of local or threads workers
+settings.parThreads = true;                                      % set to false to run parpool of local workers
 
 %% COMPATIBILITY SETTINGS
 % this settings are needed to work with the commonFunctions folder, do not

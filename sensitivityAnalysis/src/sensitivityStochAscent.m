@@ -62,8 +62,12 @@ stdThrust = settings.sensitivity.stdStoch(1);
 stdCA = settings.sensitivity.stdStoch(2);
 stdMs = settings.sensitivity.stdStoch(3);
 
-parfor_progress(N);
-parpool;
+pw = PoolWaitbar(N, 'Please wait... ');
+if settings.parThreads
+    parpool('threads');
+else
+    parpool;
+end
 parfor i = 1:N
     
     % Modify uncertain variables contained in settings:
@@ -71,10 +75,10 @@ parfor i = 1:N
     
     % Thrust:
     if strcmp("same",settings.sensitivity.thrustUncertainty)
-        newsettings.motor.expThrust = settings.motor.expThrust*(1 + randn*stdThrust);
+        newSettings.motor.expThrust = settings.motor.expThrust*(1 + randn*stdThrust);
     elseif strcmp("independent",settings.sensitivity.thrustUncertainty)
         nExpThrust = length(settings.motor.expThrust);
-        newsettings.motor.expThrust =...
+        newSettings.motor.expThrust =...
             settings.motor.expThrust.*(1 + randn(1,nExpThrust)*stdThrust);
     end
     
@@ -96,8 +100,7 @@ parfor i = 1:N
     data_ascent{i}.state.Y = Ya;
     data_ascent{i}.state.T = Ta;
     
-    parfor_progress;
+    increment(pw);
 end
 
 delete(gcp('nocreate'))
-delete('parfor_progress.txt')

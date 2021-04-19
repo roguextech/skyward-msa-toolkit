@@ -55,8 +55,12 @@ data_ascent = cell(nDelta,nPara);
 %% PARFOR LOOP
 coeff_names = settings.sensitivity.para;
 
-parfor_progress(nPara); 
-parpool;
+pw = PoolWaitbar(nPara, 'Please wait... ');
+if settings.parThreads
+    parpool('threads');
+else
+    parpool;
+end
 parfor j=1:nPara
     COEFF_NAME = string(coeff_names{j});
     for i = 1:nDelta
@@ -88,9 +92,8 @@ parfor j=1:nPara
         data_ascent{i,j}.state.Y = Ya;
         data_ascent{i,j}.state.T = Ta;
     end
-    parfor_progress;
+    increment(pw);
 end
 
 
 delete(gcp('nocreate'))
-delete('parfor_progress.txt')

@@ -111,4 +111,3 @@ circleHandle = geoplot(latCircle, lonCircle, 'b', 'LineWidth', 2);
 legend([launchpadHandle, LPhandle, circleHandle], {'Launchpad', 'Landing Points', 'Blu Area'});
 title('Landing Points with 2nd drouge');
 
-delete('parfor_progress.txt')

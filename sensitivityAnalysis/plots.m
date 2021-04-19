@@ -178,7 +178,7 @@ else
     end
     
     figure,
-    suptitle('Apogee mean value and std.')
+    subtitle('Apogee mean value and std.')
     subplot(2,1,1)
     plot(1:length(apogees),meanIter,'-o')
     ylabel('Mean apogee [m]')

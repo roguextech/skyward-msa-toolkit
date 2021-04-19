@@ -65,7 +65,7 @@ settings.wind.inputUncertainty = [0, 0];
 
 % Wind is generated randomly from the minimum to the maximum parameters which defines the wind.
 % Setting the same values for min and max will fix the parameters of the wind.
-settings.wind.MagMin = 9;                                   % [m/s] Minimum Magnitude
+settings.wind.MagMin = 8;                                   % [m/s] Minimum Magnitude
 settings.wind.MagMax = 9;                                   % [m/s] Maximum Magnitude
 settings.wind.ElMin = 0*pi/180;                             % [rad] Minimum Elevation, user input in degrees (ex. 0)
 settings.wind.ElMax = 0*pi/180;                             % [rad] Maximum Elevation, user input in degrees (ex. 0) (Max == 90 Deg)
@@ -84,7 +84,9 @@ settings.ballistic = false;
 
 %% STOCHASTIC DETAILS
 % If N > 1 the stochastic routine is started
-settings.stoch.N = 1;                                       % Number of cases
+settings.stoch.N = 10;                                       % Number of cases
+% Choose to open a parallel pool of local or threads workers
+settings.parThreads = true;                                      % set to false to run parpool of local workers
 
 %% PLOT DETAILS
 settings.plots = true;

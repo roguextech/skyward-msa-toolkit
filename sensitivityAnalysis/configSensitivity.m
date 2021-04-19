@@ -67,6 +67,9 @@ settings.sensitivity.stdStoch = [0.05,... % thrust
 % "same" to apply the same uncertainty to all points.                           
 settings.sensitivity.thrustUncertainty = "independent"; 
 
+% Choose to open a parallel pool of local or threads workers
+settings.parThreads = true;                                      % set to false to run parpool of local workers
+
 %% COMPATIBILITY SETTINGS
 % this settings are needed to work with the commonFunctions folder,  do not
 % modify it unless you now what you're doing

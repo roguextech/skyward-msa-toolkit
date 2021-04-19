@@ -174,8 +174,6 @@ else
     end
 
     delete(gcp('nocreate'))
-    delete('parfor_progress.txt')
-
 end
 
 %% PLOTS

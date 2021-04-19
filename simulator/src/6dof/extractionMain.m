@@ -1,6 +1,6 @@
 function [dY, parout] = extractionMain(t, Y, settings)
 %{
-    descentMain - ode function of the main's descent phase (third stage of descent)
+    extractionMain - ode function of the main's descent phase (third stage of descent)
    
     INPUTS:
         -  t, array, [n° variations, 1], integration time              
