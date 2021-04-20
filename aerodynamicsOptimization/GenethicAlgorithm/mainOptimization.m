@@ -37,8 +37,9 @@ configOptmization;
 tic
 
 IntCon = 1:6;
-options = optimoptions('ga', 'MaxStallGenerations', 15, 'FunctionTolerance', ...
-    1, 'MaxGenerations', 50, 'PlotFcn', {'gaplotbestindiv', 'gaplotbestf'},...
+options = optimoptions('ga', 'MaxStallGenerations', 5, 'FunctionTolerance', ...
+    1/expectedApogee, 'MaxGenerations', 1000, 'NonlinearConstraintAlgorithm', 'penalty',...
+    'PopulationSize', 10, 'PlotFcn', {'gaplotbestindiv', 'gaplotbestf'},...
     'Display', 'iter');
 nonlcon = @(x) XCPcheck(x, datcom, settings);
 fitnessfcn = @(x) optimizationGA(x, datcom, settings);
@@ -85,7 +86,7 @@ elseif x(6) == 6
     fprintf('- Type, %s \n', 'Power 1/3')
 end
 
-fprintf('- NoseCone Length, %d [m] \n\n\n', x(5))
+fprintf('- NoseCone Length, %d [cm] \n\n\n', x(5))
 fprintf('OPTIM ROCKET RESULTS: \n\n')
 fprintf('- apogee, %g [m]: \n', -fval)
 fprintf('- stability margin @launchpad exit, %g \n', XCP)
