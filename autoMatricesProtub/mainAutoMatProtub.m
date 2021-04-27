@@ -29,6 +29,11 @@ end
 
 addpath(genpath(currentPath));
 
+datcomPath = '../commonFunctions/Datcom/';
+if ~isfile(fullfile(datcomPath, 'datcom.exe'))
+    error('datcom.exe is missing')
+end
+
 %% LOAD DATA
 dataPath = '../data/';
 addpath(dataPath);
@@ -36,7 +41,6 @@ commonFunctionsPath = '../commonFunctions/';
 addpath(genpath(commonFunctionsPath));
 simulationsData;
 configAutoMatProtub;
-datcomPath = '../commonFunctions/Datcom/';
 
 tic
 

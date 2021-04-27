@@ -22,6 +22,10 @@ clc
 
 path = genpath(pwd);
 addpath(path);
+datcomPath = '../../commonFunctions/Datcom/';
+if ~isfile(fullfile(datcomPath, 'datcom.exe'))
+    error('datcom.exe is missing')
+end
 
 %% RETRIVING GEOMETRICAL DATA
 run Config.m

@@ -30,6 +30,9 @@ addpath(dataPath);
 commonFunctionsPath = '../../commonFunctions/';
 addpath(genpath(commonFunctionsPath));
 datcomPath = '../../commonFunctions/Datcom/';
+if ~isfile(fullfile(datcomPath, 'datcom.exe'))
+    error('datcom.exe is missing')
+end
 simulationsData;
 configOptmization;
 
