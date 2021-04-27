@@ -289,7 +289,7 @@ end
 value = 0;
 while value == 0
     value = exist('for006.dat', 'file');
-    pause(0.01);
+    pause(0.001);
 end 
 
 cd(oldFolder);                    % redirect back the current directory to the old folder
