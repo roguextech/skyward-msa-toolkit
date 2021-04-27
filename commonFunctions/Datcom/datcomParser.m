@@ -56,9 +56,11 @@ end
 linestring = fileread('for006.dat');
 
 %% check for computational errors in XCP
-pattern = '(\d)\*+([\n\s\-])';
-newPattern = '$2   NaN $2';
-linestring = regexprep(linestring, pattern, newPattern);
+pattern = '**********';
+newPattern = '    NaN';
+if contains(linestring, pattern)
+    linestring = replace(linestring, pattern, newPattern);
+end
 
 %% blocksplit
 pattern = '\*+ \<FLIGHT CONDITIONS AND REFERENCE QUANTITIES \*+';
