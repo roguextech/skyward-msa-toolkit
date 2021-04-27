@@ -23,8 +23,14 @@ clc
 path = genpath(pwd);
 addpath(path);
 datcomPath = '../../commonFunctions/Datcom/';
-if ~isfile(fullfile(datcomPath, 'datcom.exe'))
-    error('datcom.exe is missing')
+if ismac
+    if ~isfile(fullfile(datcomPath, 'datcom'))
+        error('datcom is missing')
+    end
+else
+    if ~isfile(fullfile(datcomPath, 'datcom.exe'))
+        error('datcom.exe is missing')
+    end
 end
 
 %% RETRIVING GEOMETRICAL DATA
