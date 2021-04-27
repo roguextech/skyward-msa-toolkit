@@ -30,7 +30,20 @@ CALLED FUNCTIONS: -
 REVISIONS:
 - #0    14/10/2019, Release, Giulio Pacifici
 
-- #1    21/10/2020, Revision, Adriano Filippo Inno
+- #1    10/11/2020, Revision, Adriano Filippo Inno
+        str2num and str2double removed
+
+- #2    10/11/2020, Revision, Adriano Filippo Inno
+        improved speed avoiding to parse each aerodynamic state
+
+- #3    10/11/2020, Revision, Adriano Filippo Inno
+        improved speed avoiding to parse each line of the block
+
+- #4    15/11/2020, Revision, Adriano Filippo Inno
+        improved speed passing from line parsing to matrix parsing
+
+- #5    27/04/2021, Revision, Adriano Filippo Inno
+        check to prevent failure added
 %}
 
 if not(isempty(varargin))
@@ -41,6 +54,13 @@ else
 end
 
 linestring = fileread('for006.dat');
+
+%% check for computational errors in XCP
+pattern = '**********';
+newPattern = '    NaN';
+if contains(linestring, pattern)
+    linestring = replace(linestring, pattern, newPattern);
+end
 
 %% blocksplit
 pattern = '\*+ \<FLIGHT CONDITIONS AND REFERENCE QUANTITIES \*+';
@@ -57,10 +77,10 @@ end
 %% length check
 pattern = '*** END OF JOB ***';
 if not(contains(linestring, pattern))
-    error('Datcom didn''t complete the computations, probably the for005 contains too many cases (more than 97)')
+    error('Datcom didn''t complete the computations, probably the for005 contains too many cases')
 end
 
-%% get_coeffs_name
+%% get coefficient names
 pattern =  ' *\<ALPHA\> *([\w -/]*)';
 pattern1 = '[\./-]';
 names = cell(26, 1);
@@ -94,6 +114,7 @@ pattern1 = ' *\<MACH NO\> *= * (-*[\d]+.[\d]*)';
 pattern2 = ' *\<ALTITUDE\> *= * (-*[\d]+.[\d]*)';
 pattern3 = ' *\<SIDESLIP\> *= * (-*[\d]+.[\d]*)';
 
+%%% Mach
 Nb = length(blocks);
 NM = min([21, Nb/4]);                                % initial guess
 M = zeros(1, NM);
@@ -109,6 +130,7 @@ for i = 1:NM
 end
 NM = length(M);
 
+%%% Beta
 NB = min([97, Nb/4/NM]);              % initial guess
 B = zeros(1, NB);
 for i = 1:NB
@@ -122,7 +144,8 @@ for i = 1:NB
     end
 end
 NB = length(B);
-    
+
+%%% Altitude
 NA = Nb/4/NM/NB; 
 A = zeros(1, NA);
 for i = 1:NA
@@ -137,7 +160,7 @@ Mrep = repmat(M, 1, NB*NA);
 Brep = repmat(repelem(B, 1, NM), 1, NA);
 Arep = repelem(A, 1, NM*NB);
 
-%% get alphas
+%%% Alpha
 pattern = '^[-\d](?=[\d\.])';
 
 block = blocks{2};
