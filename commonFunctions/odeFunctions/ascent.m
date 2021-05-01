@@ -144,12 +144,11 @@ end
 %% AERODYNAMICS ANGLES
 if not(ur < 1e-9 || V_norm < 1e-9)
     alpha = atan(wr/ur);
-    beta = atan(vr/ur);                         % beta = asin(vr/V_norm); is the classical notation, Datcom uses this one though.
-    alpha_tot = atan(sqrt(wr^2 + vr^2)/ur);     % datcom 97' definition
+    beta = atan(vr/ur);                         % beta = asin(vr/V_norm) is the classical notation, Datcom uses this one though.
+    % alpha_tot = atan(sqrt(wr^2 + vr^2)/ur);   % datcom 97' definition
 else
     alpha = 0;
     beta = 0;
-    alpha_tot = 0;
 end
 
 alpha_value = alpha;
@@ -177,7 +176,7 @@ end
 
 %% INTERPOLATE AERODYNAMIC COEFFICIENTS:
 [coeffsValues, angle0] = interpCoeffs(t, alpha, M, beta, absoluteAltitude,...
-    c, alpha_tot, settings);
+    c, settings);
 
 % Retrieve Coefficients
 CA = coeffsValues(1); CYB = coeffsValues(2); CY0 = coeffsValues(3);

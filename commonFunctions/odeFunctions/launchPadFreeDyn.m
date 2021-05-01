@@ -25,8 +25,8 @@ REVISIONS:
 %% STATES RECALL
 % x = Y(1);
 % y = Y(2);
-% z = Y(3);
-  u = Y(4);
+z = Y(3);
+u = Y(4);
 
 %% QUATERION ATTITUDE
 conjQ = [Q0(1) -Q0(2:4)'];
@@ -35,8 +35,10 @@ conjQ = [Q0(1) -Q0(2:4)'];
 Vels = quatrotate(conjQ, [u 0 0]);
 
 %% CONSTANTS
-S = settings.S;              % [m^2] cross surface
-g = settings.g0;                 % [N/kg] module of gravitational field at zero
+S = settings.S;      % [m^2] cross surface
+g = settings.g0;     % [N/kg] module of gravitational field at zero
+
+absoluteAltitude = -z + settings.z0;
 [~, ~, ~, rho] = atmosphereData(absoluteAltitude, g);
 
 OMEGA = settings.OMEGA;   
@@ -44,11 +46,11 @@ T = interp1(settings.motor.expTime, settings.motor.expThrust, t);
 m = settings.ms + interp1(settings.motor.expTime, settings.motor.expM, t);
 
 %% Dynamics
-Fg = m*g*sin(OMEGA);                % [N] force due to the gravity
+Fg = m*g*sin(OMEGA); % [N] force due to the gravity
 X = 0.5*rho*u^2*S*CA;
 du = (-Fg +T -X)/m;
 
-if T < Fg                           % No velocity untill T = Fg
+if T < Fg            % No velocity untill T = Fg
     du = 0;
 end
 

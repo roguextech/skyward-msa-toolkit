@@ -1,4 +1,4 @@
-function [coeffsValues, angle0] = interpCoeffs(t, alpha, M, beta, alt, c, alphaTot, settings)
+function [coeffsValues, angle0] = interpCoeffs(t, alpha, M, beta, alt, c, settings)
 %{
 interpCoeffs - interpolation of aerodynamic coefficients.
 
@@ -22,53 +22,47 @@ VERSIONS:
 -
 %}
 
-%% Load data:
+%% Load data
 CoeffsE = settings.CoeffsE;  % Empty Rocket Coefficients
 CoeffsF = settings.CoeffsF;  % Full Rocket Coefficients
 
 tb = settings.tb;
 
-A_datcom = settings.Alphas*pi/180;
-B_datcom = settings.Betas*pi/180;
-H_datcom = settings.Altitudes;
-M_datcom = settings.Machs;
+datcomAlphas = settings.Alphas*pi/180;
+datcomBetas = settings.Betas*pi/180;
+datcomAlts = settings.Altitudes;
+datcomMachs = settings.Machs;
 
-%% Interpolation:
-% Last two entries of cellT and inst are for the evaluation of the XCP for
-% alpha = alphaTot and beta = 0.
-cellT = {A_datcom, M_datcom, B_datcom, H_datcom, A_datcom, B_datcom};
-inst = [alpha, M, beta, alt, alphaTot, 0];
+%% Interpolation
+cellT = {datcomAlphas, datcomMachs, datcomBetas, datcomAlts};
+inst = [alpha, M, beta, alt]; 
 
-index = zeros(6, 1);
-for i = 1:6
+index = zeros(4, 1);
+for i = 1:4
     [~, index(i)] = min(abs(cellT{i} - inst(i)));
 end
 
 coeffsNames = {'CA','CYB','CY','CNA','CN','CLL','CLLP','CMA','CM',...
-    'CMAD','CMQ','CLNB','CLN','CLNR','CLNP','X_C_P'};
-coeffsValues = nan(16, 1);
+    'CMAD','CMQ','CLNB','CLN','CLNR','CLNP'}; %,'X_C_P'};
+coeffsValues = nan(15, 1);
 
-for i = 1:16
+for i = 1:15
     
     CmatE = CoeffsE.(coeffsNames{i});
     CmatF = CoeffsF.(coeffsNames{i});
     
     VE = CmatE(index(1), index(2), index(3), index(4), c);
-    
-    if i == 16, VE = CmatE(index(5), index(2), index(6), index(4), c); end
-  
+
     if t <= tb
         VF = CmatF(index(1), index(2), index(3), index(4));
         
-        if i == 16, VE = CmatF(index(5), index(2), index(6), index(4)); end
-        
-        coeffsValues(i) =  t/tb*(VE-VF)+VF;
+        coeffsValues(i) =  t/tb*(VE - VF) + VF;
     else 
         coeffsValues(i) = VE;
     end
 
 end
 
-angle0 = [A_datcom(index(1)); B_datcom(index(3))];
+angle0 = [datcomAlphas(index(1)); datcomBetas(index(3))];
 
 end

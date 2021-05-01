@@ -5,7 +5,7 @@ This code implements an aerodynamics optimization of the rocket.
 The optimization variables are the fin chords and heigth, the fin shape,    
 the ogive length and the ogive shape.
 
-The code uses the genetic algorithm to reach the aim. It take from 1 to 2 hours
+The code uses the genetic algorithm to reach the aim. It takes few hours to run, be patient.
 
 
 # Usage
