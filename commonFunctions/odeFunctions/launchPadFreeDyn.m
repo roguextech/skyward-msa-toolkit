@@ -35,9 +35,9 @@ conjQ = [Q0(1) -Q0(2:4)'];
 Vels = quatrotate(conjQ, [u 0 0]);
 
 %% CONSTANTS
-[~, ~, ~, rho] = atmosisa(settings.z0);
 S = settings.S;              % [m^2] cross surface
 g = settings.g0;                 % [N/kg] module of gravitational field at zero
+[~, ~, ~, rho] = atmosphereData(absoluteAltitude, g);
 
 OMEGA = settings.OMEGA;   
 T = interp1(settings.motor.expTime, settings.motor.expThrust, t);

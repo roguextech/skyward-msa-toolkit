@@ -105,7 +105,8 @@ if -z < 0     % z is directed as the gravity vector
 end
 
 absoluteAltitude = -z + settings.z0;
-[~, a, P, rho] = atmosisa(absoluteAltitude);
+[~, a, P, rho] = atmosphereData(absoluteAltitude, g);
+
 M = V_norm/a;
 M_value = M;
 

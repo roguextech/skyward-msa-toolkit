@@ -87,7 +87,7 @@ if -z < 0        % z is directed as the gravity vector
 end
 
 absoluteAltitude = -z + settings.z0;
-[~, ~, P, rho] = atmosisa(absoluteAltitude);
+[~, ~, P, rho] = atmosphereData(absoluteAltitude, g);
 
 %% REFERENCE FRAME
 % The parachutes are approximated as rectangular surfaces with the normal
