@@ -129,7 +129,7 @@ c = 1; % descent with no aerobrakes
 
 %% INTERPOLATE AERODYNAMIC COEFFICIENTS:
 [coeffsValues, angle0] = interpCoeffs(t, alpha, M, beta, absoluteAltitude,...
-                                        c, 0, settings);
+                                        c,settings);
 
 % Retrieve Coefficients 
 CA = coeffsValues(1); CYB = coeffsValues(2); CY0 = coeffsValues(3);
