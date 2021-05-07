@@ -74,7 +74,7 @@ end
 
 %% datcom
 Xle1 = Lcenter + Lnose - d - C1;
-diffC = C1-C2;
+diffC = C1 - C2;
 
 switch shape
     case 'rect'
@@ -204,9 +204,9 @@ if protub_flag
     fprintf(fid, '  LPROT = ');
     fprintf(fid, '%.3f, \r\n', lprot);
     fprintf(fid, '  WPROT = ');
-    fprintf(fid, '%.3f, \r\n', wprot);
+    fprintf(fid, '%.4f, \r\n', wprot);
     fprintf(fid, '  HPROT = ');
-    fprintf(fid, '%.3f, \r\n', hprot);
+    fprintf(fid, '%.4f, \r\n', hprot);
     fprintf(fid, '  OPROT = 0.,$');
 end
 
