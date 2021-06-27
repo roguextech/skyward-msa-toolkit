@@ -1,6 +1,6 @@
-function [dY, parout] = ascent(t, Y, settings)
+function [dY, parout] = ascentTCT(t, Y, settings)
 %{
-ascent - ode function of the 6DOF Rigid Rocket Model
+ascentTCT - modified version of ascent.m for Test Coupling Tubes analysis
 
 INPUTS:
 - t,       double [1, 1] integration time [s];
@@ -25,11 +25,7 @@ conjugated of the current attitude quaternion
 E.G.  quatrotate(quatconj(Y(:,10:13)),Y(:,4:6))
 
 REVISIONS:
--#0 31/12/2014, Release, Ruben Di Battista
-
--#1 16/04/2016, Second version, Francesco Colombi
-
--#2 01/01/2021, Third version, Adriano Filippo Inno
+-#0 27/06/2021, Release, Davide Rosato
 
 %}
 
@@ -58,19 +54,11 @@ C = settings.C;                         % [m]     caliber
 g = settings.g0/(1 + (-z*1e-3/6371))^2; % [N/kg]  module of gravitational field 
 tb = settings.tb;                       % [s]     Burning Time
 
-if settings.stoch.N > 1
-    OMEGA = settings.stoch.OMEGA;
-    uncert = settings.stoch.uncert;
-    Day = settings.stoch.Day;
-    Hour = settings.stoch.Hour;
-    uw = settings.stoch.uw; vw = settings.stoch.vw; ww = settings.stoch.ww;
-else
-    OMEGA = settings.OMEGA;            
-    uncert = [0, 0];
-    
-    if not(settings.wind.input) && not(settings.wind.model)
-        uw = settings.constWind(1); vw = settings.constWind(2); ww = settings.constWind(3);
-    end
+OMEGA = settings.OMEGA;            
+uncert = [0, 0];
+
+if not(settings.wind.input) && not(settings.wind.model)
+    uw = settings.constWind(1); vw = settings.constWind(2); ww = settings.constWind(3);
 end
 
 % inertias for full configuration (with all the propellant embarqued) obtained with CAD's
@@ -144,7 +132,8 @@ else     % for t >= tb the fligth condition is the empty one(no interpolation ne
     Izzdot = 0;
     T = 0;
 end
-mPay = settings.mPayload;
+
+mPay = settings.mPay;
 
 %% AERODYNAMICS ANGLES
 if not(ur < 1e-9 || V_norm < 1e-9)
@@ -252,6 +241,7 @@ if -z < settings.lrampa*sin(OMEGA)      % No torque on the launchpad
         du = 0;
     end
     PesoCiao = 0;
+    Mfle = 0;
 else
 %% FORCES
     % first computed in the body-frame reference system
@@ -291,17 +281,19 @@ else
     
     MxP = dp*IxxP + (IzzP - IyyP)*q*r - qdynL_V*(V_norm*ClP+ClpP*p*C/2);
     
-    MyP = dq*IyyP + (IxxP - IzzP)*p*r - qdynL_V*(V_norm*CmP + (CmadP+CmqP)*q*C/2) - TzP*0.2;
+    MyP = dq*IyyP + (IxxP - IzzP)*p*r - qdynL_V*(V_norm*CmP + ...
+        (CmadP+CmqP)*q*C/2) - TzP*(settings.Lpay - settings.xcgPay);
     
-    MzP = dr*IzzP + (IyyP - IxxP)*p*q - qdynL_V*(V_norm*CnP + (CnrP*r+CnpP*p)*C/2) - TyP*0.2;
+    MzP = dr*IzzP + (IyyP - IxxP)*p*q - qdynL_V*(V_norm*CnP + ...
+        (CnrP*r+CnpP*p)*C/2) - TyP*(settings.Lpay - settings.xcgPay);
     
     
     
 MomentCiao = qdyn*CmP*S*C;
 NCiao = qdyn*CNP*S;
-Mfle = 0.2*NCiao + MomentCiao;
+Mfle = (settings.Lpay - settings.xcgPay)*NCiao + MomentCiao;
 
-PesoCiao = ((Mfle/0.3)/9.81);
+PesoCiao = ((Mfle/settings.xProva)/9.81);
 
 end
 % Quaternions
