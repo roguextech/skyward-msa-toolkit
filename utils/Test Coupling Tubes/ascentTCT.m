@@ -169,7 +169,7 @@ else
 end
 
 %% INTERPOLATE AERODYNAMIC COEFFICIENTS:
-[coeffsValues, coeffsValuesP, angle0] = interpCoeffs(t, alpha, M, beta, absoluteAltitude,...
+[coeffsValues, angle0, coeffsValuesP] = interpCoeffsTCT(t, alpha, M, beta, absoluteAltitude,...
     c, settings);
 
 % Retrieve Coefficients

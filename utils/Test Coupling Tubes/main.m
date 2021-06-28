@@ -34,7 +34,7 @@ addpath(genpath(currentPath));
 config;
 dataPath = '../../data/';
 addpath(dataPath);
-commonFunctionsPath = '../commonFunctions/';
+commonFunctionsPath = '../../commonFunctions/';
 addpath(genpath(commonFunctionsPath));
 simulationsData;
 
@@ -115,8 +115,17 @@ title('MASSA PROVA');
 xlabel('t [s]'); ylabel('M [kg]');
 
 subplot(2,1,2)
+for i = 1:length(data_ascent.state.T)
+    if data_ascent.interp.alpha(i) < 0
+        alphaP(i) = data_ascent.interp.alpha(i)*180/pi + data_ascent.interp.alpha(i)*180/pi*0.5;
+    else
+        alphaP(i) = data_ascent.interp.alpha(i)*180/pi + data_ascent.interp.alpha(i)*180/pi*0.5;
+    end
+end
+plot(data_ascent.state.T, alphaP);
+grid on; hold on;
 plot(data_ascent.state.T, data_ascent.interp.alpha*180/pi);
-grid on;
+legend('alpha Payload', 'alpha rocket')
 title('ALPHA');
 xlabel('t [s]'); ylabel('alpha [deg]')
 
